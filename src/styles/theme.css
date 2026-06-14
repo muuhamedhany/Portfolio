@@ -1,0 +1,322 @@
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  --font-size: 16px;
+  /* Light mode: clean off-white, same purple accent */
+  --background: #f7f6f9;
+  --foreground: #15131c;
+  --card: #ffffff;
+  --card-foreground: #15131c;
+  --popover: #ffffff;
+  --popover-foreground: #15131c;
+  --primary: #7a2eb0;
+  --primary-foreground: #ffffff;
+  --secondary: #efecf4;
+  --secondary-foreground: #2a2440;
+  --muted: #efecf4;
+  --muted-foreground: #6a6479;
+  --accent: #f2e9fb;
+  --accent-foreground: #5923a0;
+  --destructive: #d4183d;
+  --destructive-foreground: #ffffff;
+  --border: rgba(20, 18, 30, 0.1);
+  --input: transparent;
+  --input-background: #f0eef4;
+  --switch-background: #cbced4;
+  --font-weight-medium: 500;
+  --font-weight-normal: 400;
+  --ring: #8b3fd6;
+
+  /* Brand accent gradient (CarKit) + typography */
+  --accent-from: #5923a0;
+  --accent-to: #cd42a8;
+  --accent-gradient: linear-gradient(135deg, #5923a0 0%, #cd42a8 100%);
+  --font-display: 'Jersey 15', sans-serif;
+  --font-sans: 'Manrope', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+  --grid-line: rgba(20, 18, 30, 0.06);
+  --pixel-shadow: rgba(20, 18, 30, 0.35);
+  --canvas-glow: rgba(205, 66, 168, 0.12);
+  --canvas-glow-2: rgba(89, 35, 160, 0.1);
+  --chart-1: oklch(0.646 0.222 41.116);
+  --chart-2: oklch(0.6 0.118 184.704);
+  --chart-3: oklch(0.398 0.07 227.392);
+  --chart-4: oklch(0.828 0.189 84.429);
+  --chart-5: oklch(0.769 0.188 70.08);
+  --radius: 0px;
+  --sidebar: oklch(0.985 0 0);
+  --sidebar-foreground: oklch(0.145 0 0);
+  --sidebar-primary: #030213;
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.97 0 0);
+  --sidebar-accent-foreground: oklch(0.205 0 0);
+  --sidebar-border: oklch(0.922 0 0);
+  --sidebar-ring: oklch(0.708 0 0);
+}
+
+.dark {
+  /* Dark mode: primary experience — near-black with light text */
+  --background: #09080d;
+  --foreground: #ededf2;
+  --card: #100e16;
+  --card-foreground: #ededf2;
+  --popover: #100e16;
+  --popover-foreground: #ededf2;
+  --primary: #b15ce0;
+  --primary-foreground: #09080d;
+  --secondary: #1a1722;
+  --secondary-foreground: #ededf2;
+  --muted: #16131d;
+  --muted-foreground: #9b94a8;
+  --accent: #1d1429;
+  --accent-foreground: #d98fe6;
+  --destructive: oklch(0.396 0.141 25.723);
+  --destructive-foreground: oklch(0.637 0.237 25.331);
+  --border: rgba(255, 255, 255, 0.09);
+  --input: #1a1722;
+  --ring: #b15ce0;
+  --grid-line: rgba(255, 255, 255, 0.05);
+  --pixel-shadow: rgba(0, 0, 0, 0.55);
+  --canvas-glow: rgba(205, 66, 168, 0.16);
+  --canvas-glow-2: rgba(89, 35, 160, 0.18);
+  --font-weight-medium: 500;
+  --font-weight-normal: 400;
+  --chart-1: oklch(0.488 0.243 264.376);
+  --chart-2: oklch(0.696 0.17 162.48);
+  --chart-3: oklch(0.769 0.188 70.08);
+  --chart-4: oklch(0.627 0.265 303.9);
+  --chart-5: oklch(0.645 0.246 16.439);
+  --sidebar: oklch(0.205 0 0);
+  --sidebar-foreground: oklch(0.985 0 0);
+  --sidebar-primary: oklch(0.488 0.243 264.376);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.269 0 0);
+  --sidebar-accent-foreground: oklch(0.985 0 0);
+  --sidebar-border: oklch(0.269 0 0);
+  --sidebar-ring: oklch(0.439 0 0);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-input-background: var(--input-background);
+  --color-switch-background: var(--switch-background);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --font-display: var(--font-display);
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-mono);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  ::selection {
+    background: var(--accent-to);
+    color: #fff;
+  }
+
+  /* Hide scrollbars until scrolling (kept subtle) */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: transparent transparent;
+  }
+  *::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  *::-webkit-scrollbar-thumb {
+    background: transparent;
+    border-radius: 999px;
+  }
+  *:hover::-webkit-scrollbar-thumb {
+    background: var(--border);
+  }
+}
+
+@layer utilities {
+  .font-display {
+    font-family: var(--font-display);
+    letter-spacing: 0.01em;
+  }
+  /* Hard blocky drop-shadow, like a Minecraft UI element */
+  .pixel-shadow {
+    box-shadow: 4px 4px 0 0 var(--pixel-shadow);
+  }
+  .pixel-shadow-sm {
+    box-shadow: 3px 3px 0 0 var(--pixel-shadow);
+  }
+  .pixel-shadow-accent {
+    box-shadow: 4px 4px 0 0 var(--accent-from);
+  }
+  /* nudge into the shadow on press/hover for a tactile "button" feel */
+  .pixel-press {
+    transition: transform 0.08s steps(2), box-shadow 0.08s steps(2);
+  }
+  .pixel-press:hover {
+    transform: translate(2px, 2px);
+    box-shadow: 2px 2px 0 0 var(--pixel-shadow);
+  }
+  .pixel-press:active {
+    transform: translate(4px, 4px);
+    box-shadow: 0 0 0 0 var(--pixel-shadow);
+  }
+  /* Pixelized button: notched corners + hard shadow that follows the clip
+     silhouette (drop-shadow survives clip-path, box-shadow would not). */
+  .pixel-btn {
+    border-radius: 0;
+    clip-path: polygon(
+      0 5px, 5px 5px, 5px 0,
+      calc(100% - 5px) 0, calc(100% - 5px) 5px, 100% 5px,
+      100% calc(100% - 5px), calc(100% - 5px) calc(100% - 5px), calc(100% - 5px) 100%,
+      5px 100%, 5px calc(100% - 5px), 0 calc(100% - 5px)
+    );
+    filter: drop-shadow(3px 3px 0 var(--pixel-shadow));
+    transition: transform 0.08s steps(2), filter 0.08s steps(2);
+  }
+  .pixel-btn:hover {
+    transform: translate(1px, 1px);
+    filter: drop-shadow(2px 2px 0 var(--pixel-shadow));
+  }
+  .pixel-btn:active {
+    transform: translate(3px, 3px);
+    filter: drop-shadow(0 0 0 var(--pixel-shadow));
+  }
+
+  /* Themed page ground: near-black + accent glow wash + pixel grid */
+  .pixel-canvas {
+    background-color: var(--background);
+    background-image:
+      radial-gradient(120% 90% at 80% -10%, var(--canvas-glow), transparent 55%),
+      radial-gradient(110% 80% at 0% 110%, var(--canvas-glow-2), transparent 55%),
+      linear-gradient(to right, var(--grid-line) 1px, transparent 1px),
+      linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px);
+    background-size: 100% 100%, 100% 100%, 44px 44px, 44px 44px;
+  }
+
+  .text-gradient {
+    background: var(--accent-gradient);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .bg-gradient-accent {
+    background: var(--accent-gradient);
+  }
+  /* Pixel/digital grid seasoning */
+  .bg-grid {
+    background-image:
+      linear-gradient(to right, var(--grid-line) 1px, transparent 1px),
+      linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px);
+    background-size: 44px 44px;
+  }
+  /* Subtle scanline overlay */
+  .scanlines::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: repeating-linear-gradient(
+      to bottom,
+      rgba(255, 255, 255, 0.025) 0px,
+      rgba(255, 255, 255, 0.025) 1px,
+      transparent 1px,
+      transparent 3px
+    );
+  }
+
+  /**
+  * Default typography styles for HTML elements (h1-h4, p, label, button, input).
+  * These are in @layer base, so Tailwind utility classes (like text-sm, text-lg) automatically override them.
+  */
+
+  html {
+    font-size: var(--font-size);
+  }
+
+  h1 {
+    font-size: var(--text-2xl);
+    font-weight: var(--font-weight-medium);
+    line-height: 1.5;
+  }
+
+  h2 {
+    font-size: var(--text-xl);
+    font-weight: var(--font-weight-medium);
+    line-height: 1.5;
+  }
+
+  h3 {
+    font-size: var(--text-lg);
+    font-weight: var(--font-weight-medium);
+    line-height: 1.5;
+  }
+
+  h4 {
+    font-size: var(--text-base);
+    font-weight: var(--font-weight-medium);
+    line-height: 1.5;
+  }
+
+  label {
+    font-size: var(--text-base);
+    font-weight: var(--font-weight-medium);
+    line-height: 1.5;
+  }
+
+  button {
+    font-size: var(--text-base);
+    font-weight: var(--font-weight-medium);
+    line-height: 1.5;
+  }
+
+  input {
+    font-size: var(--text-base);
+    font-weight: var(--font-weight-normal);
+    line-height: 1.5;
+  }
+}
