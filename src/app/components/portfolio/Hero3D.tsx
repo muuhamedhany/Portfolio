@@ -1,8 +1,28 @@
 import { useEffect, useRef } from "react";
 import * as THREE from "three";
 
-const ACCENT_FROM = 0x5923a0;
-const ACCENT_TO = 0xcd42a8;
+const PALETTES = {
+  dark: {
+    chevron: 0x8f84df,
+    chevronEmissive: 0x40377f,
+    pencil: 0xd3a34d,
+    band: 0x665bb8,
+    wood: 0xd8b27a,
+    graphite: 0x17151d,
+    metal: 0xa7a1ae,
+    eraser: 0xb96363,
+  },
+  light: {
+    chevron: 0x5146a8,
+    chevronEmissive: 0x2f2868,
+    pencil: 0xb77728,
+    band: 0x5d52b4,
+    wood: 0xc99a5b,
+    graphite: 0x26222c,
+    metal: 0x77717d,
+    eraser: 0x9f4f52,
+  },
+} as const;
 
 interface Hero3DProps {
   theme: "dark" | "light";
@@ -21,6 +41,7 @@ export function Hero3D({ theme }: Hero3DProps) {
   useEffect(() => {
     const mount = mountRef.current;
     if (!mount) return;
+    const palette = dark ? PALETTES.dark : PALETTES.light;
 
     const getW = () => mount.clientWidth || 1;
     const getH = () => mount.clientHeight || 1;
@@ -29,29 +50,25 @@ export function Hero3D({ theme }: Hero3DProps) {
     const camera = new THREE.PerspectiveCamera(38, getW() / getH(), 0.1, 100);
     camera.position.set(0, 0, 6);
 
-    const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: false });
+    renderer.outputColorSpace = THREE.SRGBColorSpace;
+    renderer.setPixelRatio(1);
     renderer.setSize(getW(), getH());
     renderer.domElement.style.touchAction = "none";
     renderer.domElement.style.cursor = "grab";
+    renderer.domElement.style.imageRendering = "pixelated";
     mount.appendChild(renderer.domElement);
 
     // ---- lights ----
-    scene.add(new THREE.AmbientLight(0xffffff, dark ? 0.7 : 1.0));
-    const key = new THREE.DirectionalLight(0xffffff, dark ? 1.5 : 2.1);
-    key.position.set(4, 6, 5);
+    scene.add(new THREE.AmbientLight(0xffffff, dark ? 1.15 : 1.65));
+    const key = new THREE.DirectionalLight(0xfff3d6, dark ? 2.2 : 2.6);
+    key.position.set(-4, 7, 6);
     scene.add(key);
-    const rim1 = new THREE.PointLight(ACCENT_TO, dark ? 4 : 2.5);
-    rim1.position.set(-5, -2, 3);
-    scene.add(rim1);
-    const rim2 = new THREE.PointLight(ACCENT_FROM, 2);
-    rim2.position.set(3, 2, -4);
-    scene.add(rim2);
 
     // ---- tracked resources ----
     const disposables: { dispose: () => void }[] = [];
     const voxelMat = (color: number, emissive?: number, ei = 0) => {
-      const m = new THREE.MeshStandardMaterial({ color, metalness: 0.15, roughness: 0.7, flatShading: true });
+      const m = new THREE.MeshLambertMaterial({ color, flatShading: true });
       if (emissive !== undefined) {
         m.emissive = new THREE.Color(emissive);
         m.emissiveIntensity = ei;
@@ -73,7 +90,7 @@ export function Hero3D({ theme }: Hero3DProps) {
     const pattern = ["11000", "01100", "00110", "00011", "00110", "01100", "11000"];
     const s = 0.26;
     const cubeGeo = boxGeo(s * 0.96, s * 0.96, s * 1.7); // tiny gap between cubes reads as pixels
-    const chevMat = voxelMat(ACCENT_TO, ACCENT_FROM, dark ? 0.85 : 0.4);
+    const chevMat = voxelMat(palette.chevron, palette.chevronEmissive, dark ? 0.16 : 0.04);
     pattern.forEach((row, r) => {
       for (let c = 0; c < row.length; c++) {
         if (row[c] === "1") {
@@ -101,14 +118,14 @@ export function Hero3D({ theme }: Hero3DProps) {
       mesh.position.set(x, y, 0);
       pen.add(mesh);
     };
-    addBox(bw, 1.7, bw, ACCENT_FROM, 0.2, 0, ACCENT_FROM, dark ? 0.25 : 0.1); // barrel
-    addBox(bw * 1.06, 0.42, bw * 1.06, ACCENT_TO, -0.75, 0, ACCENT_FROM, dark ? 0.4 : 0.15); // band
-    addBox(0.24, 0.16, 0.24, 0xe9c08a, -1.04); // wood nib step 1
-    addBox(0.16, 0.14, 0.16, 0xe9c08a, -1.19); // wood nib step 2
-    addBox(0.08, 0.12, 0.08, 0x26262e, -1.31); // graphite tip
-    addBox(bw * 1.08, 0.14, bw * 1.08, 0xd8d8e0, 1.0); // metal ferrule
-    addBox(bw * 1.04, 0.24, bw * 1.04, 0xf06ec0, 1.18); // eraser
-    addBox(0.06, 0.5, 0.12, 0xd8d8e0, 0.78, 0.18); // clip
+    addBox(bw, 1.7, bw, palette.pencil, 0.2); // barrel
+    addBox(bw * 1.06, 0.42, bw * 1.06, palette.band, -0.75); // band
+    addBox(0.24, 0.16, 0.24, palette.wood, -1.04); // wood nib step 1
+    addBox(0.16, 0.14, 0.16, palette.wood, -1.19); // wood nib step 2
+    addBox(0.08, 0.12, 0.08, palette.graphite, -1.31); // graphite tip
+    addBox(bw * 1.08, 0.14, bw * 1.08, palette.metal, 1.0); // metal ferrule
+    addBox(bw * 1.04, 0.24, bw * 1.04, palette.eraser, 1.18); // eraser
+    addBox(0.06, 0.5, 0.12, palette.metal, 0.78, 0.18); // clip
     emblem.add(pen);
 
     // ---- interaction (drag to spin, inertial coast) ----

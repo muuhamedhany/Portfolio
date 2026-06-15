@@ -34,35 +34,17 @@ interface HeroProps {
 
 export function Hero({ onNavigate, theme }: HeroProps) {
   return (
-    <section className="scanlines relative grid h-svh place-items-center overflow-hidden bg-grid">
-      {/* Two slowly drifting gradient blobs */}
-      <motion.div
-        aria-hidden
-        className="pointer-events-none absolute -right-20 top-10 h-[26rem] w-[26rem] rounded-full bg-gradient-accent blur-[130px]"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 0.5, x: [0, -30, 0], y: [0, 24, 0] }}
-        transition={{ opacity: { duration: 1.2 }, x: { duration: 14, repeat: Infinity, ease: "easeInOut" }, y: { duration: 11, repeat: Infinity, ease: "easeInOut" } }}
-      />
-      <motion.div
-        aria-hidden
-        className="pointer-events-none absolute -left-24 bottom-0 h-[22rem] w-[22rem] rounded-full bg-[var(--accent-from)] opacity-30 blur-[130px]"
-        animate={{ x: [0, 30, 0], y: [0, -20, 0] }}
-        transition={{ x: { duration: 16, repeat: Infinity, ease: "easeInOut" }, y: { duration: 13, repeat: Infinity, ease: "easeInOut" } }}
-      />
-
+    <section className="scanlines relative grid h-svh place-items-center overflow-hidden pb-24 sm:pb-20">
       <div className="relative mx-auto grid w-full max-w-6xl gap-10 px-5 sm:px-8 lg:grid-cols-[1.6fr_1fr] lg:items-center">
         <div>
           <motion.div
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.3 }}
-            className="mb-6 flex items-center gap-3 font-mono text-xs uppercase tracking-[0.25em] text-muted-foreground"
+            className="mb-6 flex items-center gap-2.5 font-mono text-[11px] uppercase tracking-[0.18em] text-muted-foreground"
           >
-            <span className="relative flex h-2 w-2">
-              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[var(--accent-to)] opacity-70" />
-              <span className="relative inline-flex h-2 w-2 rounded-full bg-[var(--accent-to)]" />
-            </span>
-            Available for work
+            <span aria-hidden="true" className="h-2.5 w-2.5 border border-[var(--accent-to)] bg-[var(--accent-to)]/15" />
+            Open to selected projects
           </motion.div>
 
           <motion.h1
@@ -155,9 +137,10 @@ export function Hero({ onNavigate, theme }: HeroProps) {
       <motion.button
         onClick={() => onNavigate("projects")}
         initial={{ opacity: 0 }}
-        animate={{ opacity: 1, y: [0, 6, 0] }}
+        animate={{ opacity: 1, x: "-50%", y: [0, 6, 0] }}
         transition={{ opacity: { delay: 1.5 }, y: { duration: 2, repeat: Infinity, ease: "easeInOut" } }}
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 font-mono text-[10px] uppercase tracking-[0.3em] text-muted-foreground transition-colors hover:text-foreground"
+        className="absolute left-1/2 font-mono text-[10px] uppercase tracking-[0.3em] text-muted-foreground transition-colors hover:text-foreground"
+        style={{ bottom: "calc(5.75rem + env(safe-area-inset-bottom))" }}
       >
         enter ↗
       </motion.button>

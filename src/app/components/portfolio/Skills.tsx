@@ -35,7 +35,7 @@ function Marquee() {
 export function Skills() {
   return (
     <section className="relative">
-      <div className="mx-auto flex min-h-svh max-w-6xl flex-col justify-center px-5 pb-16 pt-24 sm:px-8">
+      <div className="mx-auto flex min-h-svh max-w-6xl flex-col justify-center px-5 pb-28 pt-24 sm:px-8 sm:pb-24">
       <Reveal>
         <div className="mb-10 flex items-end justify-between gap-4">
           <h2 className="font-display tracking-normal" style={{ fontSize: "clamp(1.75rem, 5vw, 3rem)", fontWeight: 600 }}>

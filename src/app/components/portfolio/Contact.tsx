@@ -10,8 +10,8 @@ const CONTACTS = [
 
 export function Contact() {
   return (
-    <section className="scanlines relative bg-grid">
-      <div className="mx-auto flex min-h-svh max-w-6xl flex-col justify-center px-5 pb-16 pt-24 sm:px-8">
+    <section className="scanlines relative">
+      <div className="mx-auto flex min-h-svh max-w-6xl flex-col justify-center px-5 pb-28 pt-24 sm:px-8 sm:pb-24">
         <Reveal>
           <span className="font-mono text-xs uppercase tracking-[0.25em] text-muted-foreground">03 / Contact</span>
           <h2

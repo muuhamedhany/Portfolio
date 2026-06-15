@@ -1,5 +1,7 @@
 import { motion } from "motion/react";
+import { Code2, FolderKanban, Home, Mail, type LucideIcon } from "lucide-react";
 import { ThemeToggle } from "./ThemeToggle";
+import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 import { SECTIONS, type SectionId } from "./sections";
 
 interface NavProps {
@@ -9,58 +11,70 @@ interface NavProps {
   onNavigate: (id: SectionId) => void;
 }
 
+const SECTION_ICONS: Record<SectionId, LucideIcon> = {
+  home: Home,
+  projects: FolderKanban,
+  skills: Code2,
+  contact: Mail,
+};
+
 export function Nav({ theme, onToggle, active, onNavigate }: NavProps) {
-  const links = SECTIONS.filter((s) => s.id !== "home");
-
   return (
-    <motion.header
-      initial={{ y: -64, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
+    <motion.nav
+      aria-label="Primary navigation"
+      initial={{ y: 64, x: "-50%", opacity: 0 }}
+      animate={{ y: 0, x: "-50%", opacity: 1 }}
       transition={{ duration: 0.6, ease: "easeOut" }}
-      className="fixed inset-x-0 top-0 z-50"
+      className="fixed left-1/2 z-50"
+      style={{ bottom: "calc(1rem + env(safe-area-inset-bottom))" }}
     >
-      <nav className="mx-auto flex h-16 max-w-6xl items-center justify-between px-5 sm:px-8">
-        <button
-          onClick={() => onNavigate("home")}
-          className="flex items-center gap-2 font-mono text-sm tracking-tight"
-        >
-          <span className="font-display inline-flex h-7 w-7 items-center justify-center rounded-none border border-border bg-card text-[13px] pixel-shadow-sm">
-            <span className="text-foreground">m</span>
-            <span className="text-gradient">u</span>
-          </span>
-          <span className="hidden text-muted-foreground transition-colors hover:text-foreground sm:inline">
-            helmy.dev
-          </span>
-        </button>
+      <div className="flex items-center gap-1 border-2 border-border bg-card p-1.5 pixel-shadow">
+        <ul className="flex items-center gap-1">
+          {SECTIONS.map((section) => {
+            const Icon = SECTION_ICONS[section.id];
+            const isActive = active === section.id;
 
-        <div className="flex items-center gap-1 sm:gap-2">
-          <ul className="mr-1 flex items-center gap-0.5">
-            {links.map((l) => {
-              const isActive = active === l.id;
-              return (
-                <li key={l.id}>
-                  <button
-                    onClick={() => onNavigate(l.id)}
-                    className={`relative rounded-md px-3 py-2 font-mono text-[11px] uppercase tracking-[0.18em] transition-colors sm:text-xs ${
-                      isActive ? "text-foreground" : "text-muted-foreground hover:text-foreground"
-                    }`}
+            return (
+              <li key={section.id}>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <button
+                      type="button"
+                      onClick={() => onNavigate(section.id)}
+                      aria-label={`Go to ${section.label}`}
+                      aria-current={isActive ? "page" : undefined}
+                      className={`relative grid h-11 w-11 place-items-center overflow-hidden border border-transparent transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring ${
+                        isActive
+                          ? "text-white"
+                          : "text-muted-foreground hover:border-border hover:bg-secondary hover:text-foreground"
+                      }`}
+                    >
+                      {isActive && (
+                        <motion.span
+                          layoutId="nav-active"
+                          className="absolute inset-0 bg-gradient-accent"
+                          transition={{ type: "spring", stiffness: 400, damping: 32 }}
+                        />
+                      )}
+                      <Icon className="relative h-5 w-5" aria-hidden="true" />
+                    </button>
+                  </TooltipTrigger>
+                  <TooltipContent
+                    side="top"
+                    sideOffset={10}
+                    className="rounded-none border border-border bg-card font-mono text-[10px] uppercase tracking-[0.18em] text-foreground pixel-shadow-sm [&>svg]:bg-card [&>svg]:fill-card"
                   >
-                    {l.label}
-                    {isActive && (
-                      <motion.span
-                        layoutId="nav-active"
-                        className="absolute inset-x-2 -bottom-0.5 h-px bg-gradient-accent"
-                        transition={{ type: "spring", stiffness: 400, damping: 32 }}
-                      />
-                    )}
-                  </button>
-                </li>
-              );
-            })}
-          </ul>
-          <ThemeToggle theme={theme} onToggle={onToggle} />
-        </div>
-      </nav>
-    </motion.header>
+                    {section.label}
+                  </TooltipContent>
+                </Tooltip>
+              </li>
+            );
+          })}
+        </ul>
+
+        <span aria-hidden="true" className="mx-0.5 h-7 w-px bg-border" />
+        <ThemeToggle theme={theme} onToggle={onToggle} />
+      </div>
+    </motion.nav>
   );
 }

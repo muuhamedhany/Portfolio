@@ -9,9 +9,10 @@ interface ThemeToggleProps {
 export function ThemeToggle({ theme, onToggle }: ThemeToggleProps) {
   return (
     <button
+      type="button"
       onClick={onToggle}
-      aria-label="Toggle color theme"
-      className="relative grid h-9 w-9 place-items-center rounded-none border-2 border-border bg-card text-foreground pixel-shadow-sm pixel-press hover:border-[var(--accent-to)] hover:text-[var(--accent-to)]"
+      aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} theme`}
+      className="relative grid h-11 w-11 place-items-center rounded-none border border-transparent bg-card text-foreground transition-colors pixel-press hover:border-[var(--accent-to)] hover:text-[var(--accent-to)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
     >
       <motion.span
         key={theme}

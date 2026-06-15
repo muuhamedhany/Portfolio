@@ -9,14 +9,14 @@
   --card-foreground: #15131c;
   --popover: #ffffff;
   --popover-foreground: #15131c;
-  --primary: #7a2eb0;
+  --primary: #6558c7;
   --primary-foreground: #ffffff;
   --secondary: #efecf4;
   --secondary-foreground: #2a2440;
   --muted: #efecf4;
   --muted-foreground: #6a6479;
-  --accent: #f2e9fb;
-  --accent-foreground: #5923a0;
+  --accent: #eeecf8;
+  --accent-foreground: #5146a8;
   --destructive: #d4183d;
   --destructive-foreground: #ffffff;
   --border: rgba(20, 18, 30, 0.1);
@@ -25,19 +25,29 @@
   --switch-background: #cbced4;
   --font-weight-medium: 500;
   --font-weight-normal: 400;
-  --ring: #8b3fd6;
+  --ring: #6558c7;
 
-  /* Brand accent gradient (CarKit) + typography */
-  --accent-from: #5923a0;
-  --accent-to: #cd42a8;
-  --accent-gradient: linear-gradient(135deg, #5923a0 0%, #cd42a8 100%);
+  /* Restrained single-hue accent scale. */
+  --accent-from: #5146a8;
+  --accent-mid: #5d52b4;
+  --accent-to: #695ebf;
+  --accent-gradient: linear-gradient(
+    115deg,
+    var(--accent-from) 0%,
+    var(--accent-mid) 52%,
+    var(--accent-to) 100%
+  );
   --font-display: 'Jersey 15', sans-serif;
   --font-sans: 'Manrope', ui-sans-serif, system-ui, sans-serif;
   --font-mono: 'JetBrains Mono', ui-monospace, monospace;
   --grid-line: rgba(20, 18, 30, 0.06);
+  --pixel-field: #eeecf7;
+  --pixel-field-strong: #e7e4f2;
+  --transition-base: #f0efeb;
+  --transition-panel: #dcd9d2;
+  --transition-accent: #97929e;
+  --transition-line: rgba(36, 33, 41, 0.075);
   --pixel-shadow: rgba(20, 18, 30, 0.35);
-  --canvas-glow: rgba(205, 66, 168, 0.12);
-  --canvas-glow-2: rgba(89, 35, 160, 0.1);
   --chart-1: oklch(0.646 0.222 41.116);
   --chart-2: oklch(0.6 0.118 184.704);
   --chart-3: oklch(0.398 0.07 227.392);
@@ -62,23 +72,30 @@
   --card-foreground: #ededf2;
   --popover: #100e16;
   --popover-foreground: #ededf2;
-  --primary: #b15ce0;
+  --primary: #8b80df;
   --primary-foreground: #09080d;
   --secondary: #1a1722;
   --secondary-foreground: #ededf2;
   --muted: #16131d;
   --muted-foreground: #9b94a8;
-  --accent: #1d1429;
-  --accent-foreground: #d98fe6;
+  --accent: #1a1828;
+  --accent-foreground: #a79dec;
   --destructive: oklch(0.396 0.141 25.723);
   --destructive-foreground: oklch(0.637 0.237 25.331);
   --border: rgba(255, 255, 255, 0.09);
   --input: #1a1722;
-  --ring: #b15ce0;
+  --ring: #8b80df;
+  --accent-from: #7064cb;
+  --accent-mid: #8276d9;
+  --accent-to: #978ce5;
   --grid-line: rgba(255, 255, 255, 0.05);
+  --pixel-field: #0e0d14;
+  --pixel-field-strong: #13111d;
+  --transition-base: #08090c;
+  --transition-panel: #1b1b22;
+  --transition-accent: #46424f;
+  --transition-line: rgba(255, 255, 255, 0.045);
   --pixel-shadow: rgba(0, 0, 0, 0.55);
-  --canvas-glow: rgba(205, 66, 168, 0.16);
-  --canvas-glow-2: rgba(89, 35, 160, 0.18);
   --font-weight-medium: 500;
   --font-weight-normal: 400;
   --chart-1: oklch(0.488 0.243 264.376);
@@ -227,15 +244,43 @@
     filter: drop-shadow(0 0 0 var(--pixel-shadow));
   }
 
-  /* Themed page ground: near-black + accent glow wash + pixel grid */
+  /* Hard-edged corner tiles share the same 44px unit as the page grid. */
   .pixel-canvas {
     background-color: var(--background);
     background-image:
-      radial-gradient(120% 90% at 80% -10%, var(--canvas-glow), transparent 55%),
-      radial-gradient(110% 80% at 0% 110%, var(--canvas-glow-2), transparent 55%),
+      linear-gradient(var(--pixel-field-strong), var(--pixel-field-strong)),
+      linear-gradient(var(--pixel-field-strong), var(--pixel-field-strong)),
+      linear-gradient(var(--pixel-field), var(--pixel-field)),
+      linear-gradient(var(--pixel-field), var(--pixel-field)),
+      linear-gradient(var(--pixel-field-strong), var(--pixel-field-strong)),
+      linear-gradient(var(--pixel-field-strong), var(--pixel-field-strong)),
+      linear-gradient(var(--pixel-field), var(--pixel-field)),
+      linear-gradient(var(--pixel-field), var(--pixel-field)),
       linear-gradient(to right, var(--grid-line) 1px, transparent 1px),
       linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px);
-    background-size: 100% 100%, 100% 100%, 44px 44px, 44px 44px;
+    background-position:
+      right top,
+      right 44px top 44px,
+      right top 132px,
+      right 176px top 44px,
+      left bottom,
+      left 44px bottom 44px,
+      left bottom 132px,
+      left 176px bottom 44px,
+      left top,
+      left top;
+    background-size:
+      176px 44px,
+      44px 88px,
+      88px 44px,
+      44px 44px,
+      176px 44px,
+      44px 88px,
+      88px 44px,
+      44px 44px,
+      44px 44px,
+      44px 44px;
+    background-repeat: no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, repeat, repeat;
   }
 
   .text-gradient {

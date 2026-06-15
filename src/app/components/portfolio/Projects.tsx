@@ -64,7 +64,7 @@ function ProjectCard({ project }: { project: Project }) {
       }`}
     >
       {/* accent corner glow on hover */}
-      <div className="pointer-events-none absolute -right-16 -top-16 h-40 w-40 rounded-full bg-gradient-accent opacity-0 blur-3xl transition-opacity duration-500 group-hover:opacity-30" />
+      <div className="pointer-events-none absolute -right-16 -top-16 h-40 w-40 rounded-full bg-[var(--accent-mid)] opacity-0 blur-3xl transition-opacity duration-500 group-hover:opacity-[0.12]" />
 
       <div className="relative">
         <div className="mb-4 flex items-center justify-between">
@@ -125,7 +125,7 @@ function ProjectCard({ project }: { project: Project }) {
 export function Projects() {
   return (
     <section className="relative">
-      <div className="mx-auto flex min-h-svh max-w-6xl flex-col justify-center px-5 pb-16 pt-24 sm:px-8">
+      <div className="mx-auto flex min-h-svh max-w-6xl flex-col justify-center px-5 pb-28 pt-24 sm:px-8 sm:pb-24">
       <Reveal>
         <div className="mb-10 flex items-end justify-between gap-4">
           <h2 className="font-display tracking-normal" style={{ fontSize: "clamp(1.75rem, 5vw, 3rem)", fontWeight: 600 }}>
