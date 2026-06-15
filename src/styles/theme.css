@@ -47,6 +47,11 @@
   --transition-panel: #dcd9d2;
   --transition-accent: #97929e;
   --transition-line: rgba(36, 33, 41, 0.075);
+  --pixel-frame: #2b2832;
+  --pixel-edge-light: rgba(255, 255, 255, 0.82);
+  --pixel-edge-dark: rgba(37, 33, 45, 0.2);
+  --pixel-active: #5146a8;
+  --pixel-active-foreground: #ffffff;
   --pixel-shadow: rgba(20, 18, 30, 0.35);
   --chart-1: oklch(0.646 0.222 41.116);
   --chart-2: oklch(0.6 0.118 184.704);
@@ -95,6 +100,11 @@
   --transition-panel: #1b1b22;
   --transition-accent: #46424f;
   --transition-line: rgba(255, 255, 255, 0.045);
+  --pixel-frame: #4a4557;
+  --pixel-edge-light: rgba(255, 255, 255, 0.08);
+  --pixel-edge-dark: rgba(0, 0, 0, 0.62);
+  --pixel-active: #7064cb;
+  --pixel-active-foreground: #ffffff;
   --pixel-shadow: rgba(0, 0, 0, 0.55);
   --font-weight-medium: 500;
   --font-weight-normal: 400;
@@ -209,6 +219,65 @@
   }
   .pixel-shadow-accent {
     box-shadow: 4px 4px 0 0 var(--accent-from);
+  }
+  .pixel-dock {
+    padding: 2px;
+    background: var(--pixel-frame);
+    clip-path: polygon(
+      0 7px, 7px 7px, 7px 0,
+      calc(100% - 7px) 0, calc(100% - 7px) 7px, 100% 7px,
+      100% calc(100% - 7px), calc(100% - 7px) calc(100% - 7px), calc(100% - 7px) 100%,
+      7px 100%, 7px calc(100% - 7px), 0 calc(100% - 7px)
+    );
+    filter: drop-shadow(4px 4px 0 var(--pixel-shadow));
+  }
+  .pixel-dock-surface {
+    background: var(--card);
+    clip-path: polygon(
+      0 5px, 5px 5px, 5px 0,
+      calc(100% - 5px) 0, calc(100% - 5px) 5px, 100% 5px,
+      100% calc(100% - 5px), calc(100% - 5px) calc(100% - 5px), calc(100% - 5px) 100%,
+      5px 100%, 5px calc(100% - 5px), 0 calc(100% - 5px)
+    );
+    box-shadow: inset 2px 2px 0 var(--pixel-edge-light), inset -2px -2px 0 var(--pixel-edge-dark);
+  }
+  .pixel-nav-control {
+    border: 1px solid var(--border);
+    background: var(--background);
+    box-shadow: inset 2px 2px 0 var(--pixel-edge-light), inset -2px -2px 0 var(--pixel-edge-dark);
+    transition:
+      transform 80ms steps(2, end),
+      color 100ms linear,
+      background-color 100ms linear,
+      border-color 100ms linear;
+  }
+  .pixel-nav-control:hover {
+    color: var(--foreground);
+    border-color: var(--pixel-frame);
+    transform: translate(1px, 1px);
+  }
+  .pixel-nav-control:active {
+    transform: translate(2px, 2px);
+    box-shadow: inset 1px 1px 0 var(--pixel-edge-dark);
+  }
+  .pixel-nav-control[data-active='true'] {
+    border-color: var(--pixel-active);
+    background: var(--pixel-active);
+    color: var(--pixel-active-foreground);
+    box-shadow: inset 2px 2px 0 rgba(255, 255, 255, 0.16), inset -2px -2px 0 rgba(0, 0, 0, 0.28);
+  }
+  .pixel-tooltip {
+    border: 0;
+    border-radius: 0;
+    background: var(--foreground);
+    color: var(--background);
+    clip-path: polygon(
+      0 4px, 4px 4px, 4px 0,
+      calc(100% - 4px) 0, calc(100% - 4px) 4px, 100% 4px,
+      100% calc(100% - 4px), calc(100% - 4px) calc(100% - 4px), calc(100% - 4px) 100%,
+      4px 100%, 4px calc(100% - 4px), 0 calc(100% - 4px)
+    );
+    filter: drop-shadow(3px 3px 0 var(--pixel-shadow));
   }
   /* nudge into the shadow on press/hover for a tactile "button" feel */
   .pixel-press {
