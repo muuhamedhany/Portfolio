@@ -551,7 +551,12 @@
         transparent 1px,
         transparent 4px
       );
-    animation: project-detail-overlay-in 120ms steps(3, end);
+  }
+  .project-detail-overlay[data-state="open"] {
+    animation: project-detail-overlay-in 120ms steps(3, end) both;
+  }
+  .project-detail-overlay[data-state="closed"] {
+    animation: project-detail-overlay-out 110ms steps(2, end) both;
   }
   .project-detail-content {
     position: fixed;
@@ -575,7 +580,12 @@
       100% calc(100% - 7px), calc(100% - 7px) calc(100% - 7px), calc(100% - 7px) 100%,
       7px 100%, 7px calc(100% - 7px), 0 calc(100% - 7px)
     );
-    animation: project-detail-enter 180ms steps(4, end);
+  }
+  .project-detail-content[data-state="open"] {
+    animation: project-detail-enter 180ms steps(4, end) both;
+  }
+  .project-detail-content[data-state="closed"] {
+    animation: project-detail-exit 130ms steps(3, end) both;
   }
   .project-detail-layout {
     display: grid;
@@ -611,12 +621,38 @@
         6px 6px 0 var(--pixel-shadow);
     }
   }
+  @keyframes project-detail-exit {
+    from {
+      opacity: 1;
+      transform: translate(-50%, -50%);
+      box-shadow:
+        inset 2px 2px 0 var(--pixel-edge-light),
+        inset -2px -2px 0 var(--pixel-edge-dark),
+        6px 6px 0 var(--pixel-shadow);
+    }
+    to {
+      opacity: 0;
+      transform: translate(-50%, calc(-50% + 8px));
+      box-shadow:
+        inset 2px 2px 0 var(--pixel-edge-light),
+        inset -2px -2px 0 var(--pixel-edge-dark),
+        2px 2px 0 var(--pixel-shadow);
+    }
+  }
   @keyframes project-detail-overlay-in {
     from {
       opacity: 0;
     }
     to {
       opacity: 1;
+    }
+  }
+  @keyframes project-detail-overlay-out {
+    from {
+      opacity: 1;
+    }
+    to {
+      opacity: 0;
     }
   }
   .project-tech-tile {
