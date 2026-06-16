@@ -37,9 +37,12 @@ const PROJECTS: Project[] = [
     name: "CarKit",
     blurb:
       "Egyptian automotive marketplace — a React Native mobile app, a Node/Express API with 70+ endpoints, and two React web portals. Seven user roles, AI-powered recommendations, PostgreSQL via Supabase.",
-    tags: ["React Native", "Node.js", "Express", "PostgreSQL", "Supabase", "AI"],
-    links: [],
-    note: "Graduation project · Team of 4 · Private",
+    tags: ["React Native Expo", "Render", "Supabase", "Express", "Node.js", "React", "PostgreSQL", "Gemini AI"],
+    links: [
+      { label: "App", href: "https://github.com/muuhamedhany/CarKitApp", icon: "github" },
+      { label: "Admin Website", href: "https://github.com/muuhamedhany/CarKit-Admin-Web", icon: "github" },
+      { label: "Driver Website", href: "https://github.com/muuhamedhany/CarKit-Driver-Web", icon: "github" }
+    ],
     featured: true,
   },
   {
@@ -133,16 +136,20 @@ function ProjectCard({ project }: { project: Project }) {
       <div className="relative flex min-w-0 flex-1 flex-col justify-between px-1 pb-1">
         <div className="mb-3 flex items-center justify-between gap-3">
           <span className="font-mono text-xs tracking-[0.25em] text-[var(--accent-to)]">{project.index}</span>
+
+        </div>
+
+        <div className="flex gap-2">
+          <h3 className="font-display text-[1.35rem] leading-none tracking-normal sm:text-[1.5rem]" style={{ fontWeight: 600 }}>
+            {project.name}
+          </h3>
+
           {project.featured && (
-            <span className="border border-[var(--accent-to)]/40 bg-[var(--accent-to)]/10 px-2 py-0.5 font-mono text-[9px] uppercase tracking-widest text-[var(--accent-to)]">
-              Featured
+            <span className="flex items-center border border-[var(--accent-to)]/40 bg-[var(--accent-to)]/10 px-2  font-mono text-[9px] uppercase tracking-widest text-[var(--accent-to)]">
+              AAST Graduation project
             </span>
           )}
         </div>
-
-        <h3 className="font-display text-[1.35rem] leading-none tracking-normal sm:text-[1.5rem]" style={{ fontWeight: 600 }}>
-          {project.name}
-        </h3>
 
         <p className="mt-3 text-sm leading-5 text-muted-foreground">{project.blurb}</p>
 
@@ -185,12 +192,6 @@ function ProjectCard({ project }: { project: Project }) {
               </a>
             );
           })}
-          {project.note && (
-            <span className="inline-flex items-center gap-1.5 font-mono text-[10px] text-muted-foreground">
-              <Lock className="h-3 w-3" />
-              {project.note}
-            </span>
-          )}
         </div>
       </div>
     </article>
@@ -201,22 +202,22 @@ export function Projects() {
   return (
     <section className="relative">
       <div className="mx-auto flex min-h-svh max-w-7xl flex-col justify-center px-5 pb-24 pt-16 sm:px-8 sm:pb-24 sm:pt-16">
-      <Reveal>
-        <div className="mb-6 flex items-end justify-between gap-4 sm:mb-7">
-          <h2 className="font-display tracking-normal" style={{ fontSize: "clamp(1.75rem, 5vw, 3rem)", fontWeight: 600 }}>
-            Selected Work
-          </h2>
-          <span className="font-mono text-xs uppercase tracking-[0.25em] text-muted-foreground">01 / Projects</span>
-        </div>
-      </Reveal>
+        <Reveal>
+          <div className="mb-6 flex items-end justify-between gap-4 sm:mb-7">
+            <h2 className="font-display tracking-normal" style={{ fontSize: "clamp(1.75rem, 5vw, 3rem)", fontWeight: 600 }}>
+              Selected Work
+            </h2>
+            <span className="font-mono text-xs uppercase tracking-[0.25em] text-muted-foreground">01 / Projects</span>
+          </div>
+        </Reveal>
 
-      <div className="grid gap-5 sm:grid-cols-2 lg:gap-6">
-        {PROJECTS.map((project, i) => (
-          <Reveal key={project.name} delay={(i % 2) * 0.08}>
-            <ProjectCard project={project} />
-          </Reveal>
-        ))}
-      </div>
+        <div className="grid gap-5 sm:grid-cols-2 lg:gap-6">
+          {PROJECTS.map((project, i) => (
+            <Reveal key={project.name} delay={(i % 2) * 0.08}>
+              <ProjectCard project={project} />
+            </Reveal>
+          ))}
+        </div>
       </div>
     </section>
   );
