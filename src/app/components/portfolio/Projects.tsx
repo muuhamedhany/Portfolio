@@ -285,25 +285,27 @@ function ProjectCard({ project }: { project: Project }) {
         >
           <ProjectPreview project={project} />
           <div className="relative flex min-w-0 flex-1 flex-col justify-between px-1 pb-1">
-            <div className="mb-3 flex items-center justify-between gap-3">
+            <div>
+              <div className="mb-3 flex items-center justify-between gap-3">
               <span className="font-mono text-xs tracking-[0.25em] text-[var(--accent-to)]">{project.index}</span>
             </div>
 
-            <div className="flex items-start gap-2">
+            <div className="flex items-center gap-2">
               <h3 className="font-display text-[1.35rem] leading-none tracking-normal sm:text-[1.5rem]" style={{ fontWeight: 600 }}>
                 {project.name}
               </h3>
 
               {project.featured && (
-                <span className="flex items-center border border-[var(--accent-to)]/40 bg-[var(--accent-to)]/10 px-2  font-mono text-[9px] uppercase tracking-widest text-[var(--accent-to)]">
+                <span className="flex items-center border border-[var(--accent-to)]/40 bg-[var(--accent-to)]/10 px-2 font-mono text-[9px] uppercase tracking-widest text-[var(--accent-to)]">
                   AAST Graduation project
                 </span>
               )}
             </div>
 
-            <p className="project-card-blurb mt-3 text-sm leading-5 text-muted-foreground">{project.blurb}</p>
+            <p className="project-card-blurb mt-2 text-sm leading-5 text-muted-foreground">{project.blurb}</p>
+            </div>
 
-            <span className="project-card-cue mt-4 inline-flex w-max border border-border bg-background px-2 py-1 font-mono text-[10px] uppercase tracking-[0.18em] text-[var(--accent-to)]">
+            <span className="mt-4 inline-flex w-max border border-border bg-background px-2 py-1 font-mono text-[10px] uppercase tracking-[0.18em] text-[var(--accent-to)]">
               View details
             </span>
           </div>
