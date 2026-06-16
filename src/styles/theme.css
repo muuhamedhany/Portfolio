@@ -382,7 +382,14 @@
     background: var(--pixel-active);
     box-shadow: 1px 1px 0 var(--pixel-shadow);
   }
+  .project-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 472px), 472px));
+    justify-content: center;
+    gap: 20px;
+  }
   .project-card {
+    width: 100%;
     gap: 14px;
     padding: 14px;
     min-height: 360px;
@@ -394,7 +401,8 @@
   .project-card-media {
     flex: 0 0 auto;
     width: 100%;
-    height: 132px;
+    aspect-ratio: 16 / 9;
+    height: auto;
     border: 2px solid var(--pixel-frame);
     box-shadow:
       inset 2px 2px 0 var(--pixel-edge-light),
@@ -406,8 +414,59 @@
       5px 100%, 5px calc(100% - 5px), 0 calc(100% - 5px)
     );
   }
+  .project-video-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 50;
+    background:
+      linear-gradient(rgba(6, 6, 10, 0.88), rgba(6, 6, 10, 0.92)),
+      repeating-linear-gradient(
+        0deg,
+        rgba(255, 255, 255, 0.03) 0,
+        rgba(255, 255, 255, 0.03) 1px,
+        transparent 1px,
+        transparent 4px
+      );
+  }
+  .project-video-content {
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    z-index: 51;
+    width: min(calc(100vw - 32px), 920px);
+    max-height: min(calc(100svh - 32px), 720px);
+    transform: translate(-50%, -50%);
+    overflow: auto;
+    border: 2px solid var(--pixel-frame);
+    background: var(--card);
+    padding: 14px;
+    box-shadow:
+      inset 2px 2px 0 var(--pixel-edge-light),
+      inset -2px -2px 0 var(--pixel-edge-dark),
+      6px 6px 0 var(--pixel-shadow);
+    clip-path: polygon(
+      0 7px, 7px 7px, 7px 0,
+      calc(100% - 7px) 0, calc(100% - 7px) 7px, 100% 7px,
+      100% calc(100% - 7px), calc(100% - 7px) calc(100% - 7px), calc(100% - 7px) 100%,
+      7px 100%, 7px calc(100% - 7px), 0 calc(100% - 7px)
+    );
+  }
+  .project-video-frame {
+    aspect-ratio: 16 / 9;
+    width: 100%;
+    overflow: hidden;
+    border: 2px solid var(--border);
+    background: #050508;
+    box-shadow:
+      inset 2px 2px 0 rgba(255, 255, 255, 0.08),
+      inset -2px -2px 0 rgba(0, 0, 0, 0.55);
+  }
   .project-tech-tile {
     box-shadow: 3px 3px 0 var(--pixel-shadow);
+    transition:
+      transform 160ms steps(4, end),
+      color 120ms linear,
+      background-color 120ms linear;
     clip-path: polygon(
       0 4px, 4px 4px, 4px 0,
       calc(100% - 4px) 0, calc(100% - 4px) 4px, 100% 4px,
@@ -415,19 +474,51 @@
       4px 100%, 4px calc(100% - 4px), 0 calc(100% - 4px)
     );
   }
+  @media (hover: hover) and (pointer: fine) {
+    .project-card:hover .project-tech-tile:nth-child(1) {
+      transform: translate(-18px, -4px);
+    }
+    .project-card:hover .project-tech-tile:nth-child(2) {
+      transform: translateY(-10px);
+    }
+    .project-card:hover .project-tech-tile:nth-child(3) {
+      transform: translate(18px, 4px);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .project-tech-tile {
+      transition: none;
+    }
+    .project-card:hover .project-tech-tile {
+      transform: none;
+    }
+  }
   @media (max-height: 760px) and (min-width: 640px) {
+    .project-grid {
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 388px), 388px));
+    }
     .project-card {
       min-height: 332px;
       gap: 12px;
       padding: 12px;
     }
     .project-card-media {
-      height: 104px;
+      width: 100%;
+      height: auto;
+    }
+  }
+  @media (min-width: 1024px) {
+    .project-grid {
+      gap: 24px;
     }
   }
   @media (max-width: 639px) {
+    .project-video-content {
+      width: calc(100vw - 20px);
+      padding: 10px;
+    }
     .project-card-media {
-      height: 112px;
+      height: auto;
     }
   }
   .pixel-custom-cursor {
