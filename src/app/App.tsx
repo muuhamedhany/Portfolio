@@ -7,6 +7,7 @@ import { Projects } from "./components/portfolio/Projects";
 import { Contact } from "./components/portfolio/Contact";
 import { Transition } from "./components/portfolio/Transition";
 import { PageDots } from "./components/portfolio/PageDots";
+import { CustomCursor } from "./components/portfolio/CustomCursor";
 import { SECTIONS, type SectionId } from "./components/portfolio/sections";
 
 type Theme = "dark" | "light";
@@ -140,6 +141,8 @@ export default function App() {
       <AnimatePresence>
         {pendingMeta && <Transition key="transition" name={pendingMeta.label} index={pendingMeta.index} />}
       </AnimatePresence>
+
+      <CustomCursor />
     </div>
   );
 }

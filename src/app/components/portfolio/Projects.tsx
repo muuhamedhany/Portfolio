@@ -1,4 +1,12 @@
-import { ArrowUpRight, Github, Globe, Figma as FigmaIcon, Lock } from "lucide-react";
+import {
+  ArrowUpRight,
+  Figma as FigmaIcon,
+  Github,
+  Globe,
+  Lock,
+} from "lucide-react";
+import type { IconType } from "react-icons";
+import { SiExpress, SiFigma, SiFramer, SiNodedotjs, SiPostgresql, SiReact, SiSupabase, SiTailwindcss } from "react-icons/si";
 import { Reveal } from "./Reveal";
 
 interface ProjectLink {
@@ -13,6 +21,10 @@ interface Project {
   blurb: string;
   tags: string[];
   links: ProjectLink[];
+  previewImage?: {
+    src: string;
+    alt: string;
+  };
   featured?: boolean;
   note?: string;
 }
@@ -56,78 +68,121 @@ const PROJECTS: Project[] = [
 
 const LINK_ICON = { live: Globe, github: Github, behance: FigmaIcon } as const;
 
+const TAG_ICON: Partial<Record<string, IconType>> = {
+  "React Native": SiReact,
+  React: SiReact,
+  "Node.js": SiNodedotjs,
+  Express: SiExpress,
+  PostgreSQL: SiPostgresql,
+  Supabase: SiSupabase,
+  Tailwind: SiTailwindcss,
+  "Framer Motion": SiFramer,
+  Figma: SiFigma,
+};
+
+function ProjectPreview({ project }: { project: Project }) {
+  if (project.previewImage) {
+    return (
+      <div className="project-card-media overflow-hidden bg-background">
+        <img src={project.previewImage.src} alt={project.previewImage.alt} className="h-full w-full object-cover" loading="lazy" />
+      </div>
+    );
+  }
+
+  const previewTags = project.tags
+    .map((tag) => ({ tag, Icon: TAG_ICON[tag] }))
+    .filter((item): item is { tag: string; Icon: IconType } => Boolean(item.Icon))
+    .slice(0, 3);
+
+  return (
+    <div className="project-card-media flex items-center justify-center bg-background" aria-label={`${project.name} technology stack`}>
+      <div className="relative h-16 w-24" aria-hidden="true">
+        {previewTags.map((tag, index) => {
+          const Icon = tag.Icon;
+          return (
+            <div
+              key={tag.tag}
+              className="project-tech-tile absolute flex h-12 w-12 items-center justify-center border-2 border-[var(--pixel-frame)] bg-card text-[var(--accent-to)]"
+              title={tag.tag}
+              style={{
+                left: `${index * 24}px`,
+                top: `${index * 8}px`,
+                zIndex: previewTags.length - index,
+              }}
+            >
+              <Icon className="h-5 w-5" />
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
 function ProjectCard({ project }: { project: Project }) {
   return (
-    <div
-      className={`group relative flex h-full flex-col justify-between overflow-hidden rounded-none border-2 border-border bg-card pixel-shadow-sm transition-colors duration-200 hover:border-[var(--accent-to)] sm:p-8 p-6 ${
-        project.featured ? "lg:col-span-2" : ""
-      }`}
-    >
-      {/* accent corner glow on hover */}
-      <div className="pointer-events-none absolute -right-16 -top-16 h-40 w-40 rounded-full bg-[var(--accent-mid)] opacity-0 blur-3xl transition-opacity duration-500 group-hover:opacity-[0.12]" />
-
-      <div className="relative">
-        <div className="mb-4 flex items-center justify-between">
+    <article className="project-card group relative flex h-full min-h-0 flex-col border-2 border-border bg-card transition-colors duration-150 hover:border-[var(--pixel-frame)]">
+      <ProjectPreview project={project} />
+      <div className="relative flex min-w-0 flex-1 flex-col justify-between px-1 pb-1">
+        <div className="mb-3 flex items-center justify-between gap-3">
           <span className="font-mono text-xs tracking-[0.25em] text-[var(--accent-to)]">{project.index}</span>
           {project.featured && (
-            <span className="rounded-none border border-[var(--accent-to)]/40 bg-[var(--accent-to)]/10 px-3 py-1 font-mono text-[10px] uppercase tracking-widest text-[var(--accent-to)]">
+            <span className="border border-[var(--accent-to)]/40 bg-[var(--accent-to)]/10 px-2 py-0.5 font-mono text-[9px] uppercase tracking-widest text-[var(--accent-to)]">
               Featured
             </span>
           )}
         </div>
 
-        <h3
-          className="font-display tracking-normal"
-          style={{ fontSize: project.featured ? "clamp(1.75rem, 4vw, 2.5rem)" : "1.5rem", fontWeight: 600 }}
-        >
+        <h3 className="font-display text-[1.35rem] leading-none tracking-normal sm:text-[1.5rem]" style={{ fontWeight: 600 }}>
           {project.name}
         </h3>
 
-        <p className={`mt-3 text-muted-foreground ${project.featured ? "max-w-2xl" : ""}`}>{project.blurb}</p>
+        <p className="mt-3 text-sm leading-5 text-muted-foreground">{project.blurb}</p>
 
-        <div className="mt-5 flex flex-wrap gap-2">
+        <div className="mt-4 flex flex-wrap gap-2">
           {project.tags.map((t) => (
-            <span key={t} className="rounded-none border border-border px-2.5 py-1 font-mono text-xs text-foreground/80">
+            <span key={t} className="border border-border bg-background px-2 py-0.5 font-mono text-[10px] text-foreground/80">
               {t}
             </span>
           ))}
         </div>
-      </div>
 
-      <div className="relative mt-7 flex flex-wrap items-center gap-3">
-        {project.links.map((link) => {
-          const Icon = LINK_ICON[link.icon];
-          return (
-            <a
-              key={link.label}
-              href={link.href}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 border-2 border-border bg-secondary px-3 py-1.5 text-sm font-medium text-secondary-foreground pixel-btn hover:bg-gradient-accent hover:text-white"
-            >
-              <Icon className="h-3.5 w-3.5" />
-              {link.label}
-              <ArrowUpRight className="h-3.5 w-3.5" />
-            </a>
-          );
-        })}
-        {project.note && (
-          <span className="inline-flex items-center gap-1.5 font-mono text-xs text-muted-foreground">
-            <Lock className="h-3.5 w-3.5" />
-            {project.note}
-          </span>
-        )}
+        <div className="mt-4 flex flex-wrap items-center gap-2.5">
+          {project.links.map((link) => {
+            const Icon = LINK_ICON[link.icon];
+            return (
+              <a
+                key={link.label}
+                href={link.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex min-h-8 items-center gap-1 border-2 border-border bg-secondary px-2.5 py-1 text-xs font-medium text-secondary-foreground pixel-btn hover:bg-[var(--pixel-active)] hover:text-[var(--pixel-active-foreground)]"
+                aria-label={`Open ${project.name} ${link.label}`}
+              >
+                <Icon className="h-3.5 w-3.5" />
+                {link.label}
+                <ArrowUpRight className="h-3.5 w-3.5" />
+              </a>
+            );
+          })}
+          {project.note && (
+            <span className="inline-flex items-center gap-1.5 font-mono text-[10px] text-muted-foreground">
+              <Lock className="h-3 w-3" />
+              {project.note}
+            </span>
+          )}
+        </div>
       </div>
-    </div>
+    </article>
   );
 }
 
 export function Projects() {
   return (
     <section className="relative">
-      <div className="mx-auto flex min-h-svh max-w-6xl flex-col justify-center px-5 pb-28 pt-24 sm:px-8 sm:pb-24">
+      <div className="mx-auto flex min-h-svh max-w-7xl flex-col justify-center px-5 pb-24 pt-16 sm:px-8 sm:pb-24 sm:pt-16">
       <Reveal>
-        <div className="mb-10 flex items-end justify-between gap-4">
+        <div className="mb-6 flex items-end justify-between gap-4 sm:mb-7">
           <h2 className="font-display tracking-normal" style={{ fontSize: "clamp(1.75rem, 5vw, 3rem)", fontWeight: 600 }}>
             Selected Work
           </h2>
@@ -135,9 +190,9 @@ export function Projects() {
         </div>
       </Reveal>
 
-      <div className="grid gap-4 lg:grid-cols-2">
+      <div className="grid gap-5 sm:grid-cols-2 lg:gap-6">
         {PROJECTS.map((project, i) => (
-          <Reveal key={project.name} delay={(i % 2) * 0.08} className={project.featured ? "lg:col-span-2" : ""}>
+          <Reveal key={project.name} delay={(i % 2) * 0.08}>
             <ProjectCard project={project} />
           </Reveal>
         ))}

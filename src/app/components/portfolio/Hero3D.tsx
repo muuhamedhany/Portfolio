@@ -57,6 +57,7 @@ export function Hero3D({ theme }: Hero3DProps) {
     renderer.domElement.style.touchAction = "none";
     renderer.domElement.style.cursor = "var(--cursor-grab)";
     renderer.domElement.style.imageRendering = "pixelated";
+    renderer.domElement.dataset.cursor = "grab";
     mount.appendChild(renderer.domElement);
 
     // ---- lights ----
@@ -143,6 +144,7 @@ export function Hero3D({ theme }: Hero3DProps) {
       lastX = e.clientX;
       lastY = e.clientY;
       el.style.cursor = "var(--cursor-grabbing)";
+      el.dataset.cursor = "grabbing";
       el.setPointerCapture?.(e.pointerId);
     };
     const onMove = (e: PointerEvent) => {
@@ -159,6 +161,7 @@ export function Hero3D({ theme }: Hero3DProps) {
     const onUp = () => {
       active = false;
       el.style.cursor = "var(--cursor-grab)";
+      el.dataset.cursor = "grab";
     };
     el.addEventListener("pointerdown", onDown);
     el.addEventListener("pointermove", onMove);
