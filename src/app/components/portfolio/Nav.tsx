@@ -1,5 +1,9 @@
 import { motion } from "motion/react";
-import { Code2, FolderKanban, Home, Mail, type LucideIcon } from "lucide-react";
+import { Icon } from "@iconify/react";
+import codeIcon from "@iconify-icons/pixelarticons/code";
+import folderIcon from "@iconify-icons/pixelarticons/folder";
+import homeIcon from "@iconify-icons/pixelarticons/home";
+import mailIcon from "@iconify-icons/pixelarticons/mail";
 import { ThemeToggle } from "./ThemeToggle";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 import { SECTIONS, type SectionId } from "./sections";
@@ -11,11 +15,13 @@ interface NavProps {
   onNavigate: (id: SectionId) => void;
 }
 
-const SECTION_ICONS: Record<SectionId, LucideIcon> = {
-  home: Home,
-  projects: FolderKanban,
-  skills: Code2,
-  contact: Mail,
+type PixelNavIcon = typeof homeIcon;
+
+const SECTION_ICONS: Record<SectionId, PixelNavIcon> = {
+  home: homeIcon,
+  projects: folderIcon,
+  skills: codeIcon,
+  contact: mailIcon,
 };
 
 export function Nav({ theme, onToggle, active, onNavigate }: NavProps) {
@@ -32,7 +38,7 @@ export function Nav({ theme, onToggle, active, onNavigate }: NavProps) {
         <div className="pixel-dock-surface flex items-center gap-1 p-1.5">
           <ul className="flex items-center gap-1">
             {SECTIONS.map((section) => {
-              const Icon = SECTION_ICONS[section.id];
+              const icon = SECTION_ICONS[section.id];
               const isActive = active === section.id;
 
               return (
@@ -50,7 +56,7 @@ export function Nav({ theme, onToggle, active, onNavigate }: NavProps) {
                         {isActive && (
                           <span aria-hidden="true" className="absolute bottom-1 right-1 h-1.5 w-1.5 bg-white/70" />
                         )}
-                        <Icon className="relative h-[18px] w-[18px]" strokeWidth={2.5} aria-hidden="true" />
+                        <Icon icon={icon} className="pixel-nav-icon relative h-5 w-5" aria-hidden="true" />
                       </button>
                     </TooltipTrigger>
                     <TooltipContent

@@ -1,5 +1,7 @@
-import { Moon, Sun } from "lucide-react";
 import { motion } from "motion/react";
+import { Icon } from "@iconify/react";
+import moonIcon from "@iconify-icons/pixelarticons/moon";
+import sunIcon from "@iconify-icons/pixelarticons/sun";
 
 interface ThemeToggleProps {
   theme: "dark" | "light";
@@ -21,7 +23,7 @@ export function ThemeToggle({ theme, onToggle }: ThemeToggleProps) {
         transition={{ duration: 0.12, ease: "linear" }}
         className="grid place-items-center"
       >
-        {theme === "dark" ? <Sun className="h-[18px] w-[18px]" strokeWidth={2.5} /> : <Moon className="h-[18px] w-[18px]" strokeWidth={2.5} />}
+        <Icon icon={theme === "dark" ? sunIcon : moonIcon} className="pixel-nav-icon h-5 w-5" aria-hidden="true" />
       </motion.span>
     </button>
   );
