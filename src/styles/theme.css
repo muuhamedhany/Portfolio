@@ -412,7 +412,7 @@
     display: flex;
     width: max-content;
     align-items: center;
-    gap: 18px;
+    gap: 22px;
     white-space: nowrap;
     animation: skills-marquee-slide 30s linear infinite;
     will-change: transform;
@@ -425,8 +425,8 @@
     --skill-color: var(--accent-to);
     position: relative;
     display: inline-flex;
-    min-height: 54px;
-    min-width: 54px;
+    min-height: 68px;
+    min-width: 68px;
     align-items: center;
     justify-content: center;
     border: 2px solid var(--border);
@@ -451,8 +451,8 @@
     );
   }
   .skill-icon-glyph {
-    width: 26px;
-    height: 26px;
+    width: 36px;
+    height: 36px;
     filter: grayscale(1) saturate(0.2);
     opacity: 0.64;
     transition:
