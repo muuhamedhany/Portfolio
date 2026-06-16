@@ -398,6 +398,34 @@
       inset -2px -2px 0 var(--pixel-edge-dark),
       3px 3px 0 var(--pixel-shadow);
   }
+  .project-card-trigger {
+    cursor: pointer;
+    appearance: none;
+    text-align: left;
+    color: inherit;
+    transform: translate3d(0, 0, 0);
+    transition:
+      transform 160ms steps(3, end),
+      box-shadow 160ms steps(3, end),
+      border-color 120ms linear;
+  }
+  .project-card-trigger:focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 4px;
+    border-color: var(--pixel-frame);
+  }
+  .project-card-cue {
+    transition:
+      transform 140ms steps(2, end),
+      color 120ms linear,
+      border-color 120ms linear;
+  }
+  .project-card-blurb {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
   .project-card-media {
     position: relative;
     flex: 0 0 auto;
@@ -408,6 +436,9 @@
     box-shadow:
       inset 2px 2px 0 var(--pixel-edge-light),
       inset -2px -2px 0 var(--pixel-edge-dark);
+    transition:
+      border-color 120ms linear,
+      transform 160ms steps(3, end);
     clip-path: polygon(
       0 5px, 5px 5px, 5px 0,
       calc(100% - 5px) 0, calc(100% - 5px) 5px, 100% 5px,
@@ -418,6 +449,9 @@
   .project-card-media-image img {
     position: relative;
     z-index: 1;
+    transition:
+      opacity 150ms linear,
+      transform 180ms steps(3, end);
   }
   .project-image-skeleton {
     position: absolute;
@@ -504,7 +538,7 @@
       transform: translateX(405%);
     }
   }
-  .project-video-overlay {
+  .project-detail-overlay {
     position: fixed;
     inset: 0;
     z-index: 50;
@@ -517,14 +551,15 @@
         transparent 1px,
         transparent 4px
       );
+    animation: project-detail-overlay-in 120ms steps(3, end);
   }
-  .project-video-content {
+  .project-detail-content {
     position: fixed;
     left: 50%;
     top: 50%;
     z-index: 51;
-    width: min(calc(100vw - 32px), 920px);
-    max-height: min(calc(100svh - 32px), 720px);
+    width: min(calc(100vw - 32px), 980px);
+    max-height: min(calc(100svh - 32px), 760px);
     transform: translate(-50%, -50%);
     overflow: auto;
     border: 2px solid var(--pixel-frame);
@@ -540,8 +575,15 @@
       100% calc(100% - 7px), calc(100% - 7px) calc(100% - 7px), calc(100% - 7px) 100%,
       7px 100%, 7px calc(100% - 7px), 0 calc(100% - 7px)
     );
+    animation: project-detail-enter 180ms steps(4, end);
   }
-  .project-video-frame {
+  .project-detail-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+    gap: 18px;
+    align-items: start;
+  }
+  .project-detail-video-frame {
     aspect-ratio: 16 / 9;
     width: 100%;
     overflow: hidden;
@@ -550,6 +592,32 @@
     box-shadow:
       inset 2px 2px 0 rgba(255, 255, 255, 0.08),
       inset -2px -2px 0 rgba(0, 0, 0, 0.55);
+  }
+  @keyframes project-detail-enter {
+    from {
+      opacity: 0;
+      transform: translate(-50%, calc(-50% + 10px));
+      box-shadow:
+        inset 2px 2px 0 var(--pixel-edge-light),
+        inset -2px -2px 0 var(--pixel-edge-dark),
+        2px 2px 0 var(--pixel-shadow);
+    }
+    to {
+      opacity: 1;
+      transform: translate(-50%, -50%);
+      box-shadow:
+        inset 2px 2px 0 var(--pixel-edge-light),
+        inset -2px -2px 0 var(--pixel-edge-dark),
+        6px 6px 0 var(--pixel-shadow);
+    }
+  }
+  @keyframes project-detail-overlay-in {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
   }
   .project-tech-tile {
     box-shadow: 3px 3px 0 var(--pixel-shadow);
@@ -565,6 +633,25 @@
     );
   }
   @media (hover: hover) and (pointer: fine) {
+    .project-card-trigger:hover {
+      transform: translate(-3px, -3px);
+      box-shadow:
+        inset 2px 2px 0 var(--pixel-edge-light),
+        inset -2px -2px 0 var(--pixel-edge-dark),
+        6px 6px 0 var(--pixel-shadow);
+    }
+    .project-card-trigger:hover .project-card-media {
+      border-color: var(--accent-to);
+      transform: translate(1px, 1px);
+    }
+    .project-card-trigger:hover .project-card-media-image img {
+      transform: scale(1.012);
+    }
+    .project-card-trigger:hover .project-card-cue {
+      transform: translateX(3px);
+      border-color: var(--pixel-frame);
+      color: var(--foreground);
+    }
     .project-card:hover .project-tech-tile:nth-child(1) {
       transform: translate(-18px, -4px);
     }
@@ -579,6 +666,22 @@
     .project-image-skeleton::after {
       animation: none;
       transform: translateX(220%);
+    }
+    .project-card-trigger,
+    .project-card-cue,
+    .project-card-media,
+    .project-card-media-image img {
+      transition: none;
+    }
+    .project-card-trigger:hover,
+    .project-card-trigger:hover .project-card-media,
+    .project-card-trigger:hover .project-card-media-image img,
+    .project-card-trigger:hover .project-card-cue {
+      transform: none;
+    }
+    .project-detail-overlay,
+    .project-detail-content {
+      animation: none;
     }
     .project-tech-tile {
       transition: none;
@@ -607,12 +710,20 @@
     }
   }
   @media (max-width: 639px) {
-    .project-video-content {
+    .project-detail-content {
       width: calc(100vw - 20px);
       padding: 10px;
     }
+    .project-detail-layout {
+      grid-template-columns: 1fr;
+    }
     .project-card-media {
       height: auto;
+    }
+  }
+  @media (max-width: 900px) {
+    .project-detail-layout {
+      grid-template-columns: 1fr;
     }
   }
   .pixel-custom-cursor {

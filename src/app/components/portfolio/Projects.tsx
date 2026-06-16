@@ -1,10 +1,8 @@
 import {
   ArrowUpRight,
-  ChevronDown,
   Figma as FigmaIcon,
   Github,
   Globe,
-  Play,
   X,
 } from "lucide-react";
 import * as Dialog from "@radix-ui/react-dialog";
@@ -46,12 +44,12 @@ const PROJECTS: Project[] = [
     index: "01",
     name: "CarKit",
     blurb:
-      "Egyptian automotive marketplace — a React Native mobile app, a Node/Express API with 70+ endpoints, and two React web portals. Seven user roles, AI-powered recommendations, PostgreSQL via Supabase.",
+      "CarKit is a multi-platform automotive marketplace and service system for the Egyptian market. It combines a customer/vendor/provider mobile app, an admin operations dashboard, and a driver/emergency employee web portal. The platform handles product shopping, vehicle management, workshop and mobile-service bookings, vendor/provider approvals, delivery tracking with proof uploads, emergency SOS dispatch, reviews, ads, notifications, and branch/location management. It runs on a Render-hosted Express API with PostgreSQL and Supabase storage, with Expo for the mobile app and Vite React for the web portals.",
     tags: ["React Native Expo", "Render", "Supabase", "Express", "Node.js", "React", "PostgreSQL", "Gemini AI"],
     links: [
-      { label: "App", href: "https://github.com/muuhamedhany/CarKitApp", icon: "github" },
-      { label: "Admin Website", href: "https://github.com/muuhamedhany/CarKit-Admin-Web", icon: "github" },
-      { label: "Driver Website", href: "https://github.com/muuhamedhany/CarKit-Driver-Web", icon: "github" }
+      { label: "App repo", href: "https://github.com/muuhamedhany/CarKitApp", icon: "github" },
+      { label: "Admin Web repo", href: "https://github.com/muuhamedhany/CarKit-Admin-Web", icon: "github" },
+      { label: "Driver Web repo", href: "https://github.com/muuhamedhany/CarKit-Driver-Web", icon: "github" }
     ],
     previewVideo: {
       src: "/projects/CarKitVid-optimized.mp4",
@@ -180,18 +178,19 @@ function ProjectPreview({ project }: { project: Project }) {
   );
 }
 
-function ProjectVideoDialog({ project, video }: { project: Project; video: ProjectVideo }) {
+function ProjectDetailDialog({ project }: { project: Project }) {
   return (
     <Dialog.Portal>
-      <Dialog.Overlay className="project-video-overlay" />
-      <Dialog.Content className="project-video-content">
-        <div className="mb-3 flex items-start justify-between gap-4">
+      <Dialog.Overlay className="project-detail-overlay" />
+      <Dialog.Content className="project-detail-content">
+        <div className="mb-4 flex items-start justify-between gap-4">
           <div className="min-w-0">
-            <Dialog.Title className="font-display text-2xl leading-none tracking-normal text-foreground">
-              {project.name} Video
+            <span className="mb-2 block font-mono text-xs tracking-[0.28em] text-[var(--accent-to)]">{project.index}</span>
+            <Dialog.Title className="font-display text-3xl leading-none tracking-normal text-foreground">
+              {project.name}
             </Dialog.Title>
             <Dialog.Description className="mt-2 font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground">
-              Demo preview player
+              Project details
             </Dialog.Description>
           </div>
 
@@ -206,17 +205,69 @@ function ProjectVideoDialog({ project, video }: { project: Project; video: Proje
           </Dialog.Close>
         </div>
 
-        <div className="project-video-frame">
-          <video
-            className="h-full w-full bg-black"
-            controls
-            preload="metadata"
-            poster={video.poster}
-            aria-label={video.title}
-          >
-            <source src={video.src} type={video.type ?? "video/mp4"} />
-            Your browser does not support the video player.
-          </video>
+        <div className="project-detail-layout">
+          <div className="space-y-4">
+            <ProjectPreview project={project} />
+
+            {project.previewVideo && (
+              <div className="project-detail-video-frame">
+                <video
+                  className="h-full w-full bg-black"
+                  controls
+                  preload="metadata"
+                  poster={project.previewVideo.poster}
+                  aria-label={project.previewVideo.title}
+                >
+                  <source src={project.previewVideo.src} type={project.previewVideo.type ?? "video/mp4"} />
+                  Your browser does not support the video player.
+                </video>
+              </div>
+            )}
+          </div>
+
+          <div className="min-w-0">
+            {project.featured && (
+              <span className="mb-4 inline-flex items-center border border-[var(--accent-to)]/40 bg-[var(--accent-to)]/10 px-2 py-1 font-mono text-[9px] uppercase tracking-widest text-[var(--accent-to)]">
+                AAST Graduation project
+              </span>
+            )}
+
+            <p className="text-sm leading-6 text-muted-foreground">{project.blurb}</p>
+
+            <div className="mt-5">
+              <h4 className="mb-2 font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground">Stack</h4>
+              <div className="flex flex-wrap gap-2">
+                {project.tags.map((tag) => (
+                  <span key={tag} className="border border-border bg-background px-2 py-1 font-mono text-[10px] text-foreground/80">
+                    {tag}
+                  </span>
+                ))}
+              </div>
+            </div>
+
+            <div className="mt-5">
+              <h4 className="mb-2 font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground">Links</h4>
+              <div className="flex flex-wrap items-center gap-2.5">
+                {project.links.map((link) => {
+                  const Icon = LINK_ICON[link.icon];
+                  return (
+                    <a
+                      key={link.label}
+                      href={link.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex min-h-9 items-center gap-1 border-2 border-border bg-secondary px-2.5 py-1.5 text-xs font-medium text-secondary-foreground pixel-btn hover:bg-[var(--pixel-active)] hover:text-[var(--pixel-active-foreground)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--ring)]"
+                      aria-label={`Open ${project.name} ${link.label}`}
+                    >
+                      <Icon className="h-3.5 w-3.5" aria-hidden="true" />
+                      {link.label}
+                      <ArrowUpRight className="h-3.5 w-3.5" aria-hidden="true" />
+                    </a>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
         </div>
       </Dialog.Content>
     </Dialog.Portal>
@@ -224,92 +275,42 @@ function ProjectVideoDialog({ project, video }: { project: Project; video: Proje
 }
 
 function ProjectCard({ project }: { project: Project }) {
-  const [showAllTags, setShowAllTags] = useState(false);
-  const visibleTags = showAllTags ? project.tags : project.tags.slice(0, 3);
-  const hiddenTagCount = Math.max(project.tags.length - 3, 0);
-  const tagsId = `project-${project.index}-tags`;
-
   return (
     <Dialog.Root>
-      <article className="project-card group relative flex h-full min-h-0 flex-col border-2 border-border bg-card transition-colors duration-150 hover:border-[var(--pixel-frame)]">
-        <ProjectPreview project={project} />
-        <div className="relative flex min-w-0 flex-1 flex-col justify-between px-1 pb-1">
-          <div className="mb-3 flex items-center justify-between gap-3">
-            <span className="font-mono text-xs tracking-[0.25em] text-[var(--accent-to)]">{project.index}</span>
+      <Dialog.Trigger asChild>
+        <button
+          type="button"
+          className="project-card project-card-trigger group relative flex h-full min-h-0 flex-col border-2 border-border bg-card transition-colors duration-150 hover:border-[var(--pixel-frame)]"
+          aria-label={`View details for ${project.name}`}
+        >
+          <ProjectPreview project={project} />
+          <div className="relative flex min-w-0 flex-1 flex-col justify-between px-1 pb-1">
+            <div className="mb-3 flex items-center justify-between gap-3">
+              <span className="font-mono text-xs tracking-[0.25em] text-[var(--accent-to)]">{project.index}</span>
+            </div>
 
+            <div className="flex items-start gap-2">
+              <h3 className="font-display text-[1.35rem] leading-none tracking-normal sm:text-[1.5rem]" style={{ fontWeight: 600 }}>
+                {project.name}
+              </h3>
+
+              {project.featured && (
+                <span className="flex items-center border border-[var(--accent-to)]/40 bg-[var(--accent-to)]/10 px-2  font-mono text-[9px] uppercase tracking-widest text-[var(--accent-to)]">
+                  AAST Graduation project
+                </span>
+              )}
+            </div>
+
+            <p className="project-card-blurb mt-3 text-sm leading-5 text-muted-foreground">{project.blurb}</p>
+
+            <span className="project-card-cue mt-4 inline-flex w-max border border-border bg-background px-2 py-1 font-mono text-[10px] uppercase tracking-[0.18em] text-[var(--accent-to)]">
+              View details
+            </span>
           </div>
+        </button>
+      </Dialog.Trigger>
 
-          <div className="flex gap-2">
-            <h3 className="font-display text-[1.35rem] leading-none tracking-normal sm:text-[1.5rem]" style={{ fontWeight: 600 }}>
-              {project.name}
-            </h3>
-
-            {project.featured && (
-              <span className="flex items-center border border-[var(--accent-to)]/40 bg-[var(--accent-to)]/10 px-2  font-mono text-[9px] uppercase tracking-widest text-[var(--accent-to)]">
-                AAST Graduation project
-              </span>
-            )}
-          </div>
-
-          <p className="mt-3 text-sm leading-5 text-muted-foreground">{project.blurb}</p>
-
-          <div id={tagsId} className="mt-4 flex flex-wrap gap-2">
-            {visibleTags.map((t) => (
-              <span key={t} className="border border-border bg-background px-2 py-0.5 font-mono text-[10px] text-foreground/80">
-                {t}
-              </span>
-            ))}
-            {hiddenTagCount > 0 && (
-              <button
-                type="button"
-                className="inline-flex min-h-6 items-center gap-1 border border-border bg-background px-2 py-0.5 font-mono text-[10px] text-[var(--accent-to)] transition-colors hover:border-[var(--pixel-frame)] hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--ring)]"
-                aria-expanded={showAllTags}
-                aria-controls={tagsId}
-                aria-label={`${showAllTags ? "Hide" : "Show"} ${hiddenTagCount} more technologies for ${project.name}`}
-                onClick={() => setShowAllTags((value) => !value)}
-              >
-                {showAllTags ? "less" : `+${hiddenTagCount}`}
-                <ChevronDown className={`h-3 w-3 transition-transform ${showAllTags ? "rotate-180" : ""}`} aria-hidden="true" />
-              </button>
-            )}
-          </div>
-
-          <div className="mt-4 flex flex-wrap items-center gap-2.5">
-            {project.previewVideo && (
-              <Dialog.Trigger asChild>
-                <button
-                  type="button"
-                  className="inline-flex min-h-8 items-center gap-1 border-2 border-[var(--pixel-frame)] bg-[var(--pixel-active)] px-2.5 py-1 text-xs font-medium text-[var(--pixel-active-foreground)] pixel-btn hover:bg-secondary hover:text-secondary-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--ring)]"
-                  aria-label={`Watch ${project.name} video preview`}
-                >
-                  <Play className="h-3.5 w-3.5" aria-hidden="true" />
-                  Video
-                </button>
-              </Dialog.Trigger>
-            )}
-
-            {project.links.map((link) => {
-              const Icon = LINK_ICON[link.icon];
-              return (
-                <a
-                  key={link.label}
-                  href={link.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex min-h-8 items-center gap-1 border-2 border-border bg-secondary px-2.5 py-1 text-xs font-medium text-secondary-foreground pixel-btn hover:bg-[var(--pixel-active)] hover:text-[var(--pixel-active-foreground)]"
-                  aria-label={`Open ${project.name} ${link.label}`}
-                >
-                  <Icon className="h-3.5 w-3.5" />
-                  {link.label}
-                  <ArrowUpRight className="h-3.5 w-3.5" />
-                </a>
-              );
-            })}
-          </div>
-        </div>
-      </article>
-
-      {project.previewVideo && <ProjectVideoDialog project={project} video={project.previewVideo} />}
+      <ProjectDetailDialog project={project} />
     </Dialog.Root>
   );
 }
