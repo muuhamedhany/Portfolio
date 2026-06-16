@@ -118,7 +118,10 @@ const PROJECTS: Project[] = [
         items: ["Vercel"],
       },
     ],
-    links: [{ label: "Live", href: "https://carrenral.vercel.app", icon: "live" }],
+    links: [
+      { label: "Live", href: "https://carrenral.vercel.app", icon: "live" },
+      { label: "GitHub", href: "https://github.com/muuhamedhany/Car-Renral-REACT", icon: "github" }
+    ],
     previewImage: {
       src: "/projects/CarRental.png",
       alt: "Car Rental Preview"
@@ -171,6 +174,25 @@ const PROJECTS: Project[] = [
     previewImage: {
       src: "/projects/ShapeUp.png",
       alt: "ShapeUp Preview"
+    }
+  },
+  {
+    index: "05",
+    name: "VitalityAI",
+    blurb:
+      "VitalityAI is an AI-powered wellness platform that generates personalized plans and workouts. I contributed as a frontend developer, focusing on responsive UI implementation, animation polish, interaction enhancements, and refining the landing-page experience.",
+    tags: ["Frontend UI", "Animations", "Responsive Design"],
+    stackGroups: [
+      {
+        label: "Frontend",
+        icon: "frontend",
+        items: ["Frontend UI implementation", "Responsive landing page", "Animation polish", "Interaction enhancements"],
+      },
+    ],
+    links: [{ label: "Live", href: "https://ai-wellness-tracker-mocha.vercel.app/", icon: "live" }],
+    previewImage: {
+      src: "/projects/VitalityAI.png",
+      alt: "VitalityAI landing page preview"
     }
   },
 ];

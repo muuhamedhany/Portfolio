@@ -1,31 +1,87 @@
-import { motion } from "motion/react";
+import type { IconType } from "react-icons";
+import type { CSSProperties } from "react";
+import {
+  SiCss,
+  SiExpress,
+  SiFigma,
+  SiFramer,
+  SiGit,
+  SiHtml5,
+  SiJavascript,
+  SiMysql,
+  SiNodedotjs,
+  SiPhp,
+  SiPostgresql,
+  SiReact,
+  SiSupabase,
+  SiTailwindcss,
+  SiTypescript,
+} from "react-icons/si";
 import { Reveal } from "./Reveal";
 
-const GROUPS = [
-  { label: "Front-End", items: ["HTML", "CSS", "JavaScript", "TypeScript", "React", "React Native", "Tailwind"] },
-  { label: "Back-End", items: ["Node.js", "Express.js", "PHP"] },
+type SkillName =
+  | "HTML"
+  | "CSS"
+  | "JavaScript"
+  | "TypeScript"
+  | "React"
+  | "Tailwind"
+  | "Node.js"
+  | "Express.js"
+  | "PostgreSQL"
+  | "MySQL"
+  | "Supabase"
+  | "Git"
+  | "Figma"
+  | "Framer Motion";
+
+const GROUPS: Array<{ label: string; items: SkillName[] }> = [
+  { label: "Front-End", items: ["HTML", "CSS", "JavaScript", "TypeScript", "React", "Tailwind" ] },
+  { label: "Back-End", items: ["Node.js", "Express.js" ] },
   { label: "Database", items: ["PostgreSQL", "MySQL", "Supabase"] },
   { label: "Tools", items: ["Git", "Figma", "Framer Motion"] },
 ];
 
-const TICKER = GROUPS.flatMap((g) => g.items);
+const SKILL_ICONS: Record<SkillName, { Icon: IconType; color: string }> = {
+  HTML: { Icon: SiHtml5, color: "#e34f26" },
+  CSS: { Icon: SiCss, color: "#1572b6" },
+  JavaScript: { Icon: SiJavascript, color: "#f7df1e" },
+  TypeScript: { Icon: SiTypescript, color: "#3178c6" },
+  React: { Icon: SiReact, color: "#61dafb" },
+  Tailwind: { Icon: SiTailwindcss, color: "#06b6d4" },
+  "Node.js": { Icon: SiNodedotjs, color: "#5fa04e" },
+  "Express.js": { Icon: SiExpress, color: "#f2f2f2" },
+  PostgreSQL: { Icon: SiPostgresql, color: "#4169e1" },
+  MySQL: { Icon: SiMysql, color: "#4479a1" },
+  Supabase: { Icon: SiSupabase, color: "#3ecf8e" },
+  Git: { Icon: SiGit, color: "#f05032" },
+  Figma: { Icon: SiFigma, color: "#bb8cff" },
+  "Framer Motion": { Icon: SiFramer, color: "#bb8cff" },
+};
+
+const TICKER = GROUPS.flatMap((g) => g.items).map((name) => ({ name, ...SKILL_ICONS[name] }));
 
 function Marquee() {
   const row = [...TICKER, ...TICKER];
   return (
-    <div className="relative overflow-hidden border-y border-border py-4">
-      <motion.div
-        className="flex w-max gap-8 whitespace-nowrap font-display text-2xl tracking-normal sm:text-3xl"
-        animate={{ x: ["0%", "-50%"] }}
-        transition={{ duration: 28, ease: "linear", repeat: Infinity }}
-      >
-        {row.map((item, i) => (
-          <span key={`${item}-${i}`} className="flex items-center gap-8 text-muted-foreground">
-            {item}
-            <span className="text-[var(--accent-to)]">✦</span>
+    <div className="skills-marquee relative overflow-hidden border-y border-border py-4" aria-label="Technology slideshow">
+      <div className="skills-marquee-track">
+        {row.map(({ name, Icon, color }, i) => (
+          <span
+            key={`${name}-${i}`}
+            className="skill-icon-chip"
+            style={{ "--skill-color": color } as CSSProperties}
+            tabIndex={0}
+            role="img"
+            aria-label={name}
+          >
+            <Icon className="skill-icon-glyph" aria-hidden="true" />
+            <span className="skill-icon-label" aria-hidden="true">
+              {name}
+            </span>
           </span>
         ))}
-      </motion.div>
+      </div>
       <div className="pointer-events-none absolute inset-y-0 left-0 w-24 bg-gradient-to-r from-background to-transparent" />
       <div className="pointer-events-none absolute inset-y-0 right-0 w-24 bg-gradient-to-l from-background to-transparent" />
     </div>

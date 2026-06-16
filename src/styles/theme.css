@@ -382,6 +382,114 @@
     background: var(--pixel-active);
     box-shadow: 1px 1px 0 var(--pixel-shadow);
   }
+  .skills-marquee {
+    isolation: isolate;
+  }
+  .skills-marquee-track {
+    display: flex;
+    width: max-content;
+    align-items: center;
+    gap: 18px;
+    white-space: nowrap;
+    animation: skills-marquee-slide 30s linear infinite;
+    will-change: transform;
+  }
+  .skills-marquee:hover .skills-marquee-track,
+  .skills-marquee:focus-within .skills-marquee-track {
+    animation-play-state: paused;
+  }
+  .skill-icon-chip {
+    --skill-color: var(--accent-to);
+    position: relative;
+    display: inline-flex;
+    min-height: 54px;
+    min-width: 54px;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid var(--border);
+    background: var(--card);
+    color: color-mix(in oklab, var(--muted-foreground) 72%, var(--foreground));
+    box-shadow:
+      inset 2px 2px 0 var(--pixel-edge-light),
+      inset -2px -2px 0 var(--pixel-edge-dark),
+      3px 3px 0 var(--pixel-shadow);
+    outline: none;
+    transition:
+      transform 150ms steps(3, end),
+      border-color 140ms linear,
+      color 140ms linear,
+      filter 140ms linear;
+    clip-path: polygon(
+      0 5px, 5px 5px, 5px 0,
+      calc(100% - 5px) 0, calc(100% - 5px) 5px, 100% 5px,
+      100% calc(100% - 5px), calc(100% - 5px) calc(100% - 5px), calc(100% - 5px) 100%,
+      5px 100%, 5px calc(100% - 5px), 0 calc(100% - 5px)
+    );
+  }
+  .skill-icon-glyph {
+    width: 26px;
+    height: 26px;
+    filter: grayscale(1) saturate(0.2);
+    opacity: 0.64;
+    transition:
+      transform 150ms steps(3, end),
+      color 140ms linear,
+      filter 140ms linear,
+      opacity 140ms linear;
+  }
+  .skill-icon-label {
+    position: absolute;
+    left: 50%;
+    bottom: calc(100% + 8px);
+    z-index: 2;
+    width: max-content;
+    max-width: 170px;
+    transform: translate(-50%, 5px) scale(0.96);
+    border: 1px solid var(--pixel-frame);
+    background: var(--foreground);
+    padding: 5px 8px;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    line-height: 1;
+    text-transform: uppercase;
+    color: var(--background);
+    opacity: 0;
+    pointer-events: none;
+    box-shadow: 3px 3px 0 var(--pixel-shadow);
+    transition:
+      transform 130ms steps(3, end),
+      opacity 100ms linear;
+    clip-path: polygon(
+      0 4px, 4px 4px, 4px 0,
+      calc(100% - 4px) 0, calc(100% - 4px) 4px, 100% 4px,
+      100% calc(100% - 4px), calc(100% - 4px) calc(100% - 4px), calc(100% - 4px) 100%,
+      4px 100%, 4px calc(100% - 4px), 0 calc(100% - 4px)
+    );
+  }
+  .skill-icon-chip:hover,
+  .skill-icon-chip:focus-visible {
+    transform: translate(-2px, -2px);
+    border-color: var(--skill-color);
+    color: var(--skill-color);
+    filter: drop-shadow(0 0 10px color-mix(in oklab, var(--skill-color) 24%, transparent));
+  }
+  .skill-icon-chip:hover .skill-icon-glyph,
+  .skill-icon-chip:focus-visible .skill-icon-glyph {
+    transform: scale(1.12);
+    filter: grayscale(0) saturate(1);
+    opacity: 1;
+  }
+  .skill-icon-chip:hover .skill-icon-label,
+  .skill-icon-chip:focus-visible .skill-icon-label {
+    transform: translate(-50%, 0) scale(1);
+    opacity: 1;
+  }
+  @keyframes skills-marquee-slide {
+    to {
+      transform: translateX(-50%);
+    }
+  }
   .project-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(min(100%, 472px), 472px));
@@ -877,6 +985,10 @@
     .project-detail-overlay,
     .project-detail-content {
       animation: none;
+    }
+    .skills-marquee-track {
+      animation: none;
+      transform: none;
     }
     .project-tech-tile {
       transition: none;
