@@ -41,10 +41,17 @@ export function Hero({ onNavigate, theme }: HeroProps) {
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.3 }}
-            className="mb-6 flex items-center gap-2.5 font-mono text-[11px] uppercase tracking-[0.18em] text-muted-foreground"
+            className="mb-6 font-mono"
           >
-            <span aria-hidden="true" className="h-2.5 w-2.5 border border-[var(--accent-to)] bg-[var(--accent-to)]/15" />
-            Open to selected projects
+            <span className="pixel-status-chip text-[11px]">
+              <span className="pixel-status-chip-label px-2.5 py-1 text-[10px] uppercase tracking-wider text-muted-foreground">
+                Status
+              </span>
+              <span className="flex items-center gap-2 px-3 py-1 text-foreground">
+                <span aria-hidden="true" className="pixel-status-chip-marker h-2 w-2" />
+                Available for work
+              </span>
+            </span>
           </motion.div>
 
           <motion.h1

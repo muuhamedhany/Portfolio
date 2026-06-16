@@ -3,8 +3,8 @@ import { Reveal } from "./Reveal";
 
 // Update these with your real handles.
 const CONTACTS = [
-  { label: "Email", value: "mohamed.hany@email.com", href: "mailto:mohamed.hany@email.com", icon: Mail },
-  { label: "LinkedIn", value: "in/mohamed-hany-helmy", href: "https://linkedin.com/in/mohamed-hany-helmy", icon: Linkedin },
+  { label: "Email", value: "muuhamedhany@gmail.com", href: "mailto:mohamed.hany@email.com", icon: Mail },
+  { label: "LinkedIn", value: "in/muuhammed-hany", href: "https://linkedin.com/in/mohamed-hany-helmy", icon: Linkedin },
   { label: "GitHub", value: "muuhamedhany", href: "https://github.com/muuhamedhany", icon: Github },
 ];
 
@@ -48,8 +48,8 @@ export function Contact() {
         </div>
 
         <footer className="mt-16 flex flex-col gap-2 font-mono text-xs text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
-          <span>© {new Date().getFullYear()} Mohamed Hany Helmy</span>
-          <span>Cairo, Egypt · Built with React + Tailwind + Motion</span>
+          <span>© {new Date().getFullYear()} m<span className="text-gradient">uu</span>hamedhany</span>
+          <span>Cairo, Egypt</span>
         </footer>
       </div>
     </section>

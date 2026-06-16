@@ -266,6 +266,51 @@
     color: var(--pixel-active-foreground);
     box-shadow: inset 2px 2px 0 rgba(255, 255, 255, 0.16), inset -2px -2px 0 rgba(0, 0, 0, 0.28);
   }
+  .pixel-side-rail {
+    padding: 2px;
+    background: var(--pixel-frame);
+    clip-path: polygon(
+      0 6px, 6px 6px, 6px 0,
+      calc(100% - 6px) 0, calc(100% - 6px) 6px, 100% 6px,
+      100% calc(100% - 6px), calc(100% - 6px) calc(100% - 6px), calc(100% - 6px) 100%,
+      6px 100%, 6px calc(100% - 6px), 0 calc(100% - 6px)
+    );
+    filter: drop-shadow(3px 3px 0 var(--pixel-shadow));
+  }
+  .pixel-side-rail-surface {
+    background: var(--card);
+    box-shadow: inset 2px 2px 0 var(--pixel-edge-light), inset -2px -2px 0 var(--pixel-edge-dark);
+  }
+  .pixel-side-item {
+    border: 1px solid transparent;
+    background: transparent;
+    color: var(--muted-foreground);
+    transition:
+      transform 80ms steps(2, end),
+      color 100ms linear,
+      background-color 100ms linear,
+      border-color 100ms linear;
+  }
+  .pixel-side-item:hover {
+    transform: translate(1px, 1px);
+    border-color: var(--border);
+    background: var(--background);
+    color: var(--foreground);
+  }
+  .pixel-side-item[data-active='true'] {
+    border-color: var(--pixel-active);
+    background: var(--pixel-active);
+    color: var(--pixel-active-foreground);
+    box-shadow: inset 2px 2px 0 rgba(255, 255, 255, 0.16), inset -2px -2px 0 rgba(0, 0, 0, 0.28);
+  }
+  .pixel-progress-dot {
+    box-shadow: inset 1px 1px 0 var(--pixel-edge-light), inset -1px -1px 0 var(--pixel-edge-dark);
+    transition:
+      height 100ms steps(2, end),
+      width 100ms steps(2, end),
+      background-color 100ms linear,
+      border-color 100ms linear;
+  }
   .pixel-tooltip {
     border: 0;
     border-radius: 0;
@@ -278,6 +323,29 @@
       4px 100%, 4px calc(100% - 4px), 0 calc(100% - 4px)
     );
     filter: drop-shadow(3px 3px 0 var(--pixel-shadow));
+  }
+  .pixel-status-chip {
+    display: inline-flex;
+    overflow: hidden;
+    border: 2px solid var(--pixel-frame);
+    background: var(--card);
+    color: var(--foreground);
+    clip-path: polygon(
+      0 5px, 5px 5px, 5px 0,
+      calc(100% - 5px) 0, calc(100% - 5px) 5px, 100% 5px,
+      100% calc(100% - 5px), calc(100% - 5px) calc(100% - 5px), calc(100% - 5px) 100%,
+      5px 100%, 5px calc(100% - 5px), 0 calc(100% - 5px)
+    );
+    box-shadow: 3px 3px 0 var(--pixel-shadow);
+  }
+  .pixel-status-chip-label {
+    border-right: 2px solid var(--pixel-frame);
+    background: var(--background);
+    box-shadow: inset -1px 0 0 var(--pixel-edge-dark);
+  }
+  .pixel-status-chip-marker {
+    background: var(--pixel-active);
+    box-shadow: 1px 1px 0 var(--pixel-shadow);
   }
   /* nudge into the shadow on press/hover for a tactile "button" feel */
   .pixel-press {

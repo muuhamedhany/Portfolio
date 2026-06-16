@@ -9,44 +9,37 @@ interface PageDotsProps {
 export function PageDots({ active, onNavigate }: PageDotsProps) {
   return (
     <motion.div
-      initial={{ opacity: 0, x: 16 }}
+      initial={{ opacity: 0, x: 10 }}
       animate={{ opacity: 1, x: 0 }}
-      transition={{ delay: 0.6, duration: 0.6 }}
-      className="fixed right-5 top-1/2 z-50 hidden -translate-y-1/2 flex-col items-end gap-4 sm:flex"
+      transition={{ delay: 0.35, duration: 0.2, ease: "linear" }}
+      className="pixel-side-rail fixed right-5 top-1/2 z-50 hidden -translate-y-1/2 sm:block"
     >
-      {SECTIONS.map((s) => {
-        const isActive = active === s.id;
-        return (
-          <button
-            key={s.id}
-            onClick={() => onNavigate(s.id)}
-            aria-label={`Go to ${s.label}`}
-            className="group flex items-center gap-2"
-          >
-            <span
-              className={`font-mono text-[10px] uppercase tracking-[0.2em] transition-all duration-300 ${
-                isActive ? "text-foreground opacity-100" : "text-muted-foreground opacity-0 group-hover:opacity-100"
-              }`}
+      <div className="pixel-side-rail-surface flex flex-col items-center gap-2 p-2">
+        {SECTIONS.map((s) => {
+          const isActive = active === s.id;
+          return (
+            <button
+              key={s.id}
+              type="button"
+              onClick={() => onNavigate(s.id)}
+              aria-label={`Go to ${s.label}`}
+              aria-current={isActive ? "page" : undefined}
+              data-active={isActive}
+              title={s.label}
+              className="group grid h-7 w-7 place-items-center focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
             >
-              {s.label}
-            </span>
-            <span className="relative grid place-items-center">
               <span
-                className={`h-2 w-2 rounded-none transition-colors ${
-                  isActive ? "bg-transparent" : "bg-muted-foreground/50 group-hover:bg-foreground"
+                aria-hidden="true"
+                className={`pixel-progress-dot border ${
+                  isActive
+                    ? "h-4 w-4 border-[var(--pixel-active)] bg-[var(--pixel-active)]"
+                    : "h-2.5 w-2.5 border-border bg-muted-foreground/30 group-hover:bg-muted-foreground/55"
                 }`}
               />
-              {isActive && (
-                <motion.span
-                  layoutId="dot-active"
-                  className="absolute h-3 w-3 rounded-none bg-gradient-accent"
-                  transition={{ type: "spring", stiffness: 400, damping: 30 }}
-                />
-              )}
-            </span>
-          </button>
-        );
-      })}
+            </button>
+          );
+        })}
+      </div>
     </motion.div>
   );
 }
