@@ -399,6 +399,7 @@
       3px 3px 0 var(--pixel-shadow);
   }
   .project-card-media {
+    position: relative;
     flex: 0 0 auto;
     width: 100%;
     aspect-ratio: 16 / 9;
@@ -413,6 +414,95 @@
       100% calc(100% - 5px), calc(100% - 5px) calc(100% - 5px), calc(100% - 5px) 100%,
       5px 100%, 5px calc(100% - 5px), 0 calc(100% - 5px)
     );
+  }
+  .project-card-media-image img {
+    position: relative;
+    z-index: 1;
+  }
+  .project-image-skeleton {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    gap: 8px;
+    padding: 18px;
+    overflow: hidden;
+    background:
+      linear-gradient(135deg, rgba(143, 128, 255, 0.10), transparent 38%),
+      repeating-linear-gradient(
+        0deg,
+        rgba(255, 255, 255, 0.035) 0,
+        rgba(255, 255, 255, 0.035) 1px,
+        transparent 1px,
+        transparent 8px
+      ),
+      var(--card);
+  }
+  .project-image-skeleton::before {
+    content: "";
+    position: absolute;
+    inset: 14px;
+    border: 2px solid rgba(143, 128, 255, 0.22);
+    box-shadow:
+      inset 2px 2px 0 rgba(255, 255, 255, 0.05),
+      inset -2px -2px 0 rgba(0, 0, 0, 0.28);
+  }
+  .project-image-skeleton::after {
+    content: "";
+    position: absolute;
+    inset: 0 auto 0 -35%;
+    width: 34%;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(143, 128, 255, 0.12),
+      rgba(255, 255, 255, 0.09),
+      transparent
+    );
+    animation: project-skeleton-scan 1.15s steps(8, end) infinite;
+  }
+  .project-image-skeleton-mark,
+  .project-image-skeleton-line,
+  .project-image-skeleton-label {
+    position: relative;
+    z-index: 1;
+  }
+  .project-image-skeleton-mark {
+    width: 42px;
+    height: 42px;
+    border: 2px solid rgba(143, 128, 255, 0.34);
+    background:
+      linear-gradient(90deg, transparent 18px, rgba(143, 128, 255, 0.18) 18px 22px, transparent 22px),
+      linear-gradient(0deg, transparent 18px, rgba(143, 128, 255, 0.18) 18px 22px, transparent 22px),
+      rgba(255, 255, 255, 0.025);
+    box-shadow: 3px 3px 0 var(--pixel-shadow);
+  }
+  .project-image-skeleton-line {
+    height: 8px;
+    width: 42%;
+    border: 1px solid rgba(143, 128, 255, 0.20);
+    background: rgba(255, 255, 255, 0.045);
+    box-shadow: 2px 2px 0 var(--pixel-shadow);
+  }
+  .project-image-skeleton-line-wide {
+    width: 64%;
+  }
+  .project-image-skeleton-label {
+    width: max-content;
+    border: 1px solid rgba(143, 128, 255, 0.24);
+    background: rgba(0, 0, 0, 0.18);
+    padding: 3px 6px;
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted-foreground);
+  }
+  @keyframes project-skeleton-scan {
+    to {
+      transform: translateX(405%);
+    }
   }
   .project-video-overlay {
     position: fixed;
@@ -486,6 +576,10 @@
     }
   }
   @media (prefers-reduced-motion: reduce) {
+    .project-image-skeleton::after {
+      animation: none;
+      transform: translateX(220%);
+    }
     .project-tech-tile {
       transition: none;
     }

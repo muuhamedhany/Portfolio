@@ -84,13 +84,21 @@ const PROJECTS: Project[] = [
       { label: "Live", href: "https://pure-store.vercel.app", icon: "live" },
       { label: "GitHub", href: "https://github.com/muuhamedhany/E-Commerce-REACT", icon: "github" },
     ],
+    previewImage: {
+      src: "/projects/PureStore.png",
+      alt: "PureStore Preview"
+    }
   },
   {
     index: "04",
     name: "Workout & Diet App",
     blurb: "A UI/UX case study — user research, flows, and a high-fidelity prototype in Figma. NTI graduation project.",
     tags: ["Figma", "User Research", "Prototyping"],
-    links: [{ label: "Behance", href: "https://behance.net/gallery/234873613", icon: "behance" }],
+    links: [{ label: "Behance", href: "https://www.behance.net/gallery/234873613/UIUX-Workout-Diet-App", icon: "behance" }],
+    previewImage: {
+      src: "/projects/ShapeUp.png",
+      alt: "ShapeUp Preview"
+    }
   },
 ];
 
@@ -109,10 +117,35 @@ const TAG_ICON: Partial<Record<string, IconType>> = {
 };
 
 function ProjectPreview({ project }: { project: Project }) {
+  const [imageLoaded, setImageLoaded] = useState(false);
+  const [imageFailed, setImageFailed] = useState(false);
+
   if (project.previewImage) {
     return (
-      <div className="project-card-media overflow-hidden bg-background">
-        <img src={project.previewImage.src} alt={project.previewImage.alt} className="h-full w-full object-cover" loading="lazy" />
+      <div className="project-card-media project-card-media-image overflow-hidden bg-background">
+        {!imageLoaded && !imageFailed && (
+          <div className="project-image-skeleton" aria-hidden="true">
+            <span className="project-image-skeleton-mark" />
+            <span className="project-image-skeleton-line project-image-skeleton-line-wide" />
+            <span className="project-image-skeleton-line" />
+            <span className="project-image-skeleton-label">Loading preview</span>
+          </div>
+        )}
+
+        {imageFailed ? (
+          <div className="flex h-full w-full items-center justify-center bg-card px-4 text-center font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground">
+            Preview unavailable
+          </div>
+        ) : (
+          <img
+            src={project.previewImage.src}
+            alt={project.previewImage.alt}
+            className={`h-full w-full object-cover transition-opacity duration-150 ${imageLoaded ? "opacity-100" : "opacity-0"}`}
+            loading="lazy"
+            onLoad={() => setImageLoaded(true)}
+            onError={() => setImageFailed(true)}
+          />
+        )}
       </div>
     );
   }
