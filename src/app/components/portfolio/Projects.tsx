@@ -1,10 +1,12 @@
 import {
   ArrowUpRight,
+  ChevronDown,
   Figma as FigmaIcon,
   Github,
   Globe,
   Lock,
 } from "lucide-react";
+import { useState } from "react";
 import type { IconType } from "react-icons";
 import { SiExpress, SiFigma, SiFramer, SiNodedotjs, SiPostgresql, SiReact, SiSupabase, SiTailwindcss } from "react-icons/si";
 import { Reveal } from "./Reveal";
@@ -120,6 +122,11 @@ function ProjectPreview({ project }: { project: Project }) {
 }
 
 function ProjectCard({ project }: { project: Project }) {
+  const [showAllTags, setShowAllTags] = useState(false);
+  const visibleTags = showAllTags ? project.tags : project.tags.slice(0, 3);
+  const hiddenTagCount = Math.max(project.tags.length - 3, 0);
+  const tagsId = `project-${project.index}-tags`;
+
   return (
     <article className="project-card group relative flex h-full min-h-0 flex-col border-2 border-border bg-card transition-colors duration-150 hover:border-[var(--pixel-frame)]">
       <ProjectPreview project={project} />
@@ -139,12 +146,25 @@ function ProjectCard({ project }: { project: Project }) {
 
         <p className="mt-3 text-sm leading-5 text-muted-foreground">{project.blurb}</p>
 
-        <div className="mt-4 flex flex-wrap gap-2">
-          {project.tags.map((t) => (
+        <div id={tagsId} className="mt-4 flex flex-wrap gap-2">
+          {visibleTags.map((t) => (
             <span key={t} className="border border-border bg-background px-2 py-0.5 font-mono text-[10px] text-foreground/80">
               {t}
             </span>
           ))}
+          {hiddenTagCount > 0 && (
+            <button
+              type="button"
+              className="inline-flex min-h-6 items-center gap-1 border border-border bg-background px-2 py-0.5 font-mono text-[10px] text-[var(--accent-to)] transition-colors hover:border-[var(--pixel-frame)] hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--ring)]"
+              aria-expanded={showAllTags}
+              aria-controls={tagsId}
+              aria-label={`${showAllTags ? "Hide" : "Show"} ${hiddenTagCount} more technologies for ${project.name}`}
+              onClick={() => setShowAllTags((value) => !value)}
+            >
+              {showAllTags ? "less" : `+${hiddenTagCount}`}
+              <ChevronDown className={`h-3 w-3 transition-transform ${showAllTags ? "rotate-180" : ""}`} aria-hidden="true" />
+            </button>
+          )}
         </div>
 
         <div className="mt-4 flex flex-wrap items-center gap-2.5">
