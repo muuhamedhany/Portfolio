@@ -603,6 +603,51 @@
       inset 2px 2px 0 rgba(255, 255, 255, 0.08),
       inset -2px -2px 0 rgba(0, 0, 0, 0.55);
   }
+  .project-stack-groups {
+    display: grid;
+    gap: 10px;
+  }
+  .project-stack-group {
+    border: 1px solid var(--border);
+    background:
+      linear-gradient(90deg, rgba(143, 128, 255, 0.06), transparent 34%),
+      var(--background);
+    padding: 10px;
+    box-shadow:
+      inset 1px 1px 0 var(--pixel-edge-light),
+      2px 2px 0 var(--pixel-shadow);
+  }
+  .project-stack-label {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    margin-bottom: 8px;
+    border-left: 3px solid var(--accent-to);
+    padding-left: 7px;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    line-height: 1.2;
+    text-transform: uppercase;
+    color: var(--foreground);
+  }
+  .project-stack-icon {
+    display: inline-flex;
+    width: 22px;
+    height: 22px;
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--pixel-frame);
+    background: var(--card);
+    color: var(--accent-to);
+    box-shadow:
+      inset 1px 1px 0 var(--pixel-edge-light),
+      2px 2px 0 var(--pixel-shadow);
+    transition:
+      transform 120ms steps(2, end),
+      color 120ms linear;
+  }
   @keyframes project-detail-enter {
     from {
       opacity: 0;
@@ -697,6 +742,10 @@
     .project-card:hover .project-tech-tile:nth-child(3) {
       transform: translate(18px, 4px);
     }
+    .project-stack-group:hover .project-stack-icon {
+      color: var(--foreground);
+      transform: translate(-1px, -1px);
+    }
   }
   @media (prefers-reduced-motion: reduce) {
     .project-image-skeleton::after {
@@ -706,7 +755,8 @@
     .project-card-trigger,
     .project-card-cue,
     .project-card-media,
-    .project-card-media-image img {
+    .project-card-media-image img,
+    .project-stack-icon {
       transition: none;
     }
     .project-card-trigger:hover,
@@ -723,6 +773,9 @@
       transition: none;
     }
     .project-card:hover .project-tech-tile {
+      transform: none;
+    }
+    .project-stack-group:hover .project-stack-icon {
       transform: none;
     }
   }

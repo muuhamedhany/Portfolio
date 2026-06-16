@@ -1,10 +1,18 @@
 import {
   ArrowUpRight,
+  Code2,
   Figma as FigmaIcon,
   Github,
   Globe,
+  MapPin,
+  Monitor,
+  Palette,
+  Rocket,
+  Server,
+  Smartphone,
   X,
 } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
 import * as Dialog from "@radix-ui/react-dialog";
 import { useState } from "react";
 import type { IconType } from "react-icons";
@@ -24,11 +32,20 @@ interface ProjectVideo {
   type?: string;
 }
 
+interface ProjectStackGroup {
+  label: string;
+  icon: ProjectStackIcon;
+  items: string[];
+}
+
+type ProjectStackIcon = "mobile" | "web" | "portal" | "backend" | "deploy" | "frontend" | "design" | "publish";
+
 interface Project {
   index: string;
   name: string;
   blurb: string;
   tags: string[];
+  stackGroups: ProjectStackGroup[];
   links: ProjectLink[];
   previewImage?: {
     src: string;
@@ -46,6 +63,33 @@ const PROJECTS: Project[] = [
     blurb:
       "CarKit is a multi-platform automotive marketplace and service system for the Egyptian market. It combines a customer/vendor/provider mobile app, an admin operations dashboard, and a driver/emergency employee web portal. The platform handles product shopping, vehicle management, workshop and mobile-service bookings, vendor/provider approvals, delivery tracking with proof uploads, emergency SOS dispatch, reviews, ads, notifications, and branch/location management. It runs on a Render-hosted Express API with PostgreSQL and Supabase storage, with Expo for the mobile app and Vite React for the web portals.",
     tags: ["React Native Expo", "Render", "Supabase", "Express", "Node.js", "React", "PostgreSQL", "Gemini AI"],
+    stackGroups: [
+      {
+        label: "Mobile App",
+        icon: "mobile",
+        items: ["Expo SDK 54", "React Native", "TypeScript", "Expo Router", "React Context", "AsyncStorage", "Axios", "Supabase JS"],
+      },
+      {
+        label: "Admin Web Portal",
+        icon: "web",
+        items: ["React 19", "Vite 7", "Tailwind CSS v4", "React Router 7", "Axios", "Lucide React"],
+      },
+      {
+        label: "Driver/Emergency Web Portal",
+        icon: "portal",
+        items: ["React 19", "Vite 7", "Tailwind CSS v4", "React Router 7", "Axios", "Supabase JS"],
+      },
+      {
+        label: "Backend",
+        icon: "backend",
+        items: ["Node.js", "Express 5", "PostgreSQL", "pg", "JWT authentication", "Supabase Storage", "Resend"],
+      },
+      {
+        label: "Deployment & Services",
+        icon: "deploy",
+        items: ["Render for backend API", "Supabase for PostgreSQL and file storage", "Vercel for web portals", "Expo for mobile app"],
+      },
+    ],
     links: [
       { label: "App repo", href: "https://github.com/muuhamedhany/CarKitApp", icon: "github" },
       { label: "Admin Web repo", href: "https://github.com/muuhamedhany/CarKit-Admin-Web", icon: "github" },
@@ -67,6 +111,18 @@ const PROJECTS: Project[] = [
     name: "Car Rental Landing Page",
     blurb: "A motion-rich rental landing page with scroll choreography and crisp section reveals.",
     tags: ["React", "Tailwind", "Framer Motion"],
+    stackGroups: [
+      {
+        label: "Frontend",
+        icon: "frontend",
+        items: ["React", "Tailwind CSS", "Framer Motion"],
+      },
+      {
+        label: "Deployment",
+        icon: "deploy",
+        items: ["Vercel"],
+      },
+    ],
     links: [{ label: "Live", href: "https://carrenral.vercel.app", icon: "live" }],
     previewImage: {
       src: "/projects/CarRental.png",
@@ -78,6 +134,18 @@ const PROJECTS: Project[] = [
     name: "Pure Store",
     blurb: "A React e-commerce app — product browsing, cart, and a clean storefront flow.",
     tags: ["React", "E-commerce"],
+    stackGroups: [
+      {
+        label: "Frontend",
+        icon: "frontend",
+        items: ["React", "E-commerce storefront", "Cart flow", "Product browsing"],
+      },
+      {
+        label: "Deployment",
+        icon: "deploy",
+        items: ["Vercel"],
+      },
+    ],
     links: [
       { label: "Live", href: "https://pure-store.vercel.app", icon: "live" },
       { label: "GitHub", href: "https://github.com/muuhamedhany/E-Commerce-REACT", icon: "github" },
@@ -92,6 +160,18 @@ const PROJECTS: Project[] = [
     name: "Workout & Diet App",
     blurb: "A UI/UX case study — user research, flows, and a high-fidelity prototype in Figma. NTI graduation project.",
     tags: ["Figma", "User Research", "Prototyping"],
+    stackGroups: [
+      {
+        label: "Design & Research",
+        icon: "design",
+        items: ["Figma", "User Research", "User flows", "High-fidelity prototyping"],
+      },
+      {
+        label: "Publishing",
+        icon: "publish",
+        items: ["Behance case study"],
+      },
+    ],
     links: [{ label: "Behance", href: "https://www.behance.net/gallery/234873613/UIUX-Workout-Diet-App", icon: "behance" }],
     previewImage: {
       src: "/projects/ShapeUp.png",
@@ -101,6 +181,17 @@ const PROJECTS: Project[] = [
 ];
 
 const LINK_ICON = { live: Globe, github: Github, behance: FigmaIcon } as const;
+
+const STACK_GROUP_ICON: Record<ProjectStackIcon, LucideIcon> = {
+  mobile: Smartphone,
+  web: Monitor,
+  portal: MapPin,
+  backend: Server,
+  deploy: Rocket,
+  frontend: Code2,
+  design: Palette,
+  publish: Globe,
+};
 
 const TAG_ICON: Partial<Record<string, IconType>> = {
   "React Native": SiReact,
@@ -198,7 +289,7 @@ function ProjectDetailDialog({ project }: { project: Project }) {
             <button
               type="button"
               className="pixel-btn inline-flex min-h-10 min-w-10 items-center justify-center border-2 border-border bg-secondary text-secondary-foreground hover:bg-[var(--pixel-active)] hover:text-[var(--pixel-active-foreground)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--ring)]"
-              aria-label={`Close ${project.name} video`}
+              aria-label={`Close ${project.name} details`}
             >
               <X className="h-4 w-4" aria-hidden="true" />
             </button>
@@ -236,12 +327,28 @@ function ProjectDetailDialog({ project }: { project: Project }) {
 
             <div className="mt-5">
               <h4 className="mb-2 font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground">Stack</h4>
-              <div className="flex flex-wrap gap-2">
-                {project.tags.map((tag) => (
-                  <span key={tag} className="border border-border bg-background px-2 py-1 font-mono text-[10px] text-foreground/80">
-                    {tag}
-                  </span>
-                ))}
+              <div className="project-stack-groups">
+                {project.stackGroups.map((group) => {
+                  const StackIcon = STACK_GROUP_ICON[group.icon];
+
+                  return (
+                    <section key={group.label} className="project-stack-group" aria-label={`${project.name} ${group.label} stack`}>
+                      <h5 className="project-stack-label">
+                        <span className="project-stack-icon" aria-hidden="true">
+                          <StackIcon className="h-3.5 w-3.5" />
+                        </span>
+                        <span>{group.label}</span>
+                      </h5>
+                      <div className="flex flex-wrap gap-2">
+                        {group.items.map((item) => (
+                          <span key={`${group.label}-${item}`} className="border border-border bg-background px-2 py-1 font-mono text-[10px] text-foreground/80">
+                            {item}
+                          </span>
+                        ))}
+                      </div>
+                    </section>
+                  );
+                })}
               </div>
             </div>
 
@@ -305,7 +412,7 @@ function ProjectCard({ project }: { project: Project }) {
             <p className="project-card-blurb mt-2 text-sm leading-5 text-muted-foreground">{project.blurb}</p>
             </div>
 
-            <span className="mt-4 inline-flex w-max border border-border bg-background px-2 py-1 font-mono text-[10px] uppercase tracking-[0.18em] text-[var(--accent-to)]">
+            <span className="project-card-cue mt-4 inline-flex w-max border border-border bg-background px-2 py-1 font-mono text-[10px] uppercase tracking-[0.18em] text-[var(--accent-to)]">
               View details
             </span>
           </div>
