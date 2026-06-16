@@ -58,6 +58,10 @@ const PROJECTS: Project[] = [
       title: "CarKit project demo",
       type: "video/mp4",
     },
+    previewImage: {
+      src: "/projects/CarKitIPhone.png",
+      alt: "CarKit Preview"
+    },
     featured: true,
   },
   {
