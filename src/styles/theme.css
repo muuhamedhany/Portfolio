@@ -53,6 +53,12 @@
   --pixel-active: #5146a8;
   --pixel-active-foreground: #ffffff;
   --pixel-shadow: rgba(20, 18, 30, 0.35);
+  --cursor-default: url("/cursors/pointer_a.png") 3 3, auto;
+  --cursor-pointer: url("/cursors/hand_point.png") 8 4, pointer;
+  --cursor-text: url("/cursors/line_vertical.png") 12 12, text;
+  --cursor-disabled: url("/cursors/cursor_disabled.png") 12 12, not-allowed;
+  --cursor-grab: url("/cursors/hand_open.png") 11 8, grab;
+  --cursor-grabbing: url("/cursors/hand_closed.png") 11 8, grabbing;
   --chart-1: oklch(0.646 0.222 41.116);
   --chart-2: oklch(0.6 0.118 184.704);
   --chart-3: oklch(0.398 0.07 227.392);
@@ -180,6 +186,30 @@
     @apply bg-background text-foreground;
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
+    cursor: var(--cursor-default);
+  }
+
+  a,
+  button,
+  [role='button'],
+  summary,
+  select,
+  label[for] {
+    cursor: var(--cursor-pointer);
+  }
+
+  input,
+  textarea,
+  [contenteditable='true'] {
+    cursor: var(--cursor-text);
+  }
+
+  button:disabled,
+  input:disabled,
+  textarea:disabled,
+  select:disabled,
+  [aria-disabled='true'] {
+    cursor: var(--cursor-disabled);
   }
 
   ::selection {

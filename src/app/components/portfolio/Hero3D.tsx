@@ -55,7 +55,7 @@ export function Hero3D({ theme }: Hero3DProps) {
     renderer.setPixelRatio(1);
     renderer.setSize(getW(), getH());
     renderer.domElement.style.touchAction = "none";
-    renderer.domElement.style.cursor = "grab";
+    renderer.domElement.style.cursor = "var(--cursor-grab)";
     renderer.domElement.style.imageRendering = "pixelated";
     mount.appendChild(renderer.domElement);
 
@@ -142,7 +142,7 @@ export function Hero3D({ theme }: Hero3DProps) {
       active = true;
       lastX = e.clientX;
       lastY = e.clientY;
-      el.style.cursor = "grabbing";
+      el.style.cursor = "var(--cursor-grabbing)";
       el.setPointerCapture?.(e.pointerId);
     };
     const onMove = (e: PointerEvent) => {
@@ -158,7 +158,7 @@ export function Hero3D({ theme }: Hero3DProps) {
     };
     const onUp = () => {
       active = false;
-      el.style.cursor = "grab";
+      el.style.cursor = "var(--cursor-grab)";
     };
     el.addEventListener("pointerdown", onDown);
     el.addEventListener("pointermove", onMove);
