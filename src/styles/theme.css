@@ -563,13 +563,13 @@
     left: 50%;
     top: 50%;
     z-index: 51;
-    width: min(calc(100vw - 32px), 980px);
-    max-height: min(calc(100svh - 32px), 760px);
+    width: min(calc(100vw - 28px), 1180px);
+    max-height: calc(100svh - 28px);
     transform: translate(-50%, -50%);
     overflow: auto;
     border: 2px solid var(--pixel-frame);
     background: var(--card);
-    padding: 14px;
+    padding: 12px;
     box-shadow:
       inset 2px 2px 0 var(--pixel-edge-light),
       inset -2px -2px 0 var(--pixel-edge-dark),
@@ -587,12 +587,45 @@
   .project-detail-content[data-state="closed"] {
     animation: project-detail-exit 130ms steps(3, end) both;
   }
+  .project-detail-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 10px;
+    padding-right: 2px;
+  }
+  .project-detail-index {
+    display: block;
+    margin-bottom: 5px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.26em;
+    color: var(--accent-to);
+  }
+  .project-detail-kicker {
+    margin-top: 6px;
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted-foreground);
+  }
   .project-detail-layout {
     display: grid;
-    grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
-    gap: 18px;
+    grid-template-columns: minmax(300px, 0.68fr) minmax(0, 1.32fr);
+    gap: 16px;
     align-items: start;
   }
+  .project-detail-media-column {
+    display: grid;
+    gap: 10px;
+    align-content: start;
+  }
+  .project-detail-media-column > :only-child {
+    grid-column: 1 / -1;
+  }
+  .project-detail-media-column .project-card-media,
   .project-detail-video-frame {
     aspect-ratio: 16 / 9;
     width: 100%;
@@ -603,16 +636,57 @@
       inset 2px 2px 0 rgba(255, 255, 255, 0.08),
       inset -2px -2px 0 rgba(0, 0, 0, 0.55);
   }
+  .project-detail-media-column .project-card-media img {
+    object-fit: cover;
+  }
+  .project-detail-info {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .project-detail-badge {
+    display: inline-flex;
+    width: max-content;
+    align-items: center;
+    border: 1px solid var(--accent-to);
+    background: color-mix(in oklab, var(--accent-to) 12%, transparent);
+    padding: 4px 7px;
+    font-family: var(--font-mono);
+    font-size: 8px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--accent-to);
+  }
+  .project-detail-blurb {
+    max-width: 70ch;
+    margin: 0;
+    font-size: 13px;
+    line-height: 1.55;
+    color: var(--muted-foreground);
+  }
+  .project-detail-section {
+    margin-top: 0;
+  }
+  .project-detail-section-title {
+    margin-bottom: 7px;
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted-foreground);
+  }
   .project-stack-groups {
     display: grid;
-    gap: 10px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
   }
   .project-stack-group {
     border: 1px solid var(--border);
     background:
       linear-gradient(90deg, rgba(143, 128, 255, 0.06), transparent 34%),
       var(--background);
-    padding: 10px;
+    padding: 8px;
     box-shadow:
       inset 1px 1px 0 var(--pixel-edge-light),
       2px 2px 0 var(--pixel-shadow);
@@ -621,20 +695,20 @@
     display: flex;
     align-items: center;
     gap: 7px;
-    margin-bottom: 8px;
+    margin-bottom: 6px;
     border-left: 3px solid var(--accent-to);
     padding-left: 7px;
     font-family: var(--font-mono);
-    font-size: 10px;
-    letter-spacing: 0.18em;
+    font-size: 9px;
+    letter-spacing: 0.17em;
     line-height: 1.2;
     text-transform: uppercase;
     color: var(--foreground);
   }
   .project-stack-icon {
     display: inline-flex;
-    width: 22px;
-    height: 22px;
+    width: 20px;
+    height: 20px;
     flex: 0 0 auto;
     align-items: center;
     justify-content: center;
@@ -647,6 +721,41 @@
     transition:
       transform 120ms steps(2, end),
       color 120ms linear;
+  }
+  .project-stack-tag {
+    border: 1px solid var(--border);
+    background: var(--background);
+    padding: 3px 6px;
+    font-family: var(--font-mono);
+    font-size: 9px;
+    line-height: 1.2;
+    color: color-mix(in oklab, var(--foreground) 82%, transparent);
+  }
+  .project-detail-links {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+  }
+  .project-detail-link {
+    display: inline-flex;
+    min-height: 34px;
+    align-items: center;
+    gap: 5px;
+    border: 2px solid var(--border);
+    background: var(--secondary);
+    padding: 5px 9px;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--secondary-foreground);
+  }
+  .project-detail-link:hover {
+    background: var(--pixel-active);
+    color: var(--pixel-active-foreground);
+  }
+  .project-detail-link:focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
   }
   @keyframes project-detail-enter {
     from {
@@ -803,7 +912,14 @@
       width: calc(100vw - 20px);
       padding: 10px;
     }
+    .project-detail-header {
+      gap: 10px;
+      margin-bottom: 10px;
+    }
     .project-detail-layout {
+      grid-template-columns: 1fr;
+    }
+    .project-stack-groups {
       grid-template-columns: 1fr;
     }
     .project-card-media {
@@ -812,6 +928,17 @@
   }
   @media (max-width: 900px) {
     .project-detail-layout {
+      grid-template-columns: 1fr;
+    }
+    .project-detail-media-column {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .project-stack-groups {
+      grid-template-columns: 1fr;
+    }
+  }
+  @media (max-width: 680px) {
+    .project-detail-media-column {
       grid-template-columns: 1fr;
     }
   }

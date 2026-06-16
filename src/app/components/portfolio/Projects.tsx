@@ -70,14 +70,9 @@ const PROJECTS: Project[] = [
         items: ["Expo SDK 54", "React Native", "TypeScript", "Expo Router", "React Context", "AsyncStorage", "Axios", "Supabase JS"],
       },
       {
-        label: "Admin Web Portal",
+        label: "Admin Web & Driver/Emergency Portal",
         icon: "web",
         items: ["React 19", "Vite 7", "Tailwind CSS v4", "React Router 7", "Axios", "Lucide React"],
-      },
-      {
-        label: "Driver/Emergency Web Portal",
-        icon: "portal",
-        items: ["React 19", "Vite 7", "Tailwind CSS v4", "React Router 7", "Axios", "Supabase JS"],
       },
       {
         label: "Backend",
@@ -274,13 +269,13 @@ function ProjectDetailDialog({ project }: { project: Project }) {
     <Dialog.Portal>
       <Dialog.Overlay className="project-detail-overlay" />
       <Dialog.Content className="project-detail-content">
-        <div className="mb-4 flex items-start justify-between gap-4">
+        <div className="project-detail-header">
           <div className="min-w-0">
-            <span className="mb-2 block font-mono text-xs tracking-[0.28em] text-[var(--accent-to)]">{project.index}</span>
+            <span className="project-detail-index">{project.index}</span>
             <Dialog.Title className="font-display text-3xl leading-none tracking-normal text-foreground">
               {project.name}
             </Dialog.Title>
-            <Dialog.Description className="mt-2 font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground">
+            <Dialog.Description className="project-detail-kicker">
               Project details
             </Dialog.Description>
           </div>
@@ -297,7 +292,7 @@ function ProjectDetailDialog({ project }: { project: Project }) {
         </div>
 
         <div className="project-detail-layout">
-          <div className="space-y-4">
+          <div className="project-detail-media-column">
             <ProjectPreview project={project} />
 
             {project.previewVideo && (
@@ -316,17 +311,17 @@ function ProjectDetailDialog({ project }: { project: Project }) {
             )}
           </div>
 
-          <div className="min-w-0">
+          <div className="project-detail-info">
             {project.featured && (
-              <span className="mb-4 inline-flex items-center border border-[var(--accent-to)]/40 bg-[var(--accent-to)]/10 px-2 py-1 font-mono text-[9px] uppercase tracking-widest text-[var(--accent-to)]">
+              <span className="project-detail-badge">
                 AAST Graduation project
               </span>
             )}
 
-            <p className="text-sm leading-6 text-muted-foreground">{project.blurb}</p>
+            <p className="project-detail-blurb">{project.blurb}</p>
 
-            <div className="mt-5">
-              <h4 className="mb-2 font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground">Stack</h4>
+            <div className="project-detail-section">
+              <h4 className="project-detail-section-title">Stack</h4>
               <div className="project-stack-groups">
                 {project.stackGroups.map((group) => {
                   const StackIcon = STACK_GROUP_ICON[group.icon];
@@ -341,7 +336,7 @@ function ProjectDetailDialog({ project }: { project: Project }) {
                       </h5>
                       <div className="flex flex-wrap gap-2">
                         {group.items.map((item) => (
-                          <span key={`${group.label}-${item}`} className="border border-border bg-background px-2 py-1 font-mono text-[10px] text-foreground/80">
+                          <span key={`${group.label}-${item}`} className="project-stack-tag">
                             {item}
                           </span>
                         ))}
@@ -352,9 +347,9 @@ function ProjectDetailDialog({ project }: { project: Project }) {
               </div>
             </div>
 
-            <div className="mt-5">
-              <h4 className="mb-2 font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground">Links</h4>
-              <div className="flex flex-wrap items-center gap-2.5">
+            <div className="project-detail-section">
+              <h4 className="project-detail-section-title">Links</h4>
+              <div className="project-detail-links">
                 {project.links.map((link) => {
                   const Icon = LINK_ICON[link.icon];
                   return (
@@ -363,7 +358,7 @@ function ProjectDetailDialog({ project }: { project: Project }) {
                       href={link.href}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex min-h-9 items-center gap-1 border-2 border-border bg-secondary px-2.5 py-1.5 text-xs font-medium text-secondary-foreground pixel-btn hover:bg-[var(--pixel-active)] hover:text-[var(--pixel-active-foreground)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--ring)]"
+                      className="project-detail-link pixel-btn"
                       aria-label={`Open ${project.name} ${link.label}`}
                     >
                       <Icon className="h-3.5 w-3.5" aria-hidden="true" />
@@ -381,9 +376,15 @@ function ProjectDetailDialog({ project }: { project: Project }) {
   );
 }
 
-function ProjectCard({ project }: { project: Project }) {
+function ProjectCard({
+  project,
+  onProjectDialogOpenChange,
+}: {
+  project: Project;
+  onProjectDialogOpenChange?: (open: boolean) => void;
+}) {
   return (
-    <Dialog.Root>
+    <Dialog.Root onOpenChange={onProjectDialogOpenChange}>
       <Dialog.Trigger asChild>
         <button
           type="button"
@@ -394,22 +395,22 @@ function ProjectCard({ project }: { project: Project }) {
           <div className="relative flex min-w-0 flex-1 flex-col justify-between px-1 pb-1">
             <div>
               <div className="mb-3 flex items-center justify-between gap-3">
-              <span className="font-mono text-xs tracking-[0.25em] text-[var(--accent-to)]">{project.index}</span>
-            </div>
+                <span className="font-mono text-xs tracking-[0.25em] text-[var(--accent-to)]">{project.index}</span>
+              </div>
 
-            <div className="flex items-center gap-2">
-              <h3 className="font-display text-[1.35rem] leading-none tracking-normal sm:text-[1.5rem]" style={{ fontWeight: 600 }}>
-                {project.name}
-              </h3>
+              <div className="flex items-center gap-2">
+                <h3 className="font-display text-[1.35rem] leading-none tracking-normal sm:text-[1.5rem]" style={{ fontWeight: 600 }}>
+                  {project.name}
+                </h3>
 
-              {project.featured && (
-                <span className="flex items-center border border-[var(--accent-to)]/40 bg-[var(--accent-to)]/10 px-2 font-mono text-[9px] uppercase tracking-widest text-[var(--accent-to)]">
-                  AAST Graduation project
-                </span>
-              )}
-            </div>
+                {project.featured && (
+                  <span className="flex items-center border border-[var(--accent-to)]/40 bg-[var(--accent-to)]/10 px-2 font-mono text-[9px] uppercase tracking-widest text-[var(--accent-to)]">
+                    AAST Graduation project
+                  </span>
+                )}
+              </div>
 
-            <p className="project-card-blurb mt-2 text-sm leading-5 text-muted-foreground">{project.blurb}</p>
+              <p className="project-card-blurb mt-2 text-sm leading-5 text-muted-foreground">{project.blurb}</p>
             </div>
 
             <span className="project-card-cue mt-4 inline-flex w-max border border-border bg-background px-2 py-1 font-mono text-[10px] uppercase tracking-[0.18em] text-[var(--accent-to)]">
@@ -424,7 +425,7 @@ function ProjectCard({ project }: { project: Project }) {
   );
 }
 
-export function Projects() {
+export function Projects({ onProjectDialogOpenChange }: { onProjectDialogOpenChange?: (open: boolean) => void }) {
   return (
     <section className="relative">
       <div className="mx-auto flex min-h-svh max-w-7xl flex-col justify-center px-5 pb-24 pt-16 sm:px-8 sm:pb-24 sm:pt-16">
@@ -440,7 +441,7 @@ export function Projects() {
         <div className="project-grid">
           {PROJECTS.map((project, i) => (
             <Reveal key={project.name} delay={(i % 2) * 0.08}>
-              <ProjectCard project={project} />
+              <ProjectCard project={project} onProjectDialogOpenChange={onProjectDialogOpenChange} />
             </Reveal>
           ))}
         </div>

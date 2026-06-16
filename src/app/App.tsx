@@ -25,6 +25,7 @@ export default function App() {
   const [theme, setTheme] = useState<Theme>(getInitialTheme);
   const [section, setSection] = useState<SectionId>("home");
   const [pending, setPending] = useState<SectionId | null>(null);
+  const [isProjectDialogOpen, setIsProjectDialogOpen] = useState(false);
   const lockUntil = useRef(0);
 
   useEffect(() => {
@@ -43,6 +44,10 @@ export default function App() {
       clearTimeout(done);
     };
   }, [pending]);
+
+  useEffect(() => {
+    if (section !== "projects") setIsProjectDialogOpen(false);
+  }, [section]);
 
   const navigate = useCallback(
     (target: SectionId) => {
@@ -66,6 +71,7 @@ export default function App() {
 
   // Wheel paging: scroll within a page until its edge, then advance.
   const onWheel = (e: React.WheelEvent<HTMLElement>) => {
+    if (isProjectDialogOpen) return;
     if (pending || Date.now() < lockUntil.current) return;
     if (Math.abs(e.deltaY) < 8) return;
     const el = e.currentTarget;
@@ -81,6 +87,7 @@ export default function App() {
     touchStart.current = { y: e.touches[0].clientY, top: e.currentTarget.scrollTop, el: e.currentTarget };
   };
   const onTouchEnd = (e: React.TouchEvent<HTMLElement>) => {
+    if (isProjectDialogOpen) return;
     if (pending || Date.now() < lockUntil.current) return;
     const el = touchStart.current.el;
     if (!el) return;
@@ -95,19 +102,20 @@ export default function App() {
   // Keyboard paging.
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
+      if (isProjectDialogOpen) return;
       if (e.key === "ArrowDown" || e.key === "PageDown") navigateRelative(1);
       else if (e.key === "ArrowUp" || e.key === "PageUp") navigateRelative(-1);
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [navigateRelative]);
+  }, [isProjectDialogOpen, navigateRelative]);
 
   const renderSection = (id: SectionId) => {
     switch (id) {
       case "home":
         return <Hero onNavigate={navigate} theme={theme} />;
       case "projects":
-        return <Projects />;
+        return <Projects onProjectDialogOpenChange={setIsProjectDialogOpen} />;
       case "skills":
         return <Skills />;
       case "contact":
