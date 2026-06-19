@@ -149,7 +149,7 @@ export function Hero({ onNavigate, theme }: HeroProps) {
         className="absolute left-1/2 font-mono text-[10px] uppercase tracking-[0.3em] text-muted-foreground transition-colors hover:text-foreground"
         style={{ bottom: "calc(5.75rem + env(safe-area-inset-bottom))" }}
       >
-        enter ↗
+        Explore ↗
       </motion.button>
     </section>
   );
