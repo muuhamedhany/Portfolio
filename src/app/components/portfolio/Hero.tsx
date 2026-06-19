@@ -16,7 +16,7 @@ function EmblemFallback() {
   );
 }
 
-const NAME_LINES = ["Muhammed", "Hany"];
+const NAME_LINES = ["Muuhamed", "Hany"];
 
 const container = {
   hidden: {},
