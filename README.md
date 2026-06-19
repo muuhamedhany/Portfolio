@@ -38,24 +38,3 @@ npm run dev
 ```
 
 The portfolio will be available at `http://localhost:5173` (or your configured port). 🎉
-
----
-
-## 📂 Project Structure
-
-This project is built from the design available at:
-https://www.figma.com/design/C6cLGSyqHuvaV8rivz4ibo/Personal-Developer-Portfolio
-
-🎯 **Figma Design**: Beautiful UI/UX from the ground up
-
----
-
-## 📝 License
-
-📄 This project is open source and available under the MIT License.
-
----
-
-💖 Built with ❤️ by [Muuhamed Hany](https://github.com/muuhamedhany)
-
-⭐ **If you found this helpful, consider giving it a star!**
