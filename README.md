@@ -1,4 +1,4 @@
-# 🎨 Personal Developer Portfolio
+# 🎨 Personal Portfolio
 
 ✨ Showcasing my craft, one pixel at a time. A modern, responsive portfolio built to highlight my best work and skills.
 
