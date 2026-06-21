@@ -3,8 +3,8 @@ import { Reveal } from "./Reveal";
 
 // Update these with your real handles.
 const CONTACTS = [
-  { label: "Email", value: "muuhamedhany@gmail.com", href: "mailto:mohamed.hany@email.com", icon: Mail },
-  { label: "LinkedIn", value: "in/muuhammed-hany", href: "https://linkedin.com/in/mohamed-hany-helmy", icon: Linkedin },
+  { label: "Email", value: "muuhamedhany@gmail.com", href: "mailto:muuhamedhany@gmail.com", icon: Mail },
+  { label: "LinkedIn", value: "in/muuhammed-hany", href: "https://www.linkedin.com/in/muuhammed-hany", icon: Linkedin },
   { label: "GitHub", value: "muuhamedhany", href: "https://github.com/muuhamedhany", icon: Github },
 ];
 
