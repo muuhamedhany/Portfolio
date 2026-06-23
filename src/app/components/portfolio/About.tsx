@@ -1,4 +1,4 @@
-import type { CSSProperties } from "react";
+import { useEffect, useMemo, useState, type CSSProperties } from "react";
 import type { IconType } from "react-icons";
 import { Github, Instagram, Linkedin } from "lucide-react";
 import {
@@ -75,9 +75,87 @@ const TECH_ICONS: Record<TechName, { Icon: IconType; color: string }> = {
 
 const SOCIALS = [
   { label: "Instagram", value: "@muuhamedhany", href: "https://www.instagram.com/muuhamedhany/", icon: Instagram },
-  { label: "LinkedIn", value: "in/mohamed-hany-helmy", href: "https://linkedin.com/in/mohamed-hany-helmy", icon: Linkedin },
+  { label: "LinkedIn", value: "in/muuhammed-hany", href: "https://www.linkedin.com/in/muuhammed-hany", icon: Linkedin },
   { label: "GitHub", value: "muuhamedhany", href: "https://github.com/muuhamedhany", icon: Github },
 ];
+
+const HERO_ROLES = ["Frontend developer", "UI/UX designer"];
+
+function useTypewriter(words: string[]) {
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
+  const [wordIndex, setWordIndex] = useState(0);
+  const [visibleCount, setVisibleCount] = useState(0);
+  const [phase, setPhase] = useState<"typing" | "holding" | "deleting">("typing");
+
+  useEffect(() => {
+    const media = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const updatePreference = () => setPrefersReducedMotion(media.matches);
+
+    updatePreference();
+    media.addEventListener("change", updatePreference);
+    return () => media.removeEventListener("change", updatePreference);
+  }, []);
+
+  useEffect(() => {
+    if (prefersReducedMotion) return;
+
+    const currentWord = words[wordIndex];
+    let delay = 72;
+    if (phase === "holding") delay = 1150;
+    if (phase === "deleting") delay = 42;
+    if (phase === "deleting" && visibleCount === 0) delay = 220;
+
+    const timeout = window.setTimeout(() => {
+      if (phase === "typing") {
+        if (visibleCount < currentWord.length) {
+          setVisibleCount((count) => count + 1);
+        } else {
+          setPhase("holding");
+        }
+        return;
+      }
+
+      if (phase === "holding") {
+        setPhase("deleting");
+        return;
+      }
+
+      if (visibleCount > 0) {
+        setVisibleCount((count) => count - 1);
+      } else {
+        setWordIndex((index) => (index + 1) % words.length);
+        setPhase("typing");
+      }
+    }, delay);
+
+    return () => window.clearTimeout(timeout);
+  }, [phase, prefersReducedMotion, visibleCount, wordIndex, words]);
+
+  return useMemo(() => {
+    if (prefersReducedMotion) {
+      return { text: words.join(" / "), prefersReducedMotion };
+    }
+
+    return { text: words[wordIndex].slice(0, visibleCount), prefersReducedMotion };
+  }, [prefersReducedMotion, visibleCount, wordIndex, words]);
+}
+
+function HeroRoleLine() {
+  const { text, prefersReducedMotion } = useTypewriter(HERO_ROLES);
+
+  return (
+    <p className="about-hero-line max-w-3xl text-balance font-display leading-[0.95] tracking-normal" style={{ fontSize: "clamp(2.3rem, 7vw, 5rem)", fontWeight: 700 }}>
+      <span className="sr-only">Frontend developer and UI/UX designer based in Egypt.</span>
+      <span aria-hidden="true">
+        <span className="about-role-wrap">
+          <span className="text-gradient">{text || "\u00a0"}</span>
+          {!prefersReducedMotion && <span className="about-type-caret" aria-hidden="true" />}
+        </span>{" "}
+        based in Egypt.
+      </span>
+    </p>
+  );
+}
 
 function TechStack() {
   const row = [...TECH_STACK, ...TECH_STACK];
@@ -148,12 +226,12 @@ function SocialLinks() {
 export function About() {
   return (
     <section className="relative">
-      <div className="mx-auto grid min-h-svh max-w-7xl content-center gap-10 px-5 pb-28 pt-24 sm:px-8 sm:pb-24 lg:grid-cols-[82px_minmax(0,1fr)_82px] lg:gap-12">
+      <div className="about-layout mx-auto grid min-h-svh max-w-7xl content-center gap-10 px-5 pb-28 pt-24 sm:px-8 sm:pb-24 lg:grid-cols-[82px_minmax(0,1fr)_82px] lg:gap-12">
         <TechStack />
 
-        <div className="order-2 min-w-0">
+        <div className="about-content order-2 min-w-0">
           <Reveal>
-            <div className="mb-8 flex items-end justify-between gap-4">
+            <div className="about-title-row mb-8 flex items-end justify-between gap-4">
               <h2 className="font-display tracking-normal" style={{ fontSize: "clamp(1.75rem, 5vw, 3rem)", fontWeight: 600 }}>
                 About
               </h2>
@@ -162,18 +240,16 @@ export function About() {
           </Reveal>
 
           <Reveal delay={0.06}>
-            <p className="max-w-3xl text-balance font-display leading-[0.95] tracking-normal" style={{ fontSize: "clamp(2.3rem, 7vw, 5rem)", fontWeight: 700 }}>
-              Frontend developer and <span className="text-gradient">UI/UX designer</span> based in Egypt.
-            </p>
+            <HeroRoleLine />
           </Reveal>
 
           <Reveal delay={0.12}>
-            <p className="mt-8 max-w-3xl text-base leading-8 text-muted-foreground sm:text-lg">
+            <p className="about-copy mt-8 max-w-3xl text-base leading-8 text-muted-foreground sm:text-lg">
               I graduated from AASTMT with a Bachelor's in Information Systems and spent the last few years building full-stack web and mobile applications. Before code, I spent years doing digital illustration - that design instinct still drives how I build interfaces today. I care about the details most developers skip. Currently open to new opportunities.
             </p>
           </Reveal>
 
-          <div className="mt-10 max-w-3xl border-t border-border" aria-hidden="true" />
+          <div className="about-divider mt-10 max-w-3xl border-t border-border" aria-hidden="true" />
         </div>
 
         <SocialLinks />

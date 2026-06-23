@@ -420,15 +420,20 @@
     border-block: 1px solid var(--border);
     isolation: isolate;
     overscroll-behavior: contain;
-    scrollbar-width: thin;
-    scrollbar-color: var(--border) transparent;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .about-tech-marquee::-webkit-scrollbar {
+    display: none;
   }
   .about-tech-marquee-track {
     display: flex;
     width: 100%;
     flex-direction: column;
     align-items: center;
-    gap: 20px;
+    --about-tech-gap: 20px;
+    --about-tech-loop-offset: 10px;
+    gap: var(--about-tech-gap);
     padding-block: 18px;
     animation: about-tech-marquee-slide-y 28s linear infinite;
     will-change: transform;
@@ -542,12 +547,12 @@
   }
   @keyframes about-tech-marquee-slide-y {
     to {
-      transform: translateY(-50%);
+      transform: translateY(calc(-50% - var(--about-tech-loop-offset)));
     }
   }
   @keyframes about-tech-marquee-slide-x {
     to {
-      transform: translateX(-50%);
+      transform: translateX(calc(-50% - var(--about-tech-loop-offset)));
     }
   }
   .about-social-stack {
@@ -640,6 +645,26 @@
   .about-social-link:focus-visible .about-social-label {
     transform: translate(0, -50%) scale(1);
     opacity: 1;
+  }
+  .about-role-wrap {
+    display: inline-flex;
+    min-width: 10.6ch;
+    align-items: baseline;
+    white-space: nowrap;
+  }
+  .about-type-caret {
+    display: inline-block;
+    width: 0.12em;
+    height: 0.72em;
+    margin-left: 0.07em;
+    background: var(--accent-to);
+    transform: translateY(0.06em);
+    animation: about-type-caret-blink 760ms steps(2, end) infinite;
+  }
+  @keyframes about-type-caret-blink {
+    50% {
+      opacity: 0;
+    }
   }
   .project-grid {
     display: grid;
@@ -1179,13 +1204,28 @@
     }
   }
   @media (max-width: 1023px) {
+    .about-layout {
+      display: flex;
+      flex-direction: column;
+      align-content: start;
+      grid-template-columns: minmax(0, 1fr);
+      gap: 22px;
+      padding-top: 64px;
+      overflow-x: hidden;
+    }
     .about-tech-stack {
+      min-width: 0;
       width: 100%;
       justify-self: stretch;
     }
+    .about-tech-stack h3 {
+      font-size: 10px;
+      letter-spacing: 0.2em;
+    }
     .about-tech-marquee {
       width: 100%;
-      height: 92px;
+      max-width: 100%;
+      height: 70px;
       min-height: 0;
       overflow-x: auto;
       overflow-y: hidden;
@@ -1197,9 +1237,19 @@
       min-width: 100%;
       flex-direction: row;
       justify-content: flex-start;
-      gap: 22px;
-      padding: 10px 2px;
+      --about-tech-gap: 18px;
+      --about-tech-loop-offset: 9px;
+      gap: var(--about-tech-gap);
+      padding: 7px 2px;
       animation: about-tech-marquee-slide-x 28s linear infinite;
+    }
+    .about-tech-chip {
+      min-height: 56px;
+      min-width: 56px;
+    }
+    .about-tech-glyph {
+      width: 29px;
+      height: 29px;
     }
     .about-tech-fade {
       inset-block: 0;
@@ -1225,8 +1275,67 @@
     .about-tech-chip:focus-visible .about-tech-label {
       transform: translate(-50%, 0) scale(1);
     }
+    .about-content {
+      order: 2;
+      min-width: 0;
+    }
+    .about-title-row {
+      margin-bottom: 14px;
+      align-items: baseline;
+    }
+    .about-title-row h2 {
+      font-size: 2rem !important;
+    }
+    .about-title-row span {
+      font-size: 10px;
+      letter-spacing: 0.18em;
+    }
+    .about-hero-line {
+      max-width: 100%;
+      font-size: clamp(1.95rem, 8.9vw, 2.45rem) !important;
+      line-height: 1;
+    }
+    .about-copy {
+      margin-top: 20px;
+      font-size: 0.92rem;
+      line-height: 1.65;
+    }
+    .about-divider {
+      margin-top: 22px;
+    }
     .about-social-stack {
-      gap: 18px;
+      min-width: 0;
+      width: 100%;
+      flex-direction: row;
+      gap: 16px;
+      overflow: visible;
+      align-self: start;
+      justify-self: stretch;
+      justify-content: center;
+      order: 3;
+      margin-top: auto;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      padding-top: 16px;
+      padding-bottom: 16px;
+    }
+    .about-social-link {
+      min-height: 54px;
+      min-width: 54px;
+    }
+    .about-social-icon {
+      width: 24px;
+      height: 24px;
+    }
+    .about-social-label {
+      left: 50%;
+      right: auto;
+      top: calc(100% + 8px);
+      transform: translate(-50%, -5px) scale(0.96);
+    }
+    .about-social-link:hover .about-social-label,
+    .about-social-link:focus-visible .about-social-label {
+      transform: translate(-50%, 0) scale(1);
     }
   }
   @media (max-width: 639px) {
