@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { Nav } from "./components/portfolio/Nav";
 import { Hero } from "./components/portfolio/Hero";
-import { Skills } from "./components/portfolio/Skills";
+import { About } from "./components/portfolio/About";
 import { Projects } from "./components/portfolio/Projects";
 import { Contact } from "./components/portfolio/Contact";
 import { Transition } from "./components/portfolio/Transition";
@@ -116,8 +116,8 @@ export default function App() {
         return <Hero onNavigate={navigate} theme={theme} />;
       case "projects":
         return <Projects onProjectDialogOpenChange={setIsProjectDialogOpen} />;
-      case "skills":
-        return <Skills />;
+      case "about":
+        return <About />;
       case "contact":
         return <Contact />;
     }

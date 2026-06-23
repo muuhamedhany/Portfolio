@@ -405,33 +405,42 @@
     background: var(--pixel-active);
     box-shadow: 1px 1px 0 var(--pixel-shadow);
   }
-  .skills-marquee {
+  .about-tech-stack {
+    align-self: center;
+  }
+  .about-tech-marquee {
+    position: relative;
+    height: min(610px, calc(100svh - 260px));
+    min-height: 360px;
+    overflow: hidden;
+    border-block: 1px solid var(--border);
     isolation: isolate;
   }
-  .skills-marquee-track {
+  .about-tech-marquee-track {
     display: flex;
-    width: max-content;
+    width: 100%;
+    flex-direction: column;
     align-items: center;
-    gap: 22px;
-    white-space: nowrap;
-    animation: skills-marquee-slide 30s linear infinite;
+    gap: 18px;
+    padding-block: 18px;
+    animation: about-tech-marquee-slide 28s linear infinite;
     will-change: transform;
   }
-  .skills-marquee:hover .skills-marquee-track,
-  .skills-marquee:focus-within .skills-marquee-track {
+  .about-tech-marquee:hover .about-tech-marquee-track,
+  .about-tech-marquee:focus-within .about-tech-marquee-track {
     animation-play-state: paused;
   }
-  .skill-icon-chip {
+  .about-tech-chip {
     --skill-color: var(--accent-to);
     position: relative;
     display: inline-flex;
     min-height: 68px;
     min-width: 68px;
+    flex: 0 0 auto;
     align-items: center;
     justify-content: center;
     border: 2px solid var(--border);
     background: var(--card);
-    color: var(--muted-foreground);
     color: color-mix(in oklab, var(--muted-foreground) 72%, var(--foreground));
     box-shadow:
       inset 2px 2px 0 var(--pixel-edge-light),
@@ -450,7 +459,7 @@
       5px 100%, 5px calc(100% - 5px), 0 calc(100% - 5px)
     );
   }
-  .skill-icon-glyph {
+  .about-tech-glyph {
     width: 36px;
     height: 36px;
     filter: grayscale(1) saturate(0.2);
@@ -461,14 +470,14 @@
       filter 140ms linear,
       opacity 140ms linear;
   }
-  .skill-icon-label {
+  .about-tech-label {
     position: absolute;
-    left: 50%;
-    bottom: calc(100% + 8px);
+    left: calc(100% + 12px);
+    top: 50%;
     z-index: 2;
     width: max-content;
-    max-width: 170px;
-    transform: translate(-50%, 5px) scale(0.96);
+    max-width: 180px;
+    transform: translate(-5px, -50%) scale(0.96);
     border: 1px solid var(--pixel-frame);
     background: var(--foreground);
     padding: 5px 8px;
@@ -491,28 +500,27 @@
       4px 100%, 4px calc(100% - 4px), 0 calc(100% - 4px)
     );
   }
-  .skill-icon-chip:hover,
-  .skill-icon-chip:focus-visible {
+  .about-tech-chip:hover,
+  .about-tech-chip:focus-visible {
     transform: translate(-2px, -2px);
     border-color: var(--skill-color);
     color: var(--skill-color);
-    filter: drop-shadow(0 0 10px rgba(143, 128, 255, 0.18));
     filter: drop-shadow(0 0 10px color-mix(in oklab, var(--skill-color) 24%, transparent));
   }
-  .skill-icon-chip:hover .skill-icon-glyph,
-  .skill-icon-chip:focus-visible .skill-icon-glyph {
+  .about-tech-chip:hover .about-tech-glyph,
+  .about-tech-chip:focus-visible .about-tech-glyph {
     transform: scale(1.12);
     filter: grayscale(0) saturate(1);
     opacity: 1;
   }
-  .skill-icon-chip:hover .skill-icon-label,
-  .skill-icon-chip:focus-visible .skill-icon-label {
-    transform: translate(-50%, 0) scale(1);
+  .about-tech-chip:hover .about-tech-label,
+  .about-tech-chip:focus-visible .about-tech-label {
+    transform: translate(0, -50%) scale(1);
     opacity: 1;
   }
-  @keyframes skills-marquee-slide {
+  @keyframes about-tech-marquee-slide {
     to {
-      transform: translateX(-50%);
+      transform: translateY(-50%);
     }
   }
   .project-grid {
@@ -1013,9 +1021,13 @@
     .project-detail-content {
       animation: none;
     }
-    .skills-marquee-track {
+    .about-tech-marquee-track {
       animation: none;
       transform: none;
+    }
+    .about-tech-chip,
+    .about-tech-glyph {
+      transition: none;
     }
     .project-tech-tile {
       transition: none;

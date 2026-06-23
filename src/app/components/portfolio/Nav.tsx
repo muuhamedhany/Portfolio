@@ -1,9 +1,9 @@
 import { motion } from "motion/react";
 import { Icon } from "@iconify/react";
-import codeIcon from "@iconify-icons/pixelarticons/code";
 import folderIcon from "@iconify-icons/pixelarticons/folder";
 import homeIcon from "@iconify-icons/pixelarticons/home";
 import mailIcon from "@iconify-icons/pixelarticons/mail";
+import userIcon from "@iconify-icons/pixelarticons/user";
 import { ThemeToggle } from "./ThemeToggle";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 import { SECTIONS, type SectionId } from "./sections";
@@ -20,7 +20,7 @@ type PixelNavIcon = typeof homeIcon;
 const SECTION_ICONS: Record<SectionId, PixelNavIcon> = {
   home: homeIcon,
   projects: folderIcon,
-  skills: codeIcon,
+  about: userIcon,
   contact: mailIcon,
 };
 
