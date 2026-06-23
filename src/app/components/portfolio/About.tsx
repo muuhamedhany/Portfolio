@@ -1,6 +1,6 @@
 import type { CSSProperties } from "react";
 import type { IconType } from "react-icons";
-import { ArrowUpRight, Github, Instagram, Linkedin } from "lucide-react";
+import { Github, Instagram, Linkedin } from "lucide-react";
 import {
   SiCss,
   SiExpress,
@@ -40,22 +40,18 @@ type TechName =
   | "Framer Motion";
 
 const TECH_STACK: TechName[] = [
-  "HTML",
-  "CSS",
   "JavaScript",
-  "TypeScript",
   "React",
+  "TypeScript",
   "Tailwind",
   "Node.js",
   "Express.js",
-  "PHP",
   "PostgreSQL",
   "MySQL",
   "Supabase",
   "Git",
   "Github",
   "Figma",
-  "Framer Motion",
 ];
 
 const TECH_ICONS: Record<TechName, { Icon: IconType; color: string }> = {
@@ -87,11 +83,11 @@ function TechStack() {
   const row = [...TECH_STACK, ...TECH_STACK];
 
   return (
-    <aside aria-labelledby="about-tech-heading" className="about-tech-stack order-2 lg:order-1">
+    <aside aria-labelledby="about-tech-heading" className="about-tech-stack order-1">
       <h3 id="about-tech-heading" className="font-mono text-xs uppercase tracking-[0.24em] text-muted-foreground">
         Tech Stack
       </h3>
-      <div className="about-tech-marquee mt-5" aria-label="Technology slideshow">
+      <div className="about-tech-marquee mt-5" aria-label="Technology stack">
         <div className="about-tech-marquee-track">
           {row.map((tech, i) => {
             const { Icon, color } = TECH_ICONS[tech];
@@ -115,9 +111,36 @@ function TechStack() {
             );
           })}
         </div>
-        <div className="pointer-events-none absolute inset-x-0 top-0 h-16 bg-gradient-to-b from-background to-transparent" />
-        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-background to-transparent" />
+        <div className="about-tech-fade about-tech-fade-start pointer-events-none" />
+        <div className="about-tech-fade about-tech-fade-end pointer-events-none" />
       </div>
+    </aside>
+  );
+}
+
+function SocialLinks() {
+  return (
+    <aside aria-label="Social links" className="about-social-stack order-3">
+      {SOCIALS.map((social, i) => {
+        const Icon = social.icon;
+
+        return (
+          <Reveal key={social.label} delay={0.18 + i * 0.05}>
+            <a
+              href={social.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="about-social-link"
+              aria-label={social.label}
+            >
+              <Icon className="about-social-icon" aria-hidden="true" />
+              <span className="about-social-label" aria-hidden="true">
+                {social.label}
+              </span>
+            </a>
+          </Reveal>
+        );
+      })}
     </aside>
   );
 }
@@ -125,10 +148,10 @@ function TechStack() {
 export function About() {
   return (
     <section className="relative">
-      <div className="mx-auto grid min-h-svh max-w-6xl content-center gap-10 px-5 pb-28 pt-24 sm:px-8 sm:pb-24 lg:grid-cols-[minmax(190px,260px)_1fr] lg:gap-16">
+      <div className="mx-auto grid min-h-svh max-w-7xl content-center gap-10 px-5 pb-28 pt-24 sm:px-8 sm:pb-24 lg:grid-cols-[82px_minmax(0,1fr)_82px] lg:gap-12">
         <TechStack />
 
-        <div className="order-1 min-w-0 lg:order-2">
+        <div className="order-2 min-w-0">
           <Reveal>
             <div className="mb-8 flex items-end justify-between gap-4">
               <h2 className="font-display tracking-normal" style={{ fontSize: "clamp(1.75rem, 5vw, 3rem)", fontWeight: 600 }}>
@@ -150,31 +173,10 @@ export function About() {
             </p>
           </Reveal>
 
-          <div className="mt-10 max-w-3xl divide-y divide-border border-y border-border">
-            {SOCIALS.map((social, i) => {
-              const Icon = social.icon;
-              return (
-                <Reveal key={social.label} delay={0.18 + i * 0.05}>
-                  <a
-                    href={social.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="group flex items-center justify-between gap-4 py-5 transition-colors focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ring"
-                  >
-                    <span className="flex min-w-0 items-center gap-4">
-                      <Icon className="h-5 w-5 flex-none text-muted-foreground transition-colors group-hover:text-[var(--accent-to)]" aria-hidden="true" />
-                      <span className="font-mono text-xs uppercase tracking-[0.2em] text-muted-foreground">{social.label}</span>
-                      <span className="truncate text-base text-foreground transition-colors group-hover:text-gradient sm:text-lg">
-                        {social.value}
-                      </span>
-                    </span>
-                    <ArrowUpRight className="h-5 w-5 flex-none text-muted-foreground transition-all group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-[var(--accent-to)]" aria-hidden="true" />
-                  </a>
-                </Reveal>
-              );
-            })}
-          </div>
+          <div className="mt-10 max-w-3xl border-t border-border" aria-hidden="true" />
         </div>
+
+        <SocialLinks />
       </div>
     </section>
   );
