@@ -249,7 +249,6 @@ export function About() {
             </p>
           </Reveal>
 
-          <div className="about-divider mt-10 max-w-3xl border-t border-border" aria-hidden="true" />
         </div>
 
         <SocialLinks />

@@ -18,7 +18,7 @@ export function Contact() {
             className="mt-5 font-display leading-[0.95] tracking-normal"
             style={{ fontSize: "clamp(2.5rem, 9vw, 6rem)", fontWeight: 700 }}
           >
-            Let's build <span className="text-gradient">something.</span>
+            Let's build <span className="text-gradient">something!</span>
           </h2>
         </Reveal>
 
