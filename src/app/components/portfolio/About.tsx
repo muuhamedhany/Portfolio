@@ -233,7 +233,7 @@ export function About() {
           <Reveal>
             <div className="about-title-row mb-8 flex items-end justify-between gap-4">
               <h2 className="font-display tracking-normal" style={{ fontSize: "clamp(1.75rem, 5vw, 3rem)", fontWeight: 600 }}>
-                About
+                ABOUT
               </h2>
               <span className="font-mono text-xs uppercase tracking-[0.25em] text-muted-foreground">02 / About</span>
             </div>

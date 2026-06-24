@@ -53,12 +53,6 @@
   --pixel-active: #5146a8;
   --pixel-active-foreground: #ffffff;
   --pixel-shadow: rgba(20, 18, 30, 0.35);
-  --cursor-default: url("/cursors/pointer_a.png") 3 3, auto;
-  --cursor-pointer: url("/cursors/hand_point.png") 8 4, pointer;
-  --cursor-text: url("/cursors/line_vertical.png") 12 12, text;
-  --cursor-disabled: url("/cursors/cursor_disabled.png") 12 12, not-allowed;
-  --cursor-grab: url("/cursors/hand_open.png") 11 8, grab;
-  --cursor-grabbing: url("/cursors/hand_closed.png") 11 8, grabbing;
   --chart-1: #e76f51;
   --chart-2: #2a9d8f;
   --chart-3: #264653;
@@ -186,7 +180,6 @@
     @apply bg-background text-foreground;
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
-    cursor: var(--cursor-default);
   }
 
   a,
@@ -195,13 +188,13 @@
   summary,
   select,
   label[for] {
-    cursor: var(--cursor-pointer);
+    cursor: pointer;
   }
 
   input,
   textarea,
   [contenteditable='true'] {
-    cursor: var(--cursor-text);
+    cursor: text;
   }
 
   button:disabled,
@@ -209,12 +202,7 @@
   textarea:disabled,
   select:disabled,
   [aria-disabled='true'] {
-    cursor: var(--cursor-disabled);
-  }
-
-  .custom-cursor-enabled,
-  .custom-cursor-enabled * {
-    cursor: none !important;
+    cursor: not-allowed;
   }
 
   ::selection {
@@ -404,6 +392,17 @@
   .pixel-status-chip-marker {
     background: var(--pixel-active);
     box-shadow: 1px 1px 0 var(--pixel-shadow);
+  }
+  .hero-role-ticker {
+    display: inline-flex;
+    min-height: 1.4em;
+    align-items: center;
+  }
+  .hero-role-wrap {
+    display: inline-flex;
+    min-width: 12ch;
+    align-items: baseline;
+    white-space: nowrap;
   }
   .about-tech-stack {
     align-self: center;
@@ -1371,61 +1370,6 @@
   @media (max-width: 680px) {
     .project-detail-media-column {
       grid-template-columns: 1fr;
-    }
-  }
-  .pixel-custom-cursor {
-    --cursor-x: -100px;
-    --cursor-y: -100px;
-    --cursor-hot-x: 0px;
-    --cursor-hot-y: 0px;
-    position: fixed;
-    left: 0;
-    top: 0;
-    z-index: 2147483647;
-    width: 24px;
-    height: 24px;
-    pointer-events: none;
-    opacity: 1;
-    transform: translate3d(
-      calc(var(--cursor-x) - var(--cursor-hot-x)),
-      calc(var(--cursor-y) - var(--cursor-hot-y)),
-      0
-    );
-    will-change: transform;
-  }
-  .pixel-custom-cursor[data-visible='false'] {
-    opacity: 0;
-  }
-  .pixel-custom-cursor img {
-    display: block;
-    width: 24px;
-    height: 24px;
-    user-select: none;
-    image-rendering: pixelated;
-    filter: drop-shadow(1px 1px 0 rgba(0, 0, 0, 0.32));
-    animation: cursor-form-swap 110ms steps(3, end);
-  }
-  .pixel-custom-cursor[data-kind='grabbing'] img {
-    transform: scale(0.92);
-  }
-  @keyframes cursor-form-swap {
-    0% {
-      opacity: 0.45;
-      transform: scale(0.82);
-    }
-    100% {
-      opacity: 1;
-      transform: scale(1);
-    }
-  }
-  @media (prefers-reduced-motion: reduce) {
-    .pixel-custom-cursor img {
-      animation: none;
-    }
-  }
-  @media (hover: none), (pointer: coarse) {
-    .pixel-custom-cursor {
-      display: none;
     }
   }
   /* nudge into the shadow on press/hover for a tactile "button" feel */

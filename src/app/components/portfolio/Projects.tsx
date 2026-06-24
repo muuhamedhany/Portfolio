@@ -454,7 +454,7 @@ export function Projects({ onProjectDialogOpenChange }: { onProjectDialogOpenCha
         <Reveal>
           <div className="mb-6 flex items-end justify-between gap-4 sm:mb-7">
             <h2 className="font-display tracking-normal" style={{ fontSize: "clamp(1.75rem, 5vw, 3rem)", fontWeight: 600 }}>
-              Selected Work
+              SELECTED WORK
             </h2>
             <span className="font-mono text-xs uppercase tracking-[0.25em] text-muted-foreground">01 / Projects</span>
           </div>

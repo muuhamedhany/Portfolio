@@ -1,4 +1,4 @@
-import { lazy, Suspense } from "react";
+import { lazy, Suspense, useEffect, useMemo, useState } from "react";
 import { motion } from "motion/react";
 import { ArrowRight, Download } from "lucide-react";
 import type { SectionId } from "./sections";
@@ -17,6 +17,7 @@ function EmblemFallback() {
 }
 
 const NAME_LINES = ["Muuhamed", "Hany"];
+const HERO_ROLES = ["Frontend Developer", "UI/UX Designer", "Full stack Developer"];
 
 const container = {
   hidden: {},
@@ -26,6 +27,79 @@ const lineVariant = {
   hidden: { opacity: 0, y: "70%" },
   show: { opacity: 1, y: 0, transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] as const } },
 };
+
+function useTypewriter(words: string[]) {
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
+  const [wordIndex, setWordIndex] = useState(0);
+  const [visibleCount, setVisibleCount] = useState(0);
+  const [phase, setPhase] = useState<"typing" | "holding" | "deleting">("typing");
+
+  useEffect(() => {
+    const media = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const updatePreference = () => setPrefersReducedMotion(media.matches);
+
+    updatePreference();
+    media.addEventListener("change", updatePreference);
+    return () => media.removeEventListener("change", updatePreference);
+  }, []);
+
+  useEffect(() => {
+    if (prefersReducedMotion) return;
+
+    const currentWord = words[wordIndex];
+    let delay = 72;
+    if (phase === "holding") delay = 1150;
+    if (phase === "deleting") delay = 42;
+    if (phase === "deleting" && visibleCount === 0) delay = 220;
+
+    const timeout = window.setTimeout(() => {
+      if (phase === "typing") {
+        if (visibleCount < currentWord.length) {
+          setVisibleCount((count) => count + 1);
+        } else {
+          setPhase("holding");
+        }
+        return;
+      }
+
+      if (phase === "holding") {
+        setPhase("deleting");
+        return;
+      }
+
+      if (visibleCount > 0) {
+        setVisibleCount((count) => count - 1);
+      } else {
+        setWordIndex((index) => (index + 1) % words.length);
+        setPhase("typing");
+      }
+    }, delay);
+
+    return () => window.clearTimeout(timeout);
+  }, [phase, prefersReducedMotion, visibleCount, wordIndex, words]);
+
+  return useMemo(() => {
+    if (prefersReducedMotion) {
+      return { text: words.join(" / "), prefersReducedMotion };
+    }
+
+    return { text: words[wordIndex].slice(0, visibleCount), prefersReducedMotion };
+  }, [prefersReducedMotion, visibleCount, wordIndex, words]);
+}
+
+function HeroRoleTicker() {
+  const { text, prefersReducedMotion } = useTypewriter(HERO_ROLES);
+
+  return (
+    <span className="hero-role-ticker">
+      <span className="sr-only">Frontend Developer, UI/UX, Full stack</span>
+      <span aria-hidden="true" className="hero-role-wrap text-foreground">
+        {text || "\u00a0"}
+        {!prefersReducedMotion && <span className="about-type-caret" aria-hidden="true" />}
+      </span>
+    </span>
+  );
+}
 
 interface HeroProps {
   onNavigate: (id: SectionId) => void;
@@ -76,11 +150,7 @@ export function Hero({ onNavigate, theme }: HeroProps) {
             transition={{ delay: 0.95, duration: 0.6 }}
             className="mt-7 flex flex-wrap items-center gap-x-3 gap-y-2 font-mono text-xs uppercase tracking-[0.18em] text-muted-foreground sm:text-sm"
           >
-            <span className="text-foreground">Frontend Developer</span>
-            <span className="text-[var(--accent-to)]">·</span>
-            <span>Full Stack</span>
-            <span className="text-[var(--accent-to)]">·</span>
-            <span>UI/UX</span>
+            <HeroRoleTicker />
           </motion.div>
 
           <motion.p
