@@ -1489,6 +1489,216 @@
     );
   }
 
+  /* ─────────────────────────────────────────────────
+     Hero Redesign — Ambient Glow Layer
+  ───────────────────────────────────────────────── */
+  .hero-ambient-glow {
+    z-index: 0;
+  }
+  .hero-ambient-orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(72px);
+    will-change: transform;
+  }
+  .hero-ambient-orb-primary {
+    width: 520px;
+    height: 520px;
+    background: radial-gradient(
+      circle at center,
+      color-mix(in oklab, var(--accent-to) 18%, transparent) 0%,
+      transparent 70%
+    );
+    bottom: -80px;
+    right: -60px;
+    animation: hero-orb-drift-primary 22s ease-in-out infinite alternate;
+  }
+  .hero-ambient-orb-secondary {
+    width: 380px;
+    height: 380px;
+    background: radial-gradient(
+      circle at center,
+      color-mix(in oklab, var(--accent-from) 10%, transparent) 0%,
+      transparent 70%
+    );
+    top: -40px;
+    left: -80px;
+    animation: hero-orb-drift-secondary 28s ease-in-out infinite alternate;
+  }
+  @keyframes hero-orb-drift-primary {
+    0%   { transform: translate(0, 0) scale(1); }
+    33%  { transform: translate(-30px, -24px) scale(1.05); }
+    66%  { transform: translate(18px, -40px) scale(0.97); }
+    100% { transform: translate(-12px, 20px) scale(1.03); }
+  }
+  @keyframes hero-orb-drift-secondary {
+    0%   { transform: translate(0, 0) scale(1); }
+    40%  { transform: translate(24px, 30px) scale(1.06); }
+    70%  { transform: translate(-16px, 18px) scale(0.95); }
+    100% { transform: translate(10px, -20px) scale(1.04); }
+  }
+  /* Reduce orb opacity in light mode */
+  :root .hero-ambient-orb-primary  { opacity: 0.55; }
+  :root .hero-ambient-orb-secondary { opacity: 0.40; }
+  .dark .hero-ambient-orb-primary  { opacity: 0.80; }
+  .dark .hero-ambient-orb-secondary { opacity: 0.55; }
+
+  /* ─────────────────────────────────────────────────
+     Hero Redesign — Status Chip Pulse Ring
+  ───────────────────────────────────────────────── */
+  .hero-pulse-dot-wrap {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .hero-pulse-ring {
+    position: absolute;
+    inset: -3px;
+    border-radius: 50%;
+    border: 1px solid var(--pixel-active);
+    opacity: 0;
+    animation: hero-pulse-ring-expand 2.4s ease-out infinite;
+  }
+  @keyframes hero-pulse-ring-expand {
+    0%   { transform: scale(0.85); opacity: 0.7; }
+    100% { transform: scale(2.4);  opacity: 0; }
+  }
+
+  /* ─────────────────────────────────────────────────
+     Hero Redesign — Stat Badges
+  ───────────────────────────────────────────────── */
+  .hero-stat-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    border: 1px solid var(--border);
+    background: var(--card);
+    padding: 5px 10px;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted-foreground);
+    box-shadow:
+      inset 1px 1px 0 var(--pixel-edge-light),
+      inset -1px -1px 0 var(--pixel-edge-dark),
+      2px 2px 0 var(--pixel-shadow);
+    clip-path: polygon(
+      0 4px, 4px 4px, 4px 0,
+      calc(100% - 4px) 0, calc(100% - 4px) 4px, 100% 4px,
+      100% calc(100% - 4px), calc(100% - 4px) calc(100% - 4px), calc(100% - 4px) 100%,
+      4px 100%, 4px calc(100% - 4px), 0 calc(100% - 4px)
+    );
+    transition: color 150ms linear, border-color 150ms linear;
+  }
+  .hero-stat-chip:hover {
+    color: var(--foreground);
+    border-color: var(--pixel-frame);
+  }
+  .hero-stat-icon {
+    width: 11px;
+    height: 11px;
+    opacity: 0.7;
+    flex-shrink: 0;
+  }
+  .hero-stat-label {
+    opacity: 0.55;
+  }
+  .hero-stat-value {
+    color: var(--foreground);
+    font-weight: 600;
+  }
+
+  /* ─────────────────────────────────────────────────
+     Hero Redesign — Double-Bezel Emblem Frame
+  ───────────────────────────────────────────────── */
+  .hero-emblem-outer {
+    position: relative;
+    padding: 3px;
+    border: 2px solid var(--pixel-frame);
+    background: var(--pixel-field);
+    clip-path: polygon(
+      0 8px, 8px 8px, 8px 0,
+      calc(100% - 8px) 0, calc(100% - 8px) 8px, 100% 8px,
+      100% calc(100% - 8px), calc(100% - 8px) calc(100% - 8px), calc(100% - 8px) 100%,
+      8px 100%, 8px calc(100% - 8px), 0 calc(100% - 8px)
+    );
+    box-shadow:
+      inset 3px 3px 0 var(--pixel-edge-light),
+      inset -3px -3px 0 var(--pixel-edge-dark),
+      6px 6px 0 var(--pixel-shadow),
+      0 0 0 1px color-mix(in oklab, var(--accent-to) 14%, transparent);
+    filter: drop-shadow(0 0 24px color-mix(in oklab, var(--accent-to) 12%, transparent));
+  }
+  .hero-emblem-inner {
+    background: var(--card);
+    clip-path: polygon(
+      0 6px, 6px 6px, 6px 0,
+      calc(100% - 6px) 0, calc(100% - 6px) 6px, 100% 6px,
+      100% calc(100% - 6px), calc(100% - 6px) calc(100% - 6px), calc(100% - 6px) 100%,
+      6px 100%, 6px calc(100% - 6px), 0 calc(100% - 6px)
+    );
+    box-shadow: inset 2px 2px 0 var(--pixel-edge-light), inset -2px -2px 0 var(--pixel-edge-dark);
+    overflow: hidden;
+  }
+  /* Pixel corner accents */
+  .hero-emblem-corner {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    border-color: var(--accent-to);
+    border-style: solid;
+    opacity: 0.7;
+  }
+  .hero-emblem-corner-tl {
+    top: 6px;
+    left: 6px;
+    border-width: 2px 0 0 2px;
+  }
+  .hero-emblem-corner-tr {
+    top: 6px;
+    right: 6px;
+    border-width: 2px 2px 0 0;
+  }
+  .hero-emblem-corner-bl {
+    bottom: 6px;
+    left: 6px;
+    border-width: 0 0 2px 2px;
+  }
+  .hero-emblem-corner-br {
+    bottom: 6px;
+    right: 6px;
+    border-width: 0 2px 2px 0;
+  }
+
+  /* ─────────────────────────────────────────────────
+     Hero Redesign — CTA Arrow Wrap (button-in-button)
+  ───────────────────────────────────────────────── */
+  .hero-cta-arrow-wrap {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    background: rgba(255, 255, 255, 0.15);
+    flex-shrink: 0;
+    clip-path: polygon(
+      0 3px, 3px 3px, 3px 0,
+      calc(100% - 3px) 0, calc(100% - 3px) 3px, 100% 3px,
+      100% calc(100% - 3px), calc(100% - 3px) calc(100% - 3px), calc(100% - 3px) 100%,
+      3px 100%, 3px calc(100% - 3px), 0 calc(100% - 3px)
+    );
+    transition: background 200ms linear, transform 200ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .hero-cta-primary:hover .hero-cta-arrow-wrap {
+    background: rgba(255, 255, 255, 0.25);
+    transform: translate(1px, -1px);
+  }
+  .hero-cta-primary:active .hero-cta-arrow-wrap {
+    transform: translate(0, 0);
+  }
+
   /**
   * Default typography styles for HTML elements (h1-h4, p, label, button, input).
   * These are in @layer base, so Tailwind utility classes (like text-sm, text-lg) automatically override them.
