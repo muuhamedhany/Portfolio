@@ -12,13 +12,13 @@ interface RevealProps {
  * Mount-based entrance. Because sections remount on every page navigation,
  * this fires its animation each time the section becomes active.
  */
-export function Reveal({ children, delay = 0, y = 28, className }: RevealProps) {
+export function Reveal({ children, delay = 0, y = 36, className }: RevealProps) {
   return (
     <motion.div
       className={className}
       initial={{ opacity: 0, y, filter: "blur(6px)" }}
       animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-      transition={{ duration: 0.6, delay: 0.35 + delay, ease: [0.16, 1, 0.3, 1] }}
+      transition={{ duration: 0.6, delay: 0.35 + delay, ease: [0.22, 1, 0.36, 1] }}
     >
       {children}
     </motion.div>

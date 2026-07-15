@@ -7,6 +7,7 @@ import { Projects } from "./components/portfolio/Projects";
 import { Contact } from "./components/portfolio/Contact";
 import { Transition } from "./components/portfolio/Transition";
 import { PageDots } from "./components/portfolio/PageDots";
+import { Intro } from "./components/portfolio/Intro";
 import { SECTIONS, type SectionId } from "./components/portfolio/sections";
 
 type Theme = "dark" | "light";
@@ -25,6 +26,7 @@ export default function App() {
   const [section, setSection] = useState<SectionId>("home");
   const [pending, setPending] = useState<SectionId | null>(null);
   const [isProjectDialogOpen, setIsProjectDialogOpen] = useState(false);
+  const [showIntro, setShowIntro] = useState(true);
   const lockUntil = useRef(0);
 
   useEffect(() => {
@@ -124,10 +126,16 @@ export default function App() {
 
   const pendingMeta = SECTIONS.find((s) => s.id === pending);
 
+  const handleIntroComplete = useCallback(() => setShowIntro(false), []);
+
   return (
     <div className="pixel-canvas relative h-svh overflow-hidden text-foreground">
-      <Nav theme={theme} onToggle={toggle} active={section} onNavigate={navigate} />
-      <PageDots active={section} onNavigate={navigate} />
+      {!showIntro && (
+        <>
+          <Nav theme={theme} onToggle={toggle} active={section} onNavigate={navigate} />
+          <PageDots active={section} onNavigate={navigate} />
+        </>
+      )}
 
       <AnimatePresence mode="wait">
         <motion.main
@@ -139,7 +147,7 @@ export default function App() {
           initial={{ opacity: 0, scale: 0.985 }}
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 1.01, transition: { duration: 0.3 } }}
-          transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+          transition={{ duration: 0.5, delay: showIntro ? 1.5 : 0, ease: [0.16, 1, 0.3, 1] }}
         >
           {renderSection(section)}
         </motion.main>
@@ -147,6 +155,10 @@ export default function App() {
 
       <AnimatePresence>
         {pendingMeta && <Transition key="transition" name={pendingMeta.label} index={pendingMeta.index} />}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {showIntro && <Intro key="intro" onComplete={handleIntroComplete} />}
       </AnimatePresence>
     </div>
   );

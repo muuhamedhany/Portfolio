@@ -17,6 +17,7 @@ import * as Dialog from "@radix-ui/react-dialog";
 import { useState } from "react";
 import type { IconType } from "react-icons";
 import { SiExpress, SiFigma, SiFramer, SiNodedotjs, SiPostgresql, SiReact, SiSupabase, SiTailwindcss } from "react-icons/si";
+import { motion } from "motion/react";
 import { Reveal } from "./Reveal";
 
 interface ProjectLink {
@@ -210,16 +211,21 @@ const STACK_GROUP_ICON: Record<ProjectStackIcon, LucideIcon> = {
   publish: Globe,
 };
 
-const TAG_ICON: Partial<Record<string, IconType>> = {
+const TAG_ICON: Record<string, IconType> = {
   "React Native": SiReact,
+  "React Native Expo": SiReact,
   React: SiReact,
   "Node.js": SiNodedotjs,
   Express: SiExpress,
   PostgreSQL: SiPostgresql,
   Supabase: SiSupabase,
   Tailwind: SiTailwindcss,
+  "Tailwind CSS v4": SiTailwindcss,
   "Framer Motion": SiFramer,
   Figma: SiFigma,
+  "Frontend UI": SiReact,
+  "Animations": SiFramer,
+  "Responsive Design": SiTailwindcss,
 };
 
 function ProjectPreview({ project }: { project: Project }) {
@@ -286,6 +292,49 @@ function ProjectPreview({ project }: { project: Project }) {
   );
 }
 
+const dialogContainerVariants = {
+  hidden: {},
+  show: {
+    transition: {
+      staggerChildren: 0.08,
+      delayChildren: 0.1,
+    },
+  },
+};
+
+const dialogItemVariants = {
+  hidden: { opacity: 0, y: 12 },
+  show: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.5,
+      ease: [0.22, 1, 0.36, 1],
+    },
+  },
+};
+
+const tagContainerVariants = {
+  hidden: {},
+  show: {
+    transition: {
+      staggerChildren: 0.03,
+    },
+  },
+};
+
+const tagItemVariants = {
+  hidden: { opacity: 0, scale: 0.9 },
+  show: {
+    opacity: 1,
+    scale: 1,
+    transition: {
+      duration: 0.3,
+      ease: [0.22, 1, 0.36, 1],
+    },
+  },
+};
+
 function ProjectDetailDialog({ project }: { project: Project }) {
   return (
     <Dialog.Portal>
@@ -333,43 +382,62 @@ function ProjectDetailDialog({ project }: { project: Project }) {
             )}
           </div>
 
-          <div className="project-detail-info">
+          <motion.div
+            className="project-detail-info"
+            variants={dialogContainerVariants}
+            initial="hidden"
+            animate="show"
+          >
             {project.featured && (
-              <span className="project-detail-badge">
+              <motion.span variants={dialogItemVariants} className="project-detail-badge">
                 AAST Graduation project
-              </span>
+              </motion.span>
             )}
 
-            <p className="project-detail-blurb">{project.blurb}</p>
+            <motion.p variants={dialogItemVariants} className="project-detail-blurb">{project.blurb}</motion.p>
 
-            <div className="project-detail-section">
+            <motion.div variants={dialogItemVariants} className="project-detail-section">
               <h4 className="project-detail-section-title">Stack</h4>
               <div className="project-stack-groups">
                 {project.stackGroups.map((group) => {
                   const StackIcon = STACK_GROUP_ICON[group.icon];
 
                   return (
-                    <section key={group.label} className="project-stack-group" aria-label={`${project.name} ${group.label} stack`}>
+                    <motion.section
+                      key={group.label}
+                      variants={dialogItemVariants}
+                      className="project-stack-group"
+                      aria-label={`${project.name} ${group.label} stack`}
+                    >
                       <h5 className="project-stack-label">
                         <span className="project-stack-icon" aria-hidden="true">
                           <StackIcon className="h-3.5 w-3.5" />
                         </span>
                         <span>{group.label}</span>
                       </h5>
-                      <div className="flex flex-wrap gap-2">
+                      <motion.div
+                        className="flex flex-wrap gap-2"
+                        variants={tagContainerVariants}
+                        initial="hidden"
+                        animate="show"
+                      >
                         {group.items.map((item) => (
-                          <span key={`${group.label}-${item}`} className="project-stack-tag">
+                          <motion.span
+                            key={`${group.label}-${item}`}
+                            variants={tagItemVariants}
+                            className="project-stack-tag"
+                          >
                             {item}
-                          </span>
+                          </motion.span>
                         ))}
-                      </div>
-                    </section>
+                      </motion.div>
+                    </motion.section>
                   );
                 })}
               </div>
-            </div>
+            </motion.div>
 
-            <div className="project-detail-section">
+            <motion.div variants={dialogItemVariants} className="project-detail-section">
               <h4 className="project-detail-section-title">Links</h4>
               <div className="project-detail-links">
                 {project.links.map((link) => {
@@ -390,8 +458,8 @@ function ProjectDetailDialog({ project }: { project: Project }) {
                   );
                 })}
               </div>
-            </div>
-          </div>
+            </motion.div>
+          </motion.div>
         </div>
       </Dialog.Content>
     </Dialog.Portal>
@@ -433,6 +501,23 @@ function ProjectCard({
               </div>
 
               <p className="project-card-blurb mt-2 text-sm leading-5 text-muted-foreground">{project.blurb}</p>
+
+              {/* Mini tech-icon row */}
+              <div className="project-card-tech-row">
+                {project.tags
+                  .map((tag) => ({ name: tag, Icon: TAG_ICON[tag] }))
+                  .filter((item): item is { name: string; Icon: IconType } => Boolean(item.Icon))
+                  .slice(0, 5)
+                  .map(({ name, Icon }) => (
+                    <span
+                      key={name}
+                      title={name}
+                      className="project-card-tech-icon"
+                    >
+                      <Icon />
+                    </span>
+                  ))}
+              </div>
             </div>
 
             <span className="project-card-cue mt-4 inline-flex w-max border border-border bg-background px-2 py-1 font-mono text-[10px] uppercase tracking-[0.18em] text-[var(--accent-to)]">

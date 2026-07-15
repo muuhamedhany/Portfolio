@@ -1,5 +1,5 @@
 import { lazy, Suspense, useEffect, useMemo, useState } from "react";
-import { motion } from "motion/react";
+import { motion, useMotionValue, useTransform } from "motion/react";
 import { ArrowRight, Download, MapPin, Briefcase, Calendar } from "lucide-react";
 import type { SectionId } from "./sections";
 import { ErrorBoundary } from "./ErrorBoundary";
@@ -29,15 +29,20 @@ const HERO_STATS = [
 /* ─── Motion variants ─── */
 const nameContainer = {
   hidden: {},
-  show: { transition: { staggerChildren: 0.09, delayChildren: 0.5 } },
+  show: { transition: { staggerChildren: 0.03, delayChildren: 0.5 } },
 };
 
-const nameLineVariant = {
-  hidden: { opacity: 0, y: "80%" },
+const nameLineContainer = {
+  hidden: {},
+  show: { transition: { staggerChildren: 0.03 } },
+};
+
+const charVariant = {
+  hidden: { opacity: 0, y: "100%" },
   show: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] as const },
+    transition: { duration: 0.55, ease: [0.22, 1, 0.36, 1] as const },
   },
 };
 
@@ -132,17 +137,43 @@ function HeroRoleTicker() {
   );
 }
 
-/* ─── Ambient radial glow background ─── */
+/* ─── Ambient radial glow background with mouse-reactive parallax ─── */
 function AmbientGlow() {
+  const mouseX = useMotionValue(0.5);
+  const mouseY = useMotionValue(0.5);
+
+  const primaryX = useTransform(mouseX, [0, 1], [-20, 20]);
+  const primaryY = useTransform(mouseY, [0, 1], [-20, 20]);
+  const secondaryX = useTransform(mouseX, [0, 1], [12, -12]);
+  const secondaryY = useTransform(mouseY, [0, 1], [12, -12]);
+
+  useEffect(() => {
+    const isCoarse = window.matchMedia("(pointer: coarse)").matches;
+    if (isCoarse) return;
+
+    const handleMove = (e: MouseEvent) => {
+      mouseX.set(e.clientX / window.innerWidth);
+      mouseY.set(e.clientY / window.innerHeight);
+    };
+    window.addEventListener("mousemove", handleMove, { passive: true });
+    return () => window.removeEventListener("mousemove", handleMove);
+  }, [mouseX, mouseY]);
+
   return (
     <div
       aria-hidden="true"
       className="hero-ambient-glow pointer-events-none absolute inset-0 overflow-hidden"
     >
       {/* Primary accent orb — bottom right */}
-      <div className="hero-ambient-orb hero-ambient-orb-primary" />
+      <motion.div
+        className="hero-ambient-orb hero-ambient-orb-primary"
+        style={{ x: primaryX, y: primaryY }}
+      />
       {/* Secondary softer orb — top left */}
-      <div className="hero-ambient-orb hero-ambient-orb-secondary" />
+      <motion.div
+        className="hero-ambient-orb hero-ambient-orb-secondary"
+        style={{ x: secondaryX, y: secondaryY }}
+      />
     </div>
   );
 }
@@ -214,7 +245,7 @@ export function Hero({ onNavigate, theme }: HeroProps) {
             </span>
           </motion.div>
 
-          {/* Name headline — orchestrated line reveal */}
+          {/* Name headline — letter-by-letter staggered reveal */}
           <motion.h1
             variants={nameContainer}
             initial="hidden"
@@ -223,14 +254,21 @@ export function Hero({ onNavigate, theme }: HeroProps) {
             style={{ fontSize: "clamp(3rem, 9vw, 7rem)", fontWeight: 700 }}
           >
             {NAME_LINES.map((line, i) => (
-              <span key={line} className="block overflow-hidden">
-                <motion.span
-                  variants={nameLineVariant}
-                  className={`block ${i === 0 ? "text-gradient" : ""}`}
-                >
-                  {line}
-                </motion.span>
-              </span>
+              <motion.span
+                key={line}
+                variants={nameLineContainer}
+                className={`block overflow-hidden ${i === 0 ? "text-gradient-hover" : ""}`}
+              >
+                {line.split("").map((char, ci) => (
+                  <motion.span
+                    key={`${line}-${ci}`}
+                    variants={charVariant}
+                    className={`inline-block ${i === 0 ? "text-gradient" : ""}`}
+                  >
+                    {char}
+                  </motion.span>
+                ))}
+              </motion.span>
             ))}
           </motion.h1>
 

@@ -232,8 +232,8 @@ export function About() {
         <div className="about-content order-2 min-w-0">
           <Reveal>
             <div className="about-title-row mb-8 flex items-end justify-between gap-4">
-              <h2 className="font-display tracking-normal" style={{ fontSize: "clamp(1.75rem, 5vw, 3rem)", fontWeight: 600 }}>
-                ABOUT
+              <h2 className="font-display tracking-normal text-balance" style={{ fontSize: "clamp(1.75rem, 5vw, 3rem)", fontWeight: 600 }}>
+                About
               </h2>
               <span className="font-mono text-xs uppercase tracking-[0.25em] text-muted-foreground">02 / About</span>
             </div>
@@ -244,7 +244,7 @@ export function About() {
           </Reveal>
 
           <Reveal delay={0.12}>
-            <p className="about-copy mt-8 max-w-3xl text-base leading-8 text-muted-foreground sm:text-lg">
+            <p className="about-copy mt-8 max-w-3xl text-base leading-8 text-muted-foreground text-pretty sm:text-lg">
               I graduated from AASTMT with a Bachelor's in Information Systems and spent the last few years building full-stack web and mobile applications. Before code, I spent years doing digital illustration - that design instinct still drives how I build interfaces today. I care about the details most developers skip. Currently open to new opportunities.
             </p>
           </Reveal>

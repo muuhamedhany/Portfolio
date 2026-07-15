@@ -474,7 +474,7 @@
       3px 3px 0 var(--pixel-shadow);
     outline: none;
     transition:
-      transform 150ms steps(3, end),
+      transform 150ms cubic-bezier(0.32, 0.72, 0, 1),
       border-color 140ms linear,
       color 140ms linear,
       filter 140ms linear;
@@ -580,7 +580,7 @@
       3px 3px 0 var(--pixel-shadow);
     outline: none;
     transition:
-      transform 150ms steps(3, end),
+      transform 150ms cubic-bezier(0.32, 0.72, 0, 1),
       border-color 140ms linear,
       color 140ms linear,
       filter 140ms linear;
@@ -667,10 +667,49 @@
   }
   .project-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(min(100%, 472px), 472px));
+    grid-template-columns: 1fr;
     justify-content: center;
     gap: 20px;
   }
+  @media (min-width: 768px) {
+    .project-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  @media (min-width: 1024px) {
+    .project-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  /* ═══ ABOUT: Milestones Timeline ═══ */
+  .about-timeline-line {
+    width: 2px;
+    background: repeating-linear-gradient(
+      to bottom,
+      var(--border) 0px,
+      var(--border) 4px,
+      transparent 4px,
+      transparent 8px
+    );
+  }
+  .about-timeline-item {
+    display: flex;
+    align-items: baseline;
+  }
+  .about-timeline-marker {
+    position: absolute;
+    left: 0;
+    top: 5px;
+    width: 14px;
+    height: 14px;
+    background: var(--accent-to);
+    clip-path: polygon(
+      3px 0, calc(100% - 3px) 0, 100% 3px,
+      100% calc(100% - 3px), calc(100% - 3px) 100%, 3px 100%, 0 calc(100% - 3px), 0 3px
+    );
+  }
+
   .project-card {
     width: 100%;
     gap: 14px;
@@ -688,8 +727,8 @@
     color: inherit;
     transform: translate3d(0, 0, 0);
     transition:
-      transform 160ms steps(3, end),
-      box-shadow 160ms steps(3, end),
+      transform 160ms cubic-bezier(0.32, 0.72, 0, 1),
+      box-shadow 160ms cubic-bezier(0.32, 0.72, 0, 1),
       border-color 120ms linear;
   }
   .project-card-trigger:focus-visible {
@@ -699,7 +738,7 @@
   }
   .project-card-cue {
     transition:
-      transform 140ms steps(2, end),
+      transform 140ms cubic-bezier(0.32, 0.72, 0, 1),
       color 120ms linear,
       border-color 120ms linear;
   }
@@ -721,7 +760,7 @@
       inset -2px -2px 0 var(--pixel-edge-dark);
     transition:
       border-color 120ms linear,
-      transform 160ms steps(3, end);
+      transform 160ms cubic-bezier(0.32, 0.72, 0, 1);
     clip-path: polygon(
       0 5px, 5px 5px, 5px 0,
       calc(100% - 5px) 0, calc(100% - 5px) 5px, 100% 5px,
@@ -734,7 +773,7 @@
     z-index: 1;
     transition:
       opacity 150ms linear,
-      transform 180ms steps(3, end);
+      transform 180ms cubic-bezier(0.32, 0.72, 0, 1);
   }
   .project-image-skeleton {
     position: absolute;
@@ -820,6 +859,36 @@
     to {
       transform: translateX(405%);
     }
+  }
+  .project-card-tech-row {
+    margin-top: 12px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .project-card-tech-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    border: 1px solid var(--border);
+    background: var(--card);
+    color: var(--muted-foreground);
+    transition:
+      color 140ms linear,
+      border-color 140ms linear,
+      transform 150ms cubic-bezier(0.32, 0.72, 0, 1);
+    clip-path: polygon(
+      0 3px, 3px 3px, 3px 0,
+      calc(100% - 3px) 0, calc(100% - 3px) 3px, 100% 3px,
+      100% calc(100% - 3px), calc(100% - 3px) calc(100% - 3px), calc(100% - 3px) 100%,
+      3px 100%, 3px calc(100% - 3px), 0 calc(100% - 3px)
+    );
+  }
+  .project-card-tech-icon svg {
+    width: 14px;
+    height: 14px;
   }
   .project-detail-overlay {
     position: fixed;
@@ -1120,7 +1189,12 @@
       transform: translate(1px, 1px);
     }
     .project-card-trigger:hover .project-card-media-image img {
-      transform: scale(1.012);
+      transform: scale(1.04) rotate(0.5deg);
+    }
+    .project-card-trigger:hover .project-card-tech-icon {
+      color: var(--accent-to);
+      border-color: var(--accent-to);
+      transform: translateY(-2px);
     }
     .project-card-trigger:hover .project-card-cue {
       transform: translateX(3px);
@@ -1185,7 +1259,7 @@
   }
   @media (max-height: 760px) and (min-width: 640px) {
     .project-grid {
-      grid-template-columns: repeat(auto-fit, minmax(min(100%, 388px), 388px));
+      grid-template-columns: repeat(2, 1fr);
     }
     .project-card {
       min-height: 332px;
@@ -1195,6 +1269,11 @@
     .project-card-media {
       width: 100%;
       height: auto;
+    }
+  }
+  @media (max-height: 760px) and (min-width: 1024px) {
+    .project-grid {
+      grid-template-columns: repeat(3, 1fr);
     }
   }
   @media (min-width: 1024px) {
@@ -1466,6 +1545,18 @@
   }
   .bg-gradient-accent {
     background: var(--accent-gradient);
+  }
+
+  /* Gradient hover shimmer — shifts background-position on hover */
+  @supports ((-webkit-background-clip: text) or (background-clip: text)) {
+    .text-gradient-hover .text-gradient {
+      background-size: 200% 100%;
+      background-position: 0% center;
+      transition: background-position 0.6s cubic-bezier(0.32, 0.72, 0, 1);
+    }
+    .text-gradient-hover:hover .text-gradient {
+      background-position: 100% center;
+    }
   }
   /* Pixel/digital grid seasoning */
   .bg-grid {
