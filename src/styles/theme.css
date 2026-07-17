@@ -1790,6 +1790,214 @@
     transform: translate(0, 0);
   }
 
+  /* ─────────────────────────────────────────────────
+     Hero Refinement — Tech Row
+  ───────────────────────────────────────────────── */
+  .hero-tech-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 20px;
+  }
+  .hero-tech-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--muted-foreground);
+    cursor: default;
+    transition:
+      color 220ms ease,
+      transform 220ms cubic-bezier(0.16, 1, 0.3, 1),
+      filter 220ms ease;
+    will-change: transform;
+  }
+  .hero-tech-item:hover {
+    color: var(--tech-color, var(--accent-to));
+    transform: translateY(-2px);
+    filter: drop-shadow(0 0 8px color-mix(in oklab, var(--tech-color, var(--accent-to)) 30%, transparent));
+  }
+  .hero-tech-icon {
+    width: 15px;
+    height: 15px;
+    flex-shrink: 0;
+    filter: grayscale(1) opacity(0.55);
+    transition: filter 220ms ease;
+  }
+  .hero-tech-item:hover .hero-tech-icon {
+    filter: grayscale(0) opacity(1);
+  }
+  .hero-tech-label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  /* ─────────────────────────────────────────────────
+     Hero Refinement — Metadata Row
+  ───────────────────────────────────────────────── */
+  .hero-meta-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+  }
+  .hero-meta-sep {
+    color: var(--accent-to);
+    opacity: 0.5;
+    font-size: 8px;
+  }
+
+  /* ─────────────────────────────────────────────────
+     Hero Refinement — Caption Arrow
+  ───────────────────────────────────────────────── */
+  .hero-caption-arrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--muted-foreground);
+  }
+  .hero-caption-line {
+    letter-spacing: -0.04em;
+    opacity: 0.5;
+  }
+  .hero-caption-arrow-char {
+    color: var(--accent-to);
+    display: inline-block;
+    animation: hero-caption-arrow-pulse 4s ease-in-out infinite;
+    will-change: transform, opacity;
+  }
+  @keyframes hero-caption-arrow-pulse {
+    0%, 100% { transform: translateX(0); opacity: 0.6; }
+    50%       { transform: translateX(3px); opacity: 1; }
+  }
+
+  /* ─────────────────────────────────────────────────
+     Hero Refinement — Workspace Illustration
+  ───────────────────────────────────────────────── */
+  .hero-workspace {
+    position: relative;
+    width: 100%;
+    padding: 12px 8px 8px;
+  }
+  .hero-ws-svg {
+    width: 100%;
+    height: auto;
+    display: block;
+    image-rendering: pixelated;
+  }
+  /* Ambient purple glow */
+  .hero-ws-glow {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+  }
+  /* Floating tiny particles */
+  .hero-ws-particle {
+    position: absolute;
+    width: 3px;
+    height: 3px;
+    opacity: 0.4;
+    animation: hero-ws-particle-float 3.5s ease-in-out infinite alternate;
+    will-change: transform, opacity;
+    z-index: 1;
+  }
+  @keyframes hero-ws-particle-float {
+    0%   { transform: translateY(0px) scale(1);   opacity: 0.25; }
+    50%  { transform: translateY(-8px) scale(1.3); opacity: 0.55; }
+    100% { transform: translateY(-14px) scale(0.8); opacity: 0.2; }
+  }
+  /* Floating code icon */
+  .hero-ws-code-icon {
+    position: absolute;
+    top: 4%;
+    right: 6%;
+    z-index: 2;
+    opacity: 0.55;
+    animation: hero-ws-code-icon-float 5s ease-in-out infinite alternate;
+    will-change: transform, opacity;
+  }
+  @keyframes hero-ws-code-icon-float {
+    0%   { transform: translateY(0px) rotate(-4deg); opacity: 0.45; }
+    100% { transform: translateY(-10px) rotate(4deg); opacity: 0.7; }
+  }
+  /* Blinking cursor in editor */
+  .hero-ws-cursor {
+    animation: hero-ws-cursor-blink 900ms steps(2, end) infinite;
+    will-change: opacity;
+  }
+  @keyframes hero-ws-cursor-blink {
+    0%, 100% { opacity: 1; }
+    50%      { opacity: 0; }
+  }
+  /* Monitor glow pulse */
+  .hero-ws-monitor-glow {
+    animation: hero-ws-glow-pulse 4s ease-in-out infinite alternate;
+    will-change: opacity;
+  }
+  @keyframes hero-ws-glow-pulse {
+    0%   { opacity: 0.6; }
+    100% { opacity: 1.0; }
+  }
+  /* Active line subtle shimmer */
+  .hero-ws-active-line {
+    animation: hero-ws-line-blink 3.2s ease-in-out infinite alternate;
+    will-change: opacity;
+  }
+  @keyframes hero-ws-line-blink {
+    0%   { opacity: 0.6; }
+    100% { opacity: 1.0; }
+  }
+  /* Code scroll — very slow upward drift */
+  .hero-ws-code-scroll {
+    animation: hero-ws-code-scroll 18s linear infinite;
+    will-change: transform;
+  }
+  @keyframes hero-ws-code-scroll {
+    0%   { transform: translateY(0); }
+    45%  { transform: translateY(-12px); }
+    55%  { transform: translateY(-12px); }
+    100% { transform: translateY(0); }
+  }
+  /* Steam rise animation */
+  .hero-ws-steam {
+    animation: hero-ws-steam-rise 2.4s ease-in-out infinite;
+    will-change: opacity, transform;
+    transform-origin: bottom center;
+  }
+  .hero-ws-steam-1 { animation-delay: 0s; }
+  .hero-ws-steam-2 { animation-delay: 0.7s; }
+  @keyframes hero-ws-steam-rise {
+    0%   { transform: translateY(0)   scaleX(1);    opacity: 0;   }
+    20%  { opacity: 0.6; }
+    70%  { transform: translateY(-8px) scaleX(1.2); opacity: 0.3; }
+    100% { transform: translateY(-14px) scaleX(0.8); opacity: 0; }
+  }
+
+  /* ─────────────────────────────────────────────────
+     Reduced Motion — Hero Refinement
+  ───────────────────────────────────────────────── */
+  @media (prefers-reduced-motion: reduce) {
+    .hero-caption-arrow-char,
+    .hero-ws-particle,
+    .hero-ws-code-icon,
+    .hero-ws-cursor,
+    .hero-ws-monitor-glow,
+    .hero-ws-active-line,
+    .hero-ws-code-scroll,
+    .hero-ws-steam {
+      animation: none;
+    }
+    .hero-ws-cursor { opacity: 1; }
+    .hero-tech-item { transition: none; }
+  }
+
   /**
   * Default typography styles for HTML elements (h1-h4, p, label, button, input).
   * These are in @layer base, so Tailwind utility classes (like text-sm, text-lg) automatically override them.
