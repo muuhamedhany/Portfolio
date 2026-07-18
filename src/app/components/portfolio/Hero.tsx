@@ -7,6 +7,8 @@ import {
   SiPostgresql,
 } from "react-icons/si";
 import type { SectionId } from "./sections";
+import { AvatarIllustration } from "./AvatarIllustration";
+
 
 /* ─── Static data ─── */
 const NAME_LINES = ["Muhamed", "Hany"];
@@ -441,7 +443,7 @@ function EmblemFrame({ theme }: { theme: "dark" | "light" }) {
   return (
     <div className="hero-emblem-outer hero-emblem-outer--xl">
       <div className="hero-emblem-inner">
-        <WorkspaceIllustration theme={theme} />
+        <AvatarIllustration theme={theme} />
       </div>
       <span className="hero-emblem-corner hero-emblem-corner-tl" aria-hidden="true" />
       <span className="hero-emblem-corner hero-emblem-corner-tr" aria-hidden="true" />
@@ -476,7 +478,7 @@ export function Hero({ onNavigate, theme }: HeroProps) {
       <div className="relative mx-auto grid w-full max-w-6xl gap-8 px-6 sm:px-10 lg:grid-cols-[1.45fr_1fr] lg:items-center">
 
         {/* ── Left column ── */}
-        <div className="pl-1 sm:pl-2">
+        <div className="pl-1 sm:pl-2 order-2 lg:order-1">
 
           {/* Status */}
           <StatusBadge />
@@ -579,7 +581,7 @@ export function Hero({ onNavigate, theme }: HeroProps) {
           initial={{ opacity: 0, x: 24 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 1.25, duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-          className="relative hidden lg:block"
+          className="relative block order-1 lg:order-2 w-full max-w-[340px] sm:max-w-[400px] lg:max-w-none mx-auto"
         >
           <EmblemFrame theme={theme} />
 

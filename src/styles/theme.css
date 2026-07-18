@@ -2135,7 +2135,75 @@
     .hero-emblem-outer--lg  { transform: scale(1.18); }
     .hero-emblem-outer--xl  { transform: scale(1.1); }
     .hero-tech-item { transition: none; opacity: 0.72; }
+    .dissolve-pixel { animation: none; }
   }
+
+  /* ─────────────────────────────────────────────────
+     Avatar Redesign Styles
+  ───────────────────────────────────────────────── */
+  :root {
+    --avatar-glow-color: rgba(139, 92, 246, 0.18);
+    --floating-symbol-color: #8b80df;
+    --decorations-color: rgba(139, 92, 246, 0.22);
+  }
+
+  .dark {
+    --avatar-glow-color: rgba(139, 92, 246, 0.18);
+    --floating-symbol-color: #8b80df;
+    --decorations-color: rgba(139, 92, 246, 0.22);
+  }
+
+  /* Light mode overrides */
+  html:not(.dark) {
+    --avatar-glow-color: rgba(167, 139, 250, 0.10);
+    --floating-symbol-color: #4b5563;
+    --decorations-color: rgba(156, 163, 175, 0.25);
+  }
+
+  .avatar-illustration-container {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    background: var(--card);
+  }
+
+  .avatar-radial-glow {
+    background: radial-gradient(circle at 50% 50%, var(--avatar-glow-color) 0%, transparent 68%);
+  }
+
+  .avatar-svg-element {
+    width: 75%;
+    height: 75%;
+    display: block;
+    z-index: 5;
+  }
+
+  /* Dissolving Pixels Animation */
+  .dissolve-pixel {
+    transform-origin: center;
+    animation: dissolve-pixel-drift var(--duration) ease-in-out infinite;
+    animation-delay: var(--delay);
+    will-change: transform, opacity;
+  }
+
+  @keyframes dissolve-pixel-drift {
+    0% {
+      transform: translate3d(0, 0, 0);
+      opacity: 1;
+    }
+    70% {
+      opacity: 0.15;
+    }
+    100% {
+      transform: translate3d(var(--drift-x), var(--drift-y), 0);
+      opacity: 0;
+    }
+  }
+
 
   /**
   * Default typography styles for HTML elements (h1-h4, p, label, button, input).
