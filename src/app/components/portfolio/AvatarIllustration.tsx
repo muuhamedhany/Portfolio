@@ -6,14 +6,19 @@ interface AvatarIllustrationProps {
   theme: "dark" | "light";
 }
 
-const TECH_SYMBOLS = ["</>", "{}", "const", "React", "Node.js", "PostgreSQL", "TypeScript"];
+const TECH_SYMBOLS = ["</>", "{}", "React", "Node", "SQL", "const", "API", "<>"];
 
 function FloatingSymbol({ symbol, delay }: { symbol: string; delay: number }) {
-  const [coords] = useState(() => ({
-    left: 68 + Math.random() * 22,   // 68% to 90%
-    top: 15 + Math.random() * 70,    // 15% to 85%
-    duration: 4.5 + Math.random() * 3, // 4.5s to 7.5s
-  }));
+  // Random coordinates surrounding the avatar portrait
+  const [coords] = useState(() => {
+    const isLeft = Math.random() < 0.35; // 35% on the left, 65% on the right/center
+    return {
+      left: isLeft ? 8 + Math.random() * 15 : 68 + Math.random() * 24, // Left side or right side
+      top: 10 + Math.random() * 75,
+      duration: 6 + Math.random() * 4, // Very slow (6s to 10s)
+      driftY: -30 - Math.random() * 25, // Upward drift
+    };
+  });
 
   return (
     <motion.div
@@ -22,12 +27,12 @@ function FloatingSymbol({ symbol, delay }: { symbol: string; delay: number }) {
         left: `${coords.left}%`,
         top: `${coords.top}%`,
         color: "var(--floating-symbol-color)",
-        transformStyle: "preserve-3d",
+        opacity: 0.12, // 10-20% very low opacity
       }}
       initial={{ opacity: 0, y: 15 }}
       animate={{
-        opacity: [0, 0.18, 0.18, 0],
-        y: [15, -45],
+        opacity: [0, 0.14, 0.14, 0],
+        y: [15, coords.driftY],
       }}
       transition={{
         duration: coords.duration,
@@ -43,51 +48,25 @@ function FloatingSymbol({ symbol, delay }: { symbol: string; delay: number }) {
 
 function BackgroundDecorations() {
   return (
-    <div className="absolute inset-0 pointer-events-none overflow-hidden opacity-30 z-0">
-      {/* Tiny squares */}
+    <div className="absolute inset-0 pointer-events-none overflow-hidden opacity-10 z-0">
+      {/* A few tiny floating pixel squares to prevent clutter */}
       <motion.div
-        className="absolute w-3 h-3 border border-current opacity-30"
-        style={{ left: "15%", top: "25%", color: "var(--decorations-color)" }}
-        animate={{ y: [0, -6, 0], x: [0, 4, 0] }}
+        className="absolute w-2.5 h-2.5 bg-current opacity-30"
+        style={{ left: "18%", top: "30%", color: "var(--decorations-color)" }}
+        animate={{ y: [0, -6, 0] }}
         transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
       />
       <motion.div
-        className="absolute w-2 h-2 border border-current opacity-20"
-        style={{ right: "20%", top: "15%", color: "var(--decorations-color)" }}
-        animate={{ y: [0, 8, 0], x: [0, -5, 0] }}
+        className="absolute w-2 h-2 bg-current opacity-20"
+        style={{ right: "22%", top: "25%", color: "var(--decorations-color)" }}
+        animate={{ y: [0, 6, 0] }}
         transition={{ duration: 15, repeat: Infinity, ease: "easeInOut", delay: 2 }}
       />
-      
-      {/* Tiny crosses */}
       <motion.div
-        className="absolute font-mono text-[10px] opacity-35"
-        style={{ left: "22%", bottom: "22%", color: "var(--decorations-color)" }}
+        className="absolute w-2.5 h-2.5 bg-current opacity-25"
+        style={{ right: "18%", bottom: "30%", color: "var(--decorations-color)" }}
         animate={{ y: [0, -8, 0] }}
-        transition={{ duration: 10, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-      >
-        +
-      </motion.div>
-      <motion.div
-        className="absolute font-mono text-[10px] opacity-25"
-        style={{ right: "15%", bottom: "35%", color: "var(--decorations-color)" }}
-        animate={{ y: [0, -8, 0], x: [0, -4, 0] }}
         transition={{ duration: 14, repeat: Infinity, ease: "easeInOut", delay: 3 }}
-      >
-        +
-      </motion.div>
-      
-      {/* Small dots */}
-      <motion.div
-        className="absolute w-1 h-1 bg-current opacity-40"
-        style={{ left: "45%", top: "12%", color: "var(--decorations-color)" }}
-        animate={{ opacity: [0.3, 0.7, 0.3] }}
-        transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-      />
-      <motion.div
-        className="absolute w-1.5 h-1.5 bg-current opacity-25"
-        style={{ right: "35%", bottom: "15%", color: "var(--decorations-color)" }}
-        animate={{ opacity: [0.2, 0.6, 0.2] }}
-        transition={{ duration: 6, repeat: Infinity, ease: "easeInOut", delay: 1 }}
       />
     </div>
   );
@@ -140,36 +119,36 @@ export function AvatarIllustration({ theme }: AvatarIllustrationProps) {
     return () => window.removeEventListener("mousemove", handleMouseMove);
   }, [isReducedMotion, mouseX, mouseY]);
 
-  // Floating, breathing, and rotation parameters
-  const floatY = isReducedMotion ? [0, 0] : (isMobile ? [0, -4, 0] : [0, -8, 0]);
-  const floatRotate = isReducedMotion ? [0, 0] : (isMobile ? [0, 0.5, 0] : [-1, 1, -1]);
-  const breatheScale = isReducedMotion ? [1, 1] : (isMobile ? [1, 1.008, 1] : [1, 1.015, 1]);
+  // Floating, breathing, and rotation parameters (subtle as requested)
+  const floatY = isReducedMotion ? [0, 0] : (isMobile ? [0, -3, 0] : [0, -6, 0]);
+  const floatRotate = isReducedMotion ? [0, 0] : (isMobile ? [0, 0.3, 0] : [-0.8, 0.8, -0.8]);
+  const breatheScale = isReducedMotion ? [1, 1] : (isMobile ? [1, 1.006, 1] : [1, 1.01, 1]);
 
   return (
     <div className="avatar-illustration-container" style={{ perspective: "1000px" }}>
-      {/* Blurred Radial Glow */}
+      {/* Very Soft Blurred Radial Glow (Low opacity, no neon explosion) */}
       <motion.div 
         className="avatar-radial-glow absolute inset-0 pointer-events-none z-0"
         animate={isReducedMotion ? {} : {
-          opacity: [0.8, 1.0, 0.8],
-          scale: [0.96, 1.04, 0.96]
+          opacity: [0.75, 1.0, 0.75],
+          scale: [0.97, 1.03, 0.97]
         }}
         transition={{
-          duration: 5.5,
+          duration: 6,
           repeat: Infinity,
           ease: "easeInOut"
         }}
       />
 
-      {/* Decorative futuristic UI grids */}
+      {/* Decorative tiny grid squares */}
       <BackgroundDecorations />
 
-      {/* Floating tech symbols */}
+      {/* Floating tech icons */}
       {!isReducedMotion && TECH_SYMBOLS.map((sym, i) => (
-        <FloatingSymbol key={sym} symbol={sym} delay={i * 0.9} />
+        <FloatingSymbol key={`${sym}-${i}`} symbol={sym} delay={i * 1.1} />
       ))}
 
-      {/* SVG Image with Tilt and Float wrapper */}
+      {/* SVG Image wrapper */}
       <motion.div
         className="avatar-svg-container relative w-full h-full flex items-center justify-center z-10"
         style={{

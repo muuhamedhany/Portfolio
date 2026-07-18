@@ -39,6 +39,26 @@ const fadeUp = (delay: number) => ({
   transition: { duration: 0.6, delay, ease: [0.16, 1, 0.3, 1] as const },
 });
 
+const wordContainer = {
+  hidden: {},
+  show: {
+    transition: {
+      staggerChildren: 0.02,
+      delayChildren: 0.75,
+    },
+  },
+};
+
+const wordVariant = {
+  hidden: { opacity: 0, y: 8, filter: "blur(4px)" },
+  show: {
+    opacity: 1,
+    y: 0,
+    filter: "blur(0px)",
+    transition: { duration: 0.45, ease: [0.16, 1, 0.3, 1] as const },
+  },
+};
+
 /* ─── Ambient glow with mouse parallax ─── */
 function AmbientGlow() {
   const mouseX = useMotionValue(0.5);
@@ -68,13 +88,13 @@ function AmbientGlow() {
 }
 
 /* ─── Background pixel particles ─── */
-const BG_PARTICLES = Array.from({ length: 18 }, (_, i) => ({
+const BG_PARTICLES = Array.from({ length: 6 }, (_, i) => ({
   id: i,
   x: (i * 379 + 47) % 97,
   y: (i * 211 + 83) % 91,
-  size: (i % 3) + 1,
-  dur: 6 + (i % 5) * 2.4,
-  delay: (i * 0.55) % 5,
+  size: (i % 2) + 1.5,
+  dur: 8 + (i % 3) * 3,
+  delay: (i * 0.7) % 4,
 }));
 
 function BackgroundParticles() {
@@ -163,16 +183,6 @@ function MetaRow() {
       className="hero-meta-row mt-6 font-mono text-[10px] uppercase tracking-[0.16em] text-muted-foreground"
       aria-label="Quick facts"
     >
-      {/* Folder icon */}
-      <span className="hero-meta-item">
-        <svg className="hero-meta-icon" viewBox="0 0 12 10" fill="none" aria-hidden="true">
-          <rect x="0" y="2" width="12" height="8" fill="currentColor" opacity="0.5" />
-          <rect x="0" y="0" width="5" height="3" fill="currentColor" opacity="0.5" />
-        </svg>
-        <strong className="hero-meta-bold">4+</strong>{" "}Projects
-      </span>
-
-      <span className="hero-meta-sep" aria-hidden="true">•</span>
 
       {/* Location pin */}
       <span className="hero-meta-item">
@@ -181,20 +191,9 @@ function MetaRow() {
           <rect x="4" y="6" width="2" height="4" fill="currentColor" opacity="0.5" />
           <rect x="3" y="1" width="4" height="4" fill="currentColor" opacity="0.3" />
         </svg>
-        Egypt
+        Based in Egypt
       </span>
 
-      <span className="hero-meta-sep" aria-hidden="true">•</span>
-
-      {/* Globe icon */}
-      <span className="hero-meta-item">
-        <svg className="hero-meta-icon" viewBox="0 0 12 12" fill="none" aria-hidden="true">
-          <rect x="1" y="1" width="10" height="10" fill="none" stroke="currentColor" strokeWidth="1" opacity="0.5" />
-          <rect x="5" y="1" width="2" height="10" fill="currentColor" opacity="0.3" />
-          <rect x="1" y="5" width="10" height="2" fill="currentColor" opacity="0.3" />
-        </svg>
-        <strong className="hero-meta-bold">Remote</strong>{" "}Friendly
-      </span>
     </motion.div>
   );
 }
@@ -438,35 +437,16 @@ function WorkspaceIllustration({ theme }: { theme: "dark" | "light" }) {
   );
 }
 
-/* ─── Double-bezel emblem frame ─── */
-function EmblemFrame({ theme }: { theme: "dark" | "light" }) {
-  return (
-    <div className="hero-emblem-outer hero-emblem-outer--xl">
-      <div className="hero-emblem-inner">
-        <AvatarIllustration theme={theme} />
-      </div>
-      <span className="hero-emblem-corner hero-emblem-corner-tl" aria-hidden="true" />
-      <span className="hero-emblem-corner hero-emblem-corner-tr" aria-hidden="true" />
-      <span className="hero-emblem-corner hero-emblem-corner-bl" aria-hidden="true" />
-      <span className="hero-emblem-corner hero-emblem-corner-br" aria-hidden="true" />
-    </div>
-  );
-}
 
-/* ─── Caption ─── */
-function CaptionArrow() {
-  return (
-    <div className="hero-caption-arrow pointer-events-none">
-
-    </div>
-  );
-}
 
 /* ─── Props ─── */
 interface HeroProps {
   onNavigate: (id: SectionId) => void;
   theme: "dark" | "light";
 }
+
+const DESCRIPTION_TEXT = "I build modern web and mobile applications with React, React Native, Node.js and PostgreSQL. Focusing on clean architecture, performance and thoughtful user experience.";
+const descriptionWords = DESCRIPTION_TEXT.split(" ");
 
 /* ─── Main Component ─── */
 export function Hero({ onNavigate, theme }: HeroProps) {
@@ -518,34 +498,28 @@ export function Hero({ onNavigate, theme }: HeroProps) {
             className="mt-4 font-mono text-[11px] uppercase tracking-[0.3em] text-muted-foreground"
           >
             Full-Stack Engineer
+            <span className="hero-meta-item mx-4">
+              <svg className="hero-meta-icon" viewBox="0 0 10 12" fill="none" aria-hidden="true">
+                <rect x="2" y="0" width="6" height="6" fill="currentColor" opacity="0.5" />
+                <rect x="4" y="6" width="2" height="4" fill="currentColor" opacity="0.5" />
+                <rect x="3" y="1" width="4" height="4" fill="currentColor" opacity="0.3" />
+              </svg>
+              Based in Egypt
+            </span>
           </motion.div>
-
-          {/* Description — two paragraphs, tighter readable width */}
-          <motion.div {...fadeUp(1.0)} className="mt-5 max-w-[38ch] space-y-3">
-            <p className="text-sm leading-[1.85] text-muted-foreground">
-              I build modern web and mobile applications with React,
-              React&nbsp;Native, Node.js and PostgreSQL.
-            </p>
-            <p className="text-sm leading-[1.85] text-muted-foreground">
-              From product ideas to production-ready software, I focus on
-              clean architecture, performance and thoughtful user experience.
-            </p>
-          </motion.div>
-
-          {/* Tech Row */}
-          <TechRow />
 
           {/* CTA buttons — unified height via py-3, GitHub wider via px-6 */}
           <motion.div {...fadeUp(1.2)} className="mt-7 flex flex-wrap items-center gap-3">
             {/* Primary */}
             <button
               onClick={() => onNavigate("projects")}
-              className="hero-cta-primary group inline-flex items-center gap-2 border-2 border-foreground/10 bg-gradient-accent px-5 py-3 text-sm font-medium text-white pixel-btn"
+              className="pixel-cta-btn"
             >
-              Explore Projects
-              <span className="hero-cta-arrow-wrap">
-                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
-                  <path d="M2 7H12M8 3L12 7L8 11" stroke="currentColor" strokeWidth="1.5" strokeLinecap="square" />
+              <span className="pixel-cta-btn-bg" />
+              <span className="pixel-cta-btn-text">Explore Projects</span>
+              <span className="pixel-cta-btn-circle">
+                <svg width="14" height="14" viewBox="0 0 18 18" fill="none" aria-hidden="true" className="w-3.5 h-3.5">
+                  <path d="M5 13L13 5M13 5H6M13 5V12" stroke="currentColor" strokeWidth="2.2" strokeLinecap="square" strokeLinejoin="bevel" />
                 </svg>
               </span>
             </button>
@@ -565,15 +539,11 @@ export function Hero({ onNavigate, theme }: HeroProps) {
               href="https://github.com/muuhamedhany"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 border-2 border-border bg-card px-6 py-3 text-sm font-medium text-foreground pixel-btn hover:border-foreground/30 hover:text-foreground transition-colors duration-200"
+              className="inline-flex items-center gap-2 border-2 border-border bg-card px-3 py-3 text-sm font-medium text-foreground pixel-btn hover:border-foreground/30 hover:text-foreground transition-colors duration-200"
             >
-              <Github className="h-3.5 w-3.5" aria-hidden="true" />
-              GitHub
+              <Github className="h-4.5 w-4.5" aria-hidden="true" />
             </a>
           </motion.div>
-
-          {/* Metadata */}
-          <MetaRow />
         </div>
 
         {/* ── Right column ── */}
@@ -583,29 +553,11 @@ export function Hero({ onNavigate, theme }: HeroProps) {
           transition={{ delay: 1.25, duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
           className="relative block order-1 lg:order-2 w-full max-w-[340px] sm:max-w-[400px] lg:max-w-none mx-auto"
         >
-          <EmblemFrame theme={theme} />
+          <AvatarIllustration theme={theme} />
 
-          {/* Caption */}
-          <div className="pointer-events-none mt-4 flex items-center justify-center">
-            <CaptionArrow />
-          </div>
+
         </motion.div>
       </div>
-
-      {/* Scroll hint */}
-      <motion.button
-        onClick={() => onNavigate("projects")}
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1, x: "-50%", y: [0, 6, 0] }}
-        transition={{
-          opacity: { delay: 1.6, duration: 0.5 },
-          y: { duration: 2, repeat: Infinity, ease: "easeInOut", delay: 1.6 },
-        }}
-        className="absolute left-1/2 font-mono text-[10px] uppercase tracking-[0.3em] text-muted-foreground transition-colors hover:text-foreground"
-        style={{ bottom: "calc(5.75rem + env(safe-area-inset-bottom))" }}
-      >
-        Scroll Down ↘
-      </motion.button>
     </section>
   );
 }
