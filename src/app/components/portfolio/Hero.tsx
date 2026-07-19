@@ -121,7 +121,7 @@ function BackgroundParticles() {
 /* ─── Status badge — pixel-framed, green dot ─── */
 function StatusBadge() {
   return (
-    <motion.div {...fadeUp(0.3)} className="mb-6">
+    <motion.div {...fadeUp(0.3)} className="mb-6 flex justify-center lg:justify-start w-full">
       <span className="hero-status-badge pixel-status-chip text-[10px]">
         {/* Green availability dot */}
         <span className="flex items-center gap-2 px-3 py-1.5 font-mono uppercase tracking-[0.18em] text-foreground">
@@ -439,6 +439,37 @@ function WorkspaceIllustration({ theme }: { theme: "dark" | "light" }) {
 
 
 
+/* ─── Particle Bridge between Portrait and Typography ─── */
+function ParticleBridge() {
+  return (
+    <div aria-hidden="true" className="hero-particle-bridge pointer-events-none absolute inset-0 overflow-hidden hidden lg:block z-10">
+      {[...Array(12)].map((_, i) => (
+        <motion.div
+          key={`pb-${i}`}
+          className="absolute bg-primary/40"
+          style={{
+            width: `${(i % 3) + 2.5}px`,
+            height: `${(i % 3) + 2.5}px`,
+            right: `${15 + (i * 6) % 35}%`,
+            top: `${18 + (i * 7) % 55}%`,
+          }}
+          animate={{
+            x: [-15 - (i % 4) * 10, -75 - (i % 5) * 18],
+            y: [0, (i % 2 === 0 ? -20 : 20)],
+            opacity: [0, 0.65, 0.15, 0],
+          }}
+          transition={{
+            duration: 4.2 + (i % 3) * 1.4,
+            repeat: Infinity,
+            delay: i * 0.35,
+            ease: "easeInOut",
+          }}
+        />
+      ))}
+    </div>
+  );
+}
+
 /* ─── Props ─── */
 interface HeroProps {
   onNavigate: (id: SectionId) => void;
@@ -446,117 +477,134 @@ interface HeroProps {
 }
 
 const DESCRIPTION_TEXT = "I build modern web and mobile applications with React, React Native, Node.js and PostgreSQL. Focusing on clean architecture, performance and thoughtful user experience.";
-const descriptionWords = DESCRIPTION_TEXT.split(" ");
 
 /* ─── Main Component ─── */
 export function Hero({ onNavigate, theme }: HeroProps) {
   return (
-    <section className="scanlines relative grid h-svh place-items-center overflow-hidden pb-24 sm:pb-20">
+    <section className="scanlines relative min-h-screen lg:h-svh flex flex-col justify-center overflow-hidden py-12 lg:py-0">
       <AmbientGlow />
       <BackgroundParticles />
+      <ParticleBridge />
 
-      <div className="relative mx-auto grid w-full max-w-6xl gap-8 px-6 sm:px-10 lg:grid-cols-[1.45fr_1fr] lg:items-center">
+      <div className="relative mx-auto w-full max-w-7xl px-6 sm:px-10 lg:px-14 z-20">
+        <div className="relative grid grid-cols-1 lg:grid-cols-12 items-center gap-8 lg:gap-4">
 
-        {/* ── Left column ── */}
-        <div className="pl-1 sm:pl-2 order-2 lg:order-1">
+          {/* ── Editorial Headline & Main Details (Cols 1-7 or 1-8) ── */}
+          <div className="lg:col-span-8 z-20 flex flex-col items-center text-center lg:items-start lg:text-left pt-2 lg:pt-0">
 
-          {/* Status */}
-          <StatusBadge />
+            {/* Status chip */}
+            <StatusBadge />
 
-          {/* Name */}
-          <motion.h1
-            variants={nameContainer}
-            initial="hidden"
-            animate="show"
-            className="font-display leading-[0.88] tracking-normal"
-            style={{ fontSize: "clamp(2.9rem, 8.5vw, 6.8rem)", fontWeight: 700 }}
-          >
-            {NAME_LINES.map((line, i) => (
+            {/* Oversized Graphic Typography (Centered on mobile, asymmetrical on desktop) */}
+            <motion.h1
+              variants={nameContainer}
+              initial="hidden"
+              animate="show"
+              className="font-display leading-[0.82] tracking-tight select-none my-3 text-center lg:text-left w-full"
+            >
+              {/* Line 1: MUHAMED (Purple gradient) */}
               <motion.span
-                key={line}
                 variants={nameLineContainer}
-                className={`block overflow-hidden ${i === 0 ? "text-gradient-hover" : ""}`}
+                className="block overflow-hidden text-gradient-hover text-center lg:text-left"
+                style={{ fontSize: "clamp(3.6rem, 10.5vw, 9.2rem)", fontWeight: 700 }}
               >
-                {line.split("").map((char, ci) => (
+                {"Muhamed".split("").map((char, ci) => (
                   <motion.span
-                    key={`${line}-${ci}`}
+                    key={`muh-${ci}`}
                     variants={charVariant}
-                    className={`inline-block ${i === 0 ? "text-gradient" : ""}`}
+                    className="inline-block text-gradient"
                   >
                     {char}
                   </motion.span>
                 ))}
               </motion.span>
-            ))}
-          </motion.h1>
 
-          {/* Role */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.95, duration: 0.55 }}
-            className="mt-4 font-mono text-[11px] uppercase tracking-[0.3em] text-muted-foreground"
-          >
-            Full-Stack Engineer
-            <span className="hero-meta-item mx-4">
-              <svg className="hero-meta-icon" viewBox="0 0 10 12" fill="none" aria-hidden="true">
-                <rect x="2" y="0" width="6" height="6" fill="currentColor" opacity="0.5" />
-                <rect x="4" y="6" width="2" height="4" fill="currentColor" opacity="0.5" />
-                <rect x="3" y="1" width="4" height="4" fill="currentColor" opacity="0.3" />
-              </svg>
-              Based in Egypt
-            </span>
-          </motion.div>
+              {/* Line 2: HANY (Centered on mobile, offset right on desktop) */}
+              <motion.span
+                variants={nameLineContainer}
+                className="block overflow-hidden pl-0 lg:pl-40 xl:pl-52 text-center lg:text-left"
+                style={{ fontSize: "clamp(3.6rem, 10.5vw, 9.2rem)", fontWeight: 700 }}
+              >
+                {"Hany".split("").map((char, ci) => (
+                  <motion.span
+                    key={`hany-${ci}`}
+                    variants={charVariant}
+                    className="inline-block text-foreground"
+                  >
+                    {char}
+                  </motion.span>
+                ))}
+              </motion.span>
+            </motion.h1>
 
-          {/* CTA buttons — unified height via py-3, GitHub wider via px-6 */}
-          <motion.div {...fadeUp(1.2)} className="mt-7 flex flex-wrap items-center gap-3">
-            {/* Primary */}
-            <button
-              onClick={() => onNavigate("projects")}
-              className="pixel-cta-btn"
+            {/* Sub-headline & Meta tag */}
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.9, duration: 0.55 }}
+              className="mt-5 flex flex-wrap items-center justify-center lg:justify-start gap-3 font-mono text-[11px] uppercase tracking-[0.25em] text-muted-foreground w-full"
             >
-              <span className="pixel-cta-btn-bg" />
-              <span className="pixel-cta-btn-text">Explore Projects</span>
-              <span className="pixel-cta-btn-circle">
-                <svg width="14" height="14" viewBox="0 0 18 18" fill="none" aria-hidden="true" className="w-3.5 h-3.5">
-                  <path d="M5 13L13 5M13 5H6M13 5V12" stroke="currentColor" strokeWidth="2.2" strokeLinecap="square" strokeLinejoin="bevel" />
+              <span className="font-semibold text-foreground/90">Full-Stack Dev</span>
+              <span className="text-muted-foreground/30">•</span>
+              <span className="inline-flex items-center gap-1.5">
+                <svg className="w-2.5 h-3 opacity-60" viewBox="0 0 10 12" fill="none" aria-hidden="true">
+                  <rect x="2" y="0" width="6" height="6" fill="currentColor" />
+                  <rect x="4" y="6" width="2" height="4" fill="currentColor" />
                 </svg>
+                Based in Egypt
               </span>
-            </button>
+            </motion.div>
 
-            {/* Secondary */}
-            <a
-              href="/cv.pdf"
-              download
-              className="inline-flex items-center gap-2 border-2 border-border bg-card px-5 py-3 text-sm font-medium text-foreground pixel-btn hover:border-foreground/30 transition-colors duration-200"
-            >
-              <Download className="h-3.5 w-3.5" aria-hidden="true" />
-              Download CV
-            </a>
+            {/* CTAs */}
+            <motion.div {...fadeUp(1.2)} className="mt-8 flex flex-wrap items-center justify-center lg:justify-start gap-3.5 w-full">
+              <button
+                onClick={() => onNavigate("projects")}
+                className="pixel-cta-btn"
+              >
+                <span className="pixel-cta-btn-bg" />
+                <span className="pixel-cta-btn-text">Explore Projects</span>
+                <span className="pixel-cta-btn-circle">
+                  <svg width="14" height="14" viewBox="0 0 18 18" fill="none" aria-hidden="true" className="w-3.5 h-3.5">
+                    <path d="M5 13L13 5M13 5H6M13 5V12" stroke="currentColor" strokeWidth="2.2" strokeLinecap="square" strokeLinejoin="bevel" />
+                  </svg>
+                </span>
+              </button>
 
-            {/* GitHub — wider padding */}
-            <a
-              href="https://github.com/muuhamedhany"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 border-2 border-border bg-card px-3 py-3 text-sm font-medium text-foreground pixel-btn hover:border-foreground/30 hover:text-foreground transition-colors duration-200"
-            >
-              <Github className="h-4.5 w-4.5" aria-hidden="true" />
-            </a>
+              <a
+                href="/cv.pdf"
+                download
+                className="inline-flex items-center gap-2 border-2 border-border bg-card px-5 py-3 text-sm font-medium text-foreground pixel-btn hover:border-foreground/30 transition-colors duration-200"
+              >
+                <Download className="h-3.5 w-3.5" aria-hidden="true" />
+                Download CV
+              </a>
+
+              <a
+                href="https://github.com/muuhamedhany"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="GitHub Profile"
+                className="inline-flex items-center gap-2 border-2 border-border bg-card px-3.5 py-3 text-sm font-medium text-foreground pixel-btn hover:border-foreground/30 hover:text-foreground transition-colors duration-200"
+              >
+                <Github className="h-4 w-4" aria-hidden="true" />
+              </a>
+            </motion.div>
+          </div>
+
+          {/* ── SVG Portrait (Floating in upper right quadrant) ── */}
+          {/* HIDDEN ON MOBILE SCREEN (< 1024px) PER USER REQUIREMENTS */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            transition={{ delay: 0.65, duration: 0.85, ease: [0.16, 1, 0.3, 1] }}
+            className="hidden lg:block lg:col-span-4 relative pointer-events-auto"
+          >
+            <div className="relative w-full max-w-[460px] xl:max-w-[540px] mx-auto -mt-10 xl:-mt-16">
+              <AvatarIllustration theme={theme} />
+            </div>
           </motion.div>
+
         </div>
-
-        {/* ── Right column ── */}
-        <motion.div
-          initial={{ opacity: 0, x: 24 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ delay: 1.25, duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-          className="relative block order-1 lg:order-2 w-full max-w-[340px] sm:max-w-[400px] lg:max-w-none mx-auto"
-        >
-          <AvatarIllustration theme={theme} />
-
-
-        </motion.div>
       </div>
     </section>
   );

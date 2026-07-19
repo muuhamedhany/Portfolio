@@ -97,13 +97,13 @@ export function AvatarIllustration({ theme }: AvatarIllustrationProps) {
   const mouseX = useMotionValue(0.5);
   const mouseY = useMotionValue(0.5);
 
-  const springX = useSpring(mouseX, { stiffness: 35, damping: 18 });
-  const springY = useSpring(mouseY, { stiffness: 35, damping: 18 });
+  const springX = useSpring(mouseX, { stiffness: 40, damping: 20 });
+  const springY = useSpring(mouseY, { stiffness: 40, damping: 20 });
 
-  const translateX = useTransform(springX, [0, 1], [-10, 10]);
-  const translateY = useTransform(springY, [0, 1], [-10, 10]);
-  const rotateY = useTransform(springX, [0, 1], [-5, 5]);
-  const rotateX = useTransform(springY, [0, 1], [5, -5]);
+  const translateX = useTransform(springX, [0, 1], [-14, 14]);
+  const translateY = useTransform(springY, [0, 1], [-14, 14]);
+  const rotateY = useTransform(springX, [0, 1], [-7, 7]);
+  const rotateX = useTransform(springY, [0, 1], [7, -7]);
 
   useEffect(() => {
     // Disable parallax if user prefers reduced motion or on touch devices
@@ -119,36 +119,36 @@ export function AvatarIllustration({ theme }: AvatarIllustrationProps) {
     return () => window.removeEventListener("mousemove", handleMouseMove);
   }, [isReducedMotion, mouseX, mouseY]);
 
-  // Floating, breathing, and rotation parameters (subtle as requested)
-  const floatY = isReducedMotion ? [0, 0] : (isMobile ? [0, -3, 0] : [0, -6, 0]);
-  const floatRotate = isReducedMotion ? [0, 0] : (isMobile ? [0, 0.3, 0] : [-0.8, 0.8, -0.8]);
-  const breatheScale = isReducedMotion ? [1, 1] : (isMobile ? [1, 1.006, 1] : [1, 1.01, 1]);
+  // Floating, breathing, and rotation parameters
+  const floatY = isReducedMotion ? [0, 0] : [0, -10, 0];
+  const floatRotate = isReducedMotion ? [0, 0] : [-1.2, 1.2, -1.2];
+  const breatheScale = isReducedMotion ? [1, 1] : [1, 1.018, 1];
 
   return (
-    <div className="avatar-illustration-container" style={{ perspective: "1000px" }}>
-      {/* Very Soft Blurred Radial Glow (Low opacity, no neon explosion) */}
+    <div className="avatar-illustration-container relative w-full aspect-square flex items-center justify-center bg-transparent" style={{ perspective: "1000px" }}>
+      {/* Soft Radial Ambient Glow */}
       <motion.div 
-        className="avatar-radial-glow absolute inset-0 pointer-events-none z-0"
+        className="avatar-radial-glow absolute -inset-6 pointer-events-none z-0 rounded-full"
         animate={isReducedMotion ? {} : {
-          opacity: [0.75, 1.0, 0.75],
-          scale: [0.97, 1.03, 0.97]
+          opacity: [0.7, 0.95, 0.7],
+          scale: [0.95, 1.05, 0.95]
         }}
         transition={{
-          duration: 6,
+          duration: 6.5,
           repeat: Infinity,
           ease: "easeInOut"
         }}
       />
 
-      {/* Decorative tiny grid squares */}
+      {/* Decorative floating grid squares */}
       <BackgroundDecorations />
 
-      {/* Floating tech icons */}
+      {/* Floating tech code icons */}
       {!isReducedMotion && TECH_SYMBOLS.map((sym, i) => (
-        <FloatingSymbol key={`${sym}-${i}`} symbol={sym} delay={i * 1.1} />
+        <FloatingSymbol key={`${sym}-${i}`} symbol={sym} delay={i * 0.95} />
       ))}
 
-      {/* SVG Image wrapper */}
+      {/* Enlarged SVG Image wrapper (Floating naturally without container box) */}
       <motion.div
         className="avatar-svg-container relative w-full h-full flex items-center justify-center z-10"
         style={{
@@ -160,16 +160,16 @@ export function AvatarIllustration({ theme }: AvatarIllustrationProps) {
         }}
       >
         <motion.div
-          className="w-full h-full flex items-center justify-center"
+          className="w-full h-full flex items-center justify-center scale-110 sm:scale-125 lg:scale-130"
           animate={{
             y: floatY,
             rotate: floatRotate,
             scale: breatheScale
           }}
           transition={{
-            y: { duration: 7, repeat: Infinity, ease: "easeInOut" },
-            rotate: { duration: 7, repeat: Infinity, ease: "easeInOut" },
-            scale: { duration: 5.5, repeat: Infinity, ease: "easeInOut" }
+            y: { duration: 6.5, repeat: Infinity, ease: "easeInOut" },
+            rotate: { duration: 6.5, repeat: Infinity, ease: "easeInOut" },
+            scale: { duration: 5, repeat: Infinity, ease: "easeInOut" }
           }}
         >
           <AvatarSvg theme={theme} isReducedMotion={isReducedMotion} />
