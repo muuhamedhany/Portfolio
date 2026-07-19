@@ -2182,11 +2182,23 @@
     filter: drop-shadow(0 20px 40px rgba(112, 100, 203, 0.12));
   }
 
-  /* Editorial Poster particle bridge */
+  /* Editorial Poster particle bridge & canvas */
   .hero-particle-bridge {
     position: absolute;
     pointer-events: none;
     z-index: 2;
+  }
+
+  .hero-particle-canvas {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  .editorial-monogram {
+    text-shadow: 0 0 40px rgba(112, 100, 203, 0.08);
+    will-change: transform;
   }
 
 

@@ -1,5 +1,5 @@
-import { useEffect } from "react";
-import { motion, useMotionValue, useTransform } from "motion/react";
+import { useEffect, useState, useRef } from "react";
+import { motion, useMotionValue, useTransform, useSpring } from "motion/react";
 import { Download, Github } from "lucide-react";
 import {
   SiReact,
@@ -8,15 +8,70 @@ import {
 } from "react-icons/si";
 import type { SectionId } from "./sections";
 import { AvatarIllustration } from "./AvatarIllustration";
+import { GlitchTicker } from "./GlitchTicker";
+import { HeroParticleCanvas } from "./HeroParticleCanvas";
+import { EditorialMonogram } from "./EditorialMonogram";
 
-
-/* ─── Static data ─── */
+/* ─── Static data & Glitch Constants ─── */
 const NAME_LINES = ["Muhamed", "Hany"];
+const GLITCH_SYMBOLS = "!@#$%^&*()_+-=[]{}|;:<>?/░▒▓█";
+
+/* ─── GlitchChar Component for Interactive Hover ─── */
+interface GlitchCharProps {
+  char: string;
+  isGradient: boolean;
+}
+
+function GlitchChar({ char, isGradient }: GlitchCharProps) {
+  const [displayChar, setDisplayChar] = useState(char);
+  const [isGlitching, setIsGlitching] = useState(false);
+  const timerRef = useRef<number | null>(null);
+
+  const handleMouseEnter = () => {
+    if (isGlitching) return;
+    setIsGlitching(true);
+    let count = 0;
+    const maxGlitchFrames = 6;
+
+    const glitch = () => {
+      count++;
+      if (count < maxGlitchFrames) {
+        setDisplayChar(GLITCH_SYMBOLS[Math.floor(Math.random() * GLITCH_SYMBOLS.length)]);
+        timerRef.current = window.setTimeout(glitch, 35);
+      } else {
+        setDisplayChar(char);
+        setIsGlitching(false);
+      }
+    };
+
+    glitch();
+  };
+
+  useEffect(() => {
+    return () => {
+      if (timerRef.current) clearTimeout(timerRef.current);
+    };
+  }, []);
+
+  return (
+    <motion.span
+      variants={charVariant}
+      onMouseEnter={handleMouseEnter}
+      className={`inline-block cursor-pointer select-none transition-transform duration-150 ${
+        isGradient ? "text-gradient" : "text-foreground"
+      } ${
+        isGlitching ? "scale-125 text-primary drop-shadow-[0_0_14px_rgba(139,128,223,0.9)]" : "hover:scale-110"
+      }`}
+    >
+      {displayChar}
+    </motion.span>
+  );
+}
 
 /* ─── Motion variants ─── */
 const nameContainer = {
   hidden: {},
-  show: { transition: { staggerChildren: 0.03, delayChildren: 0.5 } },
+  show: { transition: { staggerChildren: 0.03, delayChildren: 0.4 } },
 };
 
 const nameLineContainer = {
@@ -136,309 +191,6 @@ function StatusBadge() {
   );
 }
 
-/* ─── Tech row ─── */
-interface TechItemProps {
-  label: string;
-  color: string;
-  Icon: React.ComponentType<{ className?: string }>;
-}
-
-function TechItem({ label, color, Icon }: TechItemProps) {
-  return (
-    <span
-      className="hero-tech-item"
-      style={{ "--tech-color": color } as React.CSSProperties}
-    >
-      <Icon className="hero-tech-icon" aria-hidden />
-      <span className="hero-tech-label">{label}</span>
-    </span>
-  );
-}
-
-function ReactNativeIcon({ className }: { className?: string }) {
-  return <SiReact className={className} aria-hidden />;
-}
-
-function TechRow() {
-  const stack: TechItemProps[] = [
-    { label: "React", color: "#61dafb", Icon: SiReact },
-    { label: "React Native", color: "#61dafb", Icon: ReactNativeIcon },
-    { label: "Node.js", color: "#5fa04e", Icon: SiNodedotjs },
-    { label: "PostgreSQL", color: "#4169e1", Icon: SiPostgresql },
-  ];
-  return (
-    <motion.div {...fadeUp(1.1)} className="hero-tech-row mt-6" aria-label="Primary technologies">
-      {stack.map((item) => <TechItem key={item.label} {...item} />)}
-    </motion.div>
-  );
-}
-
-/* ─── Metadata row with pixel icons ─── */
-function MetaRow() {
-  return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ delay: 1.4, duration: 0.6 }}
-      className="hero-meta-row mt-6 font-mono text-[10px] uppercase tracking-[0.16em] text-muted-foreground"
-      aria-label="Quick facts"
-    >
-
-      {/* Location pin */}
-      <span className="hero-meta-item">
-        <svg className="hero-meta-icon" viewBox="0 0 10 12" fill="none" aria-hidden="true">
-          <rect x="2" y="0" width="6" height="6" fill="currentColor" opacity="0.5" />
-          <rect x="4" y="6" width="2" height="4" fill="currentColor" opacity="0.5" />
-          <rect x="3" y="1" width="4" height="4" fill="currentColor" opacity="0.3" />
-        </svg>
-        Based in Egypt
-      </span>
-
-    </motion.div>
-  );
-}
-
-/* ─── Workspace illustration ─── */
-function WorkspaceIllustration({ theme }: { theme: "dark" | "light" }) {
-  const dk = theme === "dark";
-
-  const c = {
-    /* desk */
-    deskTop: dk ? "#211d35" : "#edeaf8",
-    deskFace: dk ? "#191626" : "#e3dff5",
-    deskEdge: dk ? "#110f1e" : "#cec9e8",
-
-    /* monitor stand */
-    stand: dk ? "#2e2a47" : "#d4cfed",
-    standShadow: dk ? "#1a1730" : "#c4bfe2",
-
-    /* monitor bezel */
-    bezel: dk ? "#2a2642" : "#d8d4ee",
-    bezelLight: dk ? "#35305a" : "#e0ddf4",
-
-    /* screen */
-    screenBg: dk ? "#0a0914" : "#fafaf8",
-    titleBar: dk ? "#18162a" : "#e8e4f8",
-    gutter: dk ? "#14121f" : "#eeebf9",
-    lineHL: dk ? "#7064cb1a" : "#7064cb12",
-
-    /* syntax */
-    sxPurple: dk ? "#978ce5" : "#6558c7",
-    sxBlue: dk ? "#61d4fb" : "#0070c6",
-    sxGreen: dk ? "#5fbe8e" : "#22863a",
-    sxGray: dk ? "#615b78" : "#8a82a0",
-    sxOrange: dk ? "#e5a366" : "#c07530",
-    sxString: dk ? "#97c97a" : "#1a7f37",
-    cursor: dk ? "#978ce5" : "#6558c7",
-
-    /* keyboard */
-    kbd: dk ? "#252240" : "#d0ccec",
-    kbdKey: dk ? "#1e1c38" : "#c4c0e4",
-
-    /* mug */
-    mug: dk ? "#4a3870" : "#7064cb",
-    mugHL: dk ? "#6050a8" : "#9188df",
-    mugSteam: dk ? "#7064cb55" : "#6558c733",
-
-    /* plant */
-    pot: dk ? "#8a6240" : "#a07050",
-    potRim: dk ? "#9a7250" : "#b08060",
-    soil: dk ? "#2a1e14" : "#3a2814",
-    stem: dk ? "#2a5a3a" : "#1f4a2c",
-    leaf1: dk ? "#3a7a50" : "#2d6540",
-    leaf2: dk ? "#4a9060" : "#3d7550",
-
-    /* glow / particles */
-    glow: dk ? "#7064cb" : "#6558c7",
-    ambient: dk ? "rgba(112,100,203,0.22)" : "rgba(101,88,199,0.12)",
-    particle: dk ? "#7064cb" : "#5146a8",
-    codeIcon: dk ? "#978ce5" : "#6558c7",
-
-    /* status bar */
-    statusBar: dk ? "#181630" : "#d8d4f0",
-  };
-
-  return (
-    <div className="hero-workspace" aria-hidden="true">
-      {/* Ambient glow */}
-      <div
-        className="hero-ws-glow"
-        style={{ background: `radial-gradient(ellipse at 52% 50%, ${c.ambient} 0%, transparent 68%)` }}
-      />
-
-      {/* Floating particles around monitor */}
-      {[...Array(7)].map((_, i) => (
-        <div
-          key={i}
-          className="hero-ws-particle"
-          style={{
-            left: `${8 + i * 13}%`,
-            top: `${6 + (i % 4) * 12}%`,
-            animationDelay: `${i * 0.65}s`,
-            animationDuration: `${3.2 + i * 0.55}s`,
-            background: c.particle,
-          }}
-        />
-      ))}
-
-      {/* Floating code icon — upper right of monitor */}
-      <div className="hero-ws-code-icon" style={{ color: c.codeIcon }}>
-        <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-          <path d="M5 4L1 9L5 14" stroke="currentColor" strokeWidth="2" strokeLinecap="square" />
-          <path d="M13 4L17 9L13 14" stroke="currentColor" strokeWidth="2" strokeLinecap="square" />
-          <path d="M11 1.5L7 16.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="square" opacity="0.5" />
-        </svg>
-      </div>
-
-      {/* ── SVG scene ── */}
-      <svg viewBox="0 0 360 290" className="hero-ws-svg" xmlns="http://www.w3.org/2000/svg">
-
-        {/* Desk */}
-        <rect x="10" y="206" width="340" height="12" fill={c.deskTop} />
-        <rect x="10" y="218" width="340" height="26" fill={c.deskFace} />
-        <rect x="10" y="206" width="340" height="2" fill={c.deskEdge} />
-        <rect x="30" y="244" width="10" height="32" fill={c.deskEdge} />
-        <rect x="320" y="244" width="10" height="32" fill={c.deskEdge} />
-
-        {/* Coffee Mug */}
-        <path d="M296 158 Q298 149 296 140" stroke={c.mugSteam} strokeWidth="2.5" fill="none" strokeLinecap="square" className="hero-ws-steam hero-ws-steam-1" />
-        <path d="M303 160 Q305 150 303 140" stroke={c.mugSteam} strokeWidth="2.5" fill="none" strokeLinecap="square" className="hero-ws-steam hero-ws-steam-2" />
-        <path d="M310 156 Q312 147 310 138" stroke={c.mugSteam} strokeWidth="2" fill="none" strokeLinecap="square" className="hero-ws-steam hero-ws-steam-3" />
-        <rect x="300" y="164" width="32" height="36" fill={c.mug} />
-        <rect x="300" y="164" width="32" height="4" fill={c.mugHL} />
-        <rect x="300" y="196" width="32" height="4" fill={c.mugHL} />
-        <rect x="297" y="172" width="8" height="3" fill={c.mugHL} />
-        <rect x="297" y="182" width="8" height="3" fill={c.mugHL} />
-        <rect x="294" y="172" width="4" height="13" fill={c.mugHL} />
-        <rect x="297" y="200" width="38" height="6" fill={c.deskEdge} />
-
-
-        {/* Monitor bezel */}
-        <rect x="68" y="22" width="224" height="178" fill={c.bezel} />
-        <rect x="68" y="22" width="224" height="3" fill={c.bezelLight} />
-
-        {/* Screen */}
-        <rect x="76" y="30" width="208" height="162" fill={c.screenBg} />
-
-        {/* Monitor glow overlay */}
-        <rect x="76" y="30" width="208" height="162" fill="url(#monGlow)" className="hero-ws-monitor-glow" />
-
-        {/* VS Code title bar */}
-        <rect x="76" y="30" width="208" height="10" fill={c.titleBar} />
-        {/* Traffic lights */}
-        <rect x="83" y="34" width="3" height="3" fill="#ff5f57" />
-        <rect x="90" y="34" width="3" height="3" fill="#febc2e" />
-        <rect x="97" y="34" width="3" height="3" fill="#28c840" />
-        {/* Active tab */}
-        <rect x="112" y="30" width="72" height="10" fill={c.screenBg} />
-        <text x="116" y="38" fontSize="7.5" fill={c.sxGray} fontFamily="monospace">muu.ts</text>
-
-        {/* Gutter */}
-        <rect x="76" y="46" width="24" height="146" fill={c.gutter} />
-
-        {/* Active line highlight — on the "stack" key line */}
-        <rect x="76" y="98" width="208" height="9" fill={c.lineHL} className="hero-ws-active-line" />
-
-        {/* ── Code: full developer object ── */}
-        <g clipPath="url(#editorClip)">
-
-          {/* 1: const developer = { */}
-          <text x="80" y="57" fontSize="7" fill={c.sxGray} fontFamily="monospace">1</text>
-          <text x="104" y="57" fontSize="7" fill={c.sxPurple} fontFamily="monospace">const</text>
-          <text x="132" y="57" fontSize="7" fill={c.sxBlue} fontFamily="monospace">developer</text>
-          <text x="171" y="57" fontSize="7" fill={c.sxGray} fontFamily="monospace">{"= {"}</text>
-
-          {/* 2:   name: "Muhamed Hany", */}
-          <text x="80" y="67" fontSize="7" fill={c.sxGray} fontFamily="monospace">2</text>
-          <text x="110" y="67" fontSize="7" fill={c.sxBlue} fontFamily="monospace">name</text>
-          <text x="134" y="67" fontSize="7" fill={c.sxGray} fontFamily="monospace">:</text>
-          <text x="141" y="67" fontSize="7" fill={c.sxString} fontFamily="monospace">"Muhamed Hany"</text>
-          <text x="197" y="67" fontSize="7" fill={c.sxGray} fontFamily="monospace">,</text>
-
-          {/* 3:   role: "Full-Stack Engineer", */}
-          <text x="80" y="77" fontSize="7" fill={c.sxGray} fontFamily="monospace">3</text>
-          <text x="110" y="77" fontSize="7" fill={c.sxBlue} fontFamily="monospace">role</text>
-          <text x="134" y="77" fontSize="7" fill={c.sxGray} fontFamily="monospace">:</text>
-          <text x="141" y="77" fontSize="7" fill={c.sxString} fontFamily="monospace">"Full-Stack Dev"</text>
-          <text x="205" y="77" fontSize="7" fill={c.sxGray} fontFamily="monospace">,</text>
-
-          {/* 4: (blank) */}
-          <text x="80" y="87" fontSize="7" fill={c.sxGray} fontFamily="monospace">4</text>
-
-          {/* 5:   stack: [ */}
-          <text x="80" y="97" fontSize="7" fill={c.sxGray} fontFamily="monospace">5</text>
-          <text x="110" y="97" fontSize="7" fill={c.sxBlue} fontFamily="monospace">stack</text>
-          <text x="134" y="97" fontSize="7" fill={c.sxGray} fontFamily="monospace">: [</text>
-          {/* cursor on this line */}
-          <rect x="119" y="140" width="1.2" height="9" fill={c.cursor} className="hero-ws-cursor" />
-
-          {/* 6:     "React", */}
-          <text x="80" y="107" fontSize="7" fill={c.sxGray} fontFamily="monospace">6</text>
-          <text x="120" y="107" fontSize="7" fill={c.sxString} fontFamily="monospace">"React"</text>
-          <text x="150" y="107" fontSize="7" fill={c.sxGray} fontFamily="monospace">,</text>
-
-          {/* 7:     "React Native", */}
-          <text x="80" y="117" fontSize="7" fill={c.sxGray} fontFamily="monospace">7</text>
-          <text x="120" y="117" fontSize="7" fill={c.sxString} fontFamily="monospace">"React Native"</text>
-          <text x="176" y="117" fontSize="7" fill={c.sxGray} fontFamily="monospace">,</text>
-
-          {/* 8:     "Node.js", */}
-          <text x="80" y="127" fontSize="7" fill={c.sxGray} fontFamily="monospace">8</text>
-          <text x="120" y="127" fontSize="7" fill={c.sxString} fontFamily="monospace">"Node.js"</text>
-          <text x="158" y="127" fontSize="7" fill={c.sxGray} fontFamily="monospace">,</text>
-
-          {/* 9:     "PostgreSQL", */}
-          <text x="80" y="137" fontSize="7" fill={c.sxGray} fontFamily="monospace">9</text>
-          <text x="120" y="137" fontSize="7" fill={c.sxString} fontFamily="monospace">"PostgreSQL"</text>
-          <text x="170" y="137" fontSize="7" fill={c.sxGray} fontFamily="monospace">,</text>
-
-          {/* 10:   ], */}
-          <text x="80" y="147" fontSize="7" fill={c.sxGray} fontFamily="monospace">10</text>
-          <text x="110" y="147" fontSize="7" fill={c.sxGray} fontFamily="monospace">],</text>
-
-          {/* 11: (blank) */}
-          <text x="80" y="157" fontSize="7" fill={c.sxGray} fontFamily="monospace">11</text>
-
-        </g>
-
-        {/* Status bar */}
-        <rect x="76" y="184" width="208" height="8" fill={c.statusBar} />
-        <text x="83" y="190" fontSize="5.5" fill={c.sxGray} fontFamily="monospace">TypeScript  ●  muu.ts  ●  Ln 10</text>
-
-        {/* Keyboard */}
-        <rect x="76" y="198" width="208" height="10" fill={c.kbd} />
-        {[0, 1, 2].map((row) =>
-          Array.from({ length: 11 }, (_, col) => (
-            <rect
-              key={`k-${row}-${col}`}
-              x={80 + col * 18}
-              y={200 + row * 3}
-              width="14"
-              height="2"
-              fill={c.kbdKey}
-              opacity="0.7"
-            />
-          ))
-        )}
-        <rect x="158" y="200" width="44" height="6" fill={c.kbdKey} opacity="0.4" />
-
-        {/* Defs */}
-        <defs>
-          <radialGradient id="monGlow" cx="50%" cy="45%" r="50%">
-            <stop offset="0%" stopColor={c.glow} stopOpacity="0.09" />
-            <stop offset="100%" stopColor={c.glow} stopOpacity="0" />
-          </radialGradient>
-          <clipPath id="editorClip">
-            <rect x="76" y="46" width="208" height="138" />
-          </clipPath>
-        </defs>
-      </svg>
-    </div>
-  );
-}
-
-
-
 /* ─── Particle Bridge between Portrait and Typography ─── */
 function ParticleBridge() {
   return (
@@ -476,75 +228,90 @@ interface HeroProps {
   theme: "dark" | "light";
 }
 
-const DESCRIPTION_TEXT = "I build modern web and mobile applications with React, React Native, Node.js and PostgreSQL. Focusing on clean architecture, performance and thoughtful user experience.";
-
 /* ─── Main Component ─── */
 export function Hero({ onNavigate, theme }: HeroProps) {
+  const mouseX = useMotionValue(0.5);
+  const mouseY = useMotionValue(0.5);
+
+  const springX = useSpring(mouseX, { stiffness: 45, damping: 22 });
+  const springY = useSpring(mouseY, { stiffness: 45, damping: 22 });
+
+  // 3-Layer 3D Depth Parallax
+  const line1X = useTransform(springX, [0, 1], [-6, 6]);
+  const line1Y = useTransform(springY, [0, 1], [-6, 6]);
+  const line2X = useTransform(springX, [0, 1], [10, -10]);
+  const line2Y = useTransform(springY, [0, 1], [10, -10]);
+
+  useEffect(() => {
+    const isCoarse = window.matchMedia("(pointer: coarse)").matches;
+    if (isCoarse) return;
+    const handleMouseMove = (e: MouseEvent) => {
+      mouseX.set(e.clientX / window.innerWidth);
+      mouseY.set(e.clientY / window.innerHeight);
+    };
+    window.addEventListener("mousemove", handleMouseMove, { passive: true });
+    return () => window.removeEventListener("mousemove", handleMouseMove);
+  }, [mouseX, mouseY]);
+
   return (
     <section className="scanlines relative min-h-screen lg:h-svh flex flex-col justify-center overflow-hidden py-12 lg:py-0">
       <AmbientGlow />
       <BackgroundParticles />
+      <HeroParticleCanvas />
       <ParticleBridge />
 
       <div className="relative mx-auto w-full max-w-7xl px-6 sm:px-10 lg:px-14 z-20">
         <div className="relative grid grid-cols-1 lg:grid-cols-12 items-center gap-8 lg:gap-4">
 
-          {/* ── Editorial Headline & Main Details (Cols 1-7 or 1-8) ── */}
+          {/* ── Editorial Headline & Main Details ── */}
           <div className="lg:col-span-8 z-20 flex flex-col items-center text-center lg:items-start lg:text-left pt-2 lg:pt-0">
 
             {/* Status chip */}
             <StatusBadge />
 
-            {/* Oversized Graphic Typography (Centered on mobile, asymmetrical on desktop) */}
-            <motion.h1
-              variants={nameContainer}
-              initial="hidden"
-              animate="show"
-              className="font-display leading-[0.82] tracking-tight select-none my-3 text-center lg:text-left w-full"
-            >
-              {/* Line 1: MUHAMED (Purple gradient) */}
-              <motion.span
-                variants={nameLineContainer}
-                className="block overflow-hidden text-gradient-hover text-center lg:text-left"
-                style={{ fontSize: "clamp(3.6rem, 10.5vw, 9.2rem)", fontWeight: 700 }}
-              >
-                {"Muhamed".split("").map((char, ci) => (
-                  <motion.span
-                    key={`muh-${ci}`}
-                    variants={charVariant}
-                    className="inline-block text-gradient"
-                  >
-                    {char}
-                  </motion.span>
-                ))}
-              </motion.span>
+            {/* Creative Luxury Editorial Name Composition with Monogram Watermark */}
+            <div className="relative w-full my-2">
+              {/* Massive background watermark monogram 'MH' */}
+              <EditorialMonogram mouseX={mouseX} mouseY={mouseY} />
 
-              {/* Line 2: HANY (Centered on mobile, offset right on desktop) */}
-              <motion.span
-                variants={nameLineContainer}
-                className="block overflow-hidden pl-0 lg:pl-40 xl:pl-52 text-center lg:text-left"
-                style={{ fontSize: "clamp(3.6rem, 10.5vw, 9.2rem)", fontWeight: 700 }}
+              <motion.h1
+                variants={nameContainer}
+                initial="hidden"
+                animate="show"
+                className="relative z-10 font-display leading-[0.80] tracking-tight select-none text-center lg:text-left w-full"
               >
-                {"Hany".split("").map((char, ci) => (
-                  <motion.span
-                    key={`hany-${ci}`}
-                    variants={charVariant}
-                    className="inline-block text-foreground"
-                  >
-                    {char}
-                  </motion.span>
-                ))}
-              </motion.span>
-            </motion.h1>
+                {/* Line 1: MUHAMED (Purple gradient display, top interlocked layer) */}
+                <motion.span
+                  variants={nameLineContainer}
+                  style={{ x: line1X, y: line1Y, fontSize: "clamp(3.8rem, 11vw, 9.6rem)", fontWeight: 700 }}
+                  className="block overflow-visible text-gradient-hover text-center lg:text-left relative z-10"
+                >
+                  {"Muhamed".split("").map((char, ci) => (
+                    <GlitchChar key={`muh-${ci}`} char={char} isGradient={true} />
+                  ))}
+                </motion.span>
 
-            {/* Sub-headline & Meta tag */}
+                {/* Line 2: HANY (Interlocking directly into MUHAMED baseline with negative top margin) */}
+                <motion.span
+                  variants={nameLineContainer}
+                  style={{ x: line2X, y: line2Y, fontSize: "clamp(3.8rem, 11vw, 9.6rem)", fontWeight: 700 }}
+                  className="block overflow-visible -mt-4 sm:-mt-8 lg:-mt-12 xl:-mt-14 pl-0 lg:pl-36 xl:pl-48 text-center lg:text-left relative z-20"
+                >
+                  {"Hany".split("").map((char, ci) => (
+                    <GlitchChar key={`hany-${ci}`} char={char} isGradient={false} />
+                  ))}
+                </motion.span>
+              </motion.h1>
+            </div>
+
+            {/* Sub-headline with Glitch Scramble Role Ticker */}
             <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.9, duration: 0.55 }}
-              className="mt-5 flex flex-wrap items-center justify-center lg:justify-start gap-3 font-mono text-[11px] uppercase tracking-[0.25em] text-muted-foreground w-full"
+              className="mt-6 flex flex-wrap items-center justify-center lg:justify-start gap-3 font-mono text-[11px] uppercase tracking-[0.25em] text-muted-foreground w-full"
             >
-              <span className="font-semibold text-foreground/90">Full-Stack Dev</span>
+              <GlitchTicker />
               <span className="text-muted-foreground/30">•</span>
               <span className="inline-flex items-center gap-1.5">
                 <svg className="w-2.5 h-3 opacity-60" viewBox="0 0 10 12" fill="none" aria-hidden="true">
