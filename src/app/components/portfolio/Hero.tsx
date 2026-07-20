@@ -310,7 +310,7 @@ export function Hero({ onNavigate, theme }: HeroProps) {
               className="mt-6 flex flex-wrap items-center justify-center lg:justify-start gap-3 font-mono text-[11px] uppercase tracking-[0.25em] text-muted-foreground w-full"
             >
               <GlitchTicker />
-              <span className="hidden sm:text-muted-foreground/30">•</span>
+              <span className="hidden md:block text-muted-foreground/70">•</span>
               <span className="inline-flex items-center gap-1.5">
                 <svg className="w-2.5 h-3 opacity-60" viewBox="0 0 10 12" fill="none" aria-hidden="true">
                   <rect x="2" y="0" width="6" height="6" fill="currentColor" />
