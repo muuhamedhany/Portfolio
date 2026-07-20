@@ -2,9 +2,7 @@ import { useEffect, useState, useRef } from "react";
 
 const ROLES = [
   "FULL-STACK DEV",
-  "REACT & NODE SPECIALIST",
-  "CREATIVE DIGITAL CRAFTSMAN",
-  "POSTGRESQL & ARCHITECTURE",
+  "UI/UX DESIGNER",
 ];
 
 const GLITCH_GLYPHS = "!@#$%^&*()_+-=[]{}|;:<>?/░▒▓█+=";
@@ -71,9 +69,8 @@ export function GlitchTicker({ className = "" }: GlitchTickerProps) {
   return (
     <span className={`inline-flex items-center font-mono ${className}`}>
       <span
-        className={`transition-colors duration-150 ${
-          isGlitching ? "text-primary font-bold tracking-[0.28em]" : "text-foreground/90 font-semibold"
-        }`}
+        className={`text-sm transition-colors duration-150 ${isGlitching ? "text-primary font-bold tracking-[0.28em]" : "text-foreground/90 font-semibold"
+          }`}
       >
         {displayedText}
       </span>

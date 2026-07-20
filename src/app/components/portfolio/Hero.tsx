@@ -57,11 +57,9 @@ function GlitchChar({ char, isGradient }: GlitchCharProps) {
     <motion.span
       variants={charVariant}
       onMouseEnter={handleMouseEnter}
-      className={`inline-block cursor-pointer select-none transition-transform duration-150 ${
-        isGradient ? "text-gradient" : "text-foreground"
-      } ${
-        isGlitching ? "scale-125 text-primary drop-shadow-[0_0_14px_rgba(139,128,223,0.9)]" : "hover:scale-110"
-      }`}
+      className={`inline-block cursor-pointer select-none transition-transform duration-150 ${isGradient ? "text-gradient" : "text-foreground"
+        } ${isGlitching ? "scale-125 text-primary drop-shadow-[0_0_14px_rgba(139,128,223,0.9)]" : "hover:scale-110"
+        }`}
     >
       {displayChar}
     </motion.span>
@@ -283,7 +281,7 @@ export function Hero({ onNavigate, theme }: HeroProps) {
                 {/* Line 1: MUHAMED (Purple gradient display, top interlocked layer) */}
                 <motion.span
                   variants={nameLineContainer}
-                  style={{ x: line1X, y: line1Y, fontSize: "clamp(3.8rem, 11vw, 9.6rem)", fontWeight: 700 }}
+                  style={{ x: line1X, y: line1Y, fontSize: "clamp(3.8rem, 11vw, 9.6rem)" }}
                   className="block overflow-visible text-gradient-hover text-center lg:text-left relative z-10"
                 >
                   {"Muhamed".split("").map((char, ci) => (
@@ -294,7 +292,7 @@ export function Hero({ onNavigate, theme }: HeroProps) {
                 {/* Line 2: HANY (Interlocking directly into MUHAMED baseline with negative top margin) */}
                 <motion.span
                   variants={nameLineContainer}
-                  style={{ x: line2X, y: line2Y, fontSize: "clamp(3.8rem, 11vw, 9.6rem)", fontWeight: 700 }}
+                  style={{ x: line2X, y: line2Y, fontSize: "clamp(3.8rem, 11vw, 9.6rem)" }}
                   className="block overflow-visible -mt-4 sm:-mt-8 lg:-mt-12 xl:-mt-14 pl-0 lg:pl-36 xl:pl-48 text-center lg:text-left relative z-20"
                 >
                   {"Hany".split("").map((char, ci) => (
@@ -312,7 +310,7 @@ export function Hero({ onNavigate, theme }: HeroProps) {
               className="mt-6 flex flex-wrap items-center justify-center lg:justify-start gap-3 font-mono text-[11px] uppercase tracking-[0.25em] text-muted-foreground w-full"
             >
               <GlitchTicker />
-              <span className="text-muted-foreground/30">•</span>
+              <span className="hidden sm:text-muted-foreground/30">•</span>
               <span className="inline-flex items-center gap-1.5">
                 <svg className="w-2.5 h-3 opacity-60" viewBox="0 0 10 12" fill="none" aria-hidden="true">
                   <rect x="2" y="0" width="6" height="6" fill="currentColor" />

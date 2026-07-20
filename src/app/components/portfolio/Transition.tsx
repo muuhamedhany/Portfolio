@@ -94,7 +94,7 @@ export function Transition({ name, index }: TransitionProps) {
             <span aria-hidden="true" className="h-px w-8 bg-[var(--transition-line)]" />
             <h2
               className="font-display tracking-normal text-foreground"
-              style={{ fontSize: "clamp(2rem, 7vw, 4.5rem)", fontWeight: 700 }}
+              style={{ fontSize: "clamp(2rem, 7vw, 4.5rem)" }}
             >
               {name}
             </h2>

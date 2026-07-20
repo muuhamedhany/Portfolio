@@ -489,7 +489,7 @@ function ProjectCard({
               </div>
 
               <div className="flex items-center gap-2">
-                <h3 className="font-display text-[1.35rem] leading-none tracking-normal sm:text-[1.5rem]" style={{ fontWeight: 600 }}>
+                <h3 className="font-display text-[1.35rem] leading-none tracking-normal sm:text-[1.5rem]">
                   {project.name}
                 </h3>
 
@@ -538,7 +538,7 @@ export function Projects({ onProjectDialogOpenChange }: { onProjectDialogOpenCha
       <div className="mx-auto flex min-h-svh max-w-7xl flex-col justify-center px-5 pb-24 pt-16 sm:px-8 sm:pb-24 sm:pt-16">
         <Reveal>
           <div className="mb-6 flex items-end justify-between gap-4 sm:mb-7">
-            <h2 className="font-display tracking-normal" style={{ fontSize: "clamp(1.75rem, 5vw, 3rem)", fontWeight: 600 }}>
+            <h2 className="font-display tracking-normal" style={{ fontSize: "clamp(1.75rem, 5vw, 3rem)" }}>
               SELECTED WORK
             </h2>
             <span className="font-mono text-xs uppercase tracking-[0.25em] text-muted-foreground">01 / Projects</span>

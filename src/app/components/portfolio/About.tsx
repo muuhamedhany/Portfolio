@@ -144,7 +144,7 @@ function HeroRoleLine() {
   const { text, prefersReducedMotion } = useTypewriter(HERO_ROLES);
 
   return (
-    <p className="about-hero-line max-w-3xl text-balance font-display leading-[0.95] tracking-normal" style={{ fontSize: "clamp(2.3rem, 7vw, 5rem)", fontWeight: 700 }}>
+    <p className="about-hero-line max-w-3xl text-balance font-display leading-[0.95] tracking-normal" style={{ fontSize: "clamp(2.3rem, 7vw, 5rem)" }}>
       <span className="sr-only">Frontend developer and UI/UX designer based in Egypt.</span>
       <span aria-hidden="true">
         <span className="about-role-wrap">
@@ -232,7 +232,7 @@ export function About() {
         <div className="about-content order-2 min-w-0">
           <Reveal>
             <div className="about-title-row mb-8 flex items-end justify-between gap-4">
-              <h2 className="font-display tracking-normal text-balance" style={{ fontSize: "clamp(1.75rem, 5vw, 3rem)", fontWeight: 600 }}>
+              <h2 className="font-display tracking-normal text-balance" style={{ fontSize: "clamp(1.75rem, 5vw, 3rem)" }}>
                 About
               </h2>
               <span className="font-mono text-xs uppercase tracking-[0.25em] text-muted-foreground">02 / About</span>

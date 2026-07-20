@@ -103,7 +103,7 @@ export function Intro({ onComplete }: IntroProps) {
         <div>
           <h1
             className="font-display tracking-normal text-foreground"
-            style={{ fontSize: "clamp(2rem, 7vw, 4.5rem)", fontWeight: 700 }}
+            style={{ fontSize: "clamp(2rem, 7vw, 4.5rem)" }}
           >
             m<span className="text-gradient">uu</span>hamedhany
           </h1>

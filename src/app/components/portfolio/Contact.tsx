@@ -19,7 +19,7 @@ export function Contact() {
               <span className="font-mono text-xs uppercase tracking-[0.25em] text-muted-foreground">03 / Contact</span>
               <h2
                 className="mt-5 font-display leading-[0.95] tracking-normal text-balance"
-                style={{ fontSize: "clamp(2.5rem, 6vw, 5rem)", fontWeight: 700 }}
+                style={{ fontSize: "clamp(2.5rem, 6vw, 5rem)" }}
               >
                 Let's build <span className="text-gradient">something!</span>
               </h2>
