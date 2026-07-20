@@ -3,6 +3,7 @@ import { motion, useReducedMotion } from "motion/react";
 
 interface IntroProps {
   onComplete: () => void;
+  onExitStart?: () => void;
 }
 
 const STRIP_COUNT = 14;
@@ -32,7 +33,7 @@ const stripVariants = {
 };
 
 /** Pixel-shutter intro screen. Plays once on first load, then unmounts. */
-export function Intro({ onComplete }: IntroProps) {
+export function Intro({ onComplete, onExitStart }: IntroProps) {
   const [phase, setPhase] = useState<"holding" | "exit">("holding");
   const reducedMotion = useReducedMotion() ?? false;
 
@@ -43,7 +44,10 @@ export function Intro({ onComplete }: IntroProps) {
     }
 
     // Hold for 1s showing the name, then begin exit
-    const holdTimer = setTimeout(() => setPhase("exit"), 1000);
+    const holdTimer = setTimeout(() => {
+      setPhase("exit");
+      onExitStart?.();
+    }, 1000);
     // Full exit complete after strips retract (~1.0s + 14*16ms stagger)
     const doneTimer = setTimeout(() => onComplete(), 1700);
 
@@ -51,7 +55,7 @@ export function Intro({ onComplete }: IntroProps) {
       clearTimeout(holdTimer);
       clearTimeout(doneTimer);
     };
-  }, [onComplete, reducedMotion]);
+  }, [onComplete, onExitStart, reducedMotion]);
 
   return (
     <div className="fixed inset-0 z-[70] overflow-hidden">

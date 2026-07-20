@@ -27,6 +27,7 @@ export default function App() {
   const [pending, setPending] = useState<SectionId | null>(null);
   const [isProjectDialogOpen, setIsProjectDialogOpen] = useState(false);
   const [showIntro, setShowIntro] = useState(true);
+  const [introReady, setIntroReady] = useState(false);
   const lockUntil = useRef(0);
 
   useEffect(() => {
@@ -126,7 +127,11 @@ export default function App() {
 
   const pendingMeta = SECTIONS.find((s) => s.id === pending);
 
-  const handleIntroComplete = useCallback(() => setShowIntro(false), []);
+  const handleIntroExitStart = useCallback(() => setIntroReady(true), []);
+  const handleIntroComplete = useCallback(() => {
+    setShowIntro(false);
+    setIntroReady(true);
+  }, []);
 
   return (
     <div className="pixel-canvas relative h-svh overflow-hidden text-foreground">
@@ -138,19 +143,21 @@ export default function App() {
       )}
 
       <AnimatePresence mode="wait">
-        <motion.main
-          key={section}
-          onWheel={onWheel}
-          onTouchStart={onTouchStart}
-          onTouchEnd={onTouchEnd}
-          className="h-svh overflow-y-auto"
-          initial={{ opacity: 0, scale: 0.985 }}
-          animate={{ opacity: 1, scale: 1 }}
-          exit={{ opacity: 0, scale: 1.01, transition: { duration: 0.3 } }}
-          transition={{ duration: 0.5, delay: showIntro ? 1.5 : 0, ease: [0.16, 1, 0.3, 1] }}
-        >
-          {renderSection(section)}
-        </motion.main>
+        {(introReady || !showIntro) && (
+          <motion.main
+            key={section}
+            onWheel={onWheel}
+            onTouchStart={onTouchStart}
+            onTouchEnd={onTouchEnd}
+            className="h-svh overflow-y-auto"
+            initial={{ opacity: 0, scale: 0.985 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 1.01, transition: { duration: 0.3 } }}
+            transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+          >
+            {renderSection(section)}
+          </motion.main>
+        )}
       </AnimatePresence>
 
       <AnimatePresence>
@@ -158,7 +165,7 @@ export default function App() {
       </AnimatePresence>
 
       <AnimatePresence>
-        {showIntro && <Intro key="intro" onComplete={handleIntroComplete} />}
+        {showIntro && <Intro key="intro" onExitStart={handleIntroExitStart} onComplete={handleIntroComplete} />}
       </AnimatePresence>
     </div>
   );
