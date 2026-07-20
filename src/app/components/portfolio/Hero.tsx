@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import { motion, useMotionValue, useTransform, useSpring } from "motion/react";
 import { Download, Github } from "lucide-react";
 import {
@@ -17,19 +17,23 @@ import { HeroStatusCapsule } from "./HeroStatusCapsule";
 const NAME_LINES = ["Muhamed", "Hany"];
 const GLITCH_SYMBOLS = "!@#$%^&*()_+-=[]{}|;:<>?/░▒▓█";
 
-/* ─── GlitchChar Component for Interactive Hover ─── */
+/* ─── GlitchChar Component for Interactive Hover & Auto Glitch ─── */
 interface GlitchCharProps {
   char: string;
   isGradient: boolean;
+  index?: number;
+  glitchTrigger?: number;
 }
 
-function GlitchChar({ char, isGradient }: GlitchCharProps) {
+function GlitchChar({ char, isGradient, index = 0, glitchTrigger }: GlitchCharProps) {
   const [displayChar, setDisplayChar] = useState(char);
   const [isGlitching, setIsGlitching] = useState(false);
   const timerRef = useRef<number | null>(null);
+  const isGlitchingRef = useRef(false);
 
-  const handleMouseEnter = () => {
-    if (isGlitching) return;
+  const triggerGlitch = useCallback(() => {
+    if (isGlitchingRef.current) return;
+    isGlitchingRef.current = true;
     setIsGlitching(true);
     let count = 0;
     const maxGlitchFrames = 6;
@@ -42,11 +46,22 @@ function GlitchChar({ char, isGradient }: GlitchCharProps) {
       } else {
         setDisplayChar(char);
         setIsGlitching(false);
+        isGlitchingRef.current = false;
       }
     };
 
     glitch();
-  };
+  }, [char]);
+
+  // Handle auto-glitch trigger wave (staggered across letters)
+  useEffect(() => {
+    if (!glitchTrigger) return;
+    const staggerTimer = window.setTimeout(() => {
+      triggerGlitch();
+    }, index * 40);
+
+    return () => clearTimeout(staggerTimer);
+  }, [glitchTrigger, index, triggerGlitch]);
 
   useEffect(() => {
     return () => {
@@ -57,7 +72,7 @@ function GlitchChar({ char, isGradient }: GlitchCharProps) {
   return (
     <motion.span
       variants={charVariant}
-      onMouseEnter={handleMouseEnter}
+      onMouseEnter={triggerGlitch}
       className={`inline-block cursor-pointer select-none transition-transform duration-150 ${isGradient ? "text-gradient" : "text-foreground"
         } ${isGlitching ? "scale-125 text-primary drop-shadow-[0_0_14px_rgba(139,128,223,0.9)]" : "hover:scale-110"
         }`}
@@ -213,6 +228,7 @@ interface HeroProps {
 
 /* ─── Main Component ─── */
 export function Hero({ onNavigate, theme }: HeroProps) {
+  const [glitchTrigger, setGlitchTrigger] = useState(0);
   const mouseX = useMotionValue(0.5);
   const mouseY = useMotionValue(0.5);
 
@@ -224,6 +240,21 @@ export function Hero({ onNavigate, theme }: HeroProps) {
   const line1Y = useTransform(springY, [0, 1], [-6, 6]);
   const line2X = useTransform(springX, [0, 1], [10, -10]);
   const line2Y = useTransform(springY, [0, 1], [10, -10]);
+
+  // Periodic name glitch trigger (every 15 to 20 seconds)
+  useEffect(() => {
+    let timeoutId: number;
+    const scheduleNext = () => {
+      const delay = 15000 + Math.floor(Math.random() * 5000);
+      timeoutId = window.setTimeout(() => {
+        setGlitchTrigger((prev) => prev + 1);
+        scheduleNext();
+      }, delay);
+    };
+
+    scheduleNext();
+    return () => clearTimeout(timeoutId);
+  }, []);
 
   useEffect(() => {
     const isCoarse = window.matchMedia("(pointer: coarse)").matches;
@@ -270,7 +301,13 @@ export function Hero({ onNavigate, theme }: HeroProps) {
                   className="block overflow-visible text-gradient-hover text-center relative z-10"
                 >
                   {"Muhamed".split("").map((char, ci) => (
-                    <GlitchChar key={`muh-${ci}`} char={char} isGradient={true} />
+                    <GlitchChar
+                      key={`muh-${ci}`}
+                      char={char}
+                      isGradient={true}
+                      index={ci}
+                      glitchTrigger={glitchTrigger}
+                    />
                   ))}
                 </motion.span>
 
@@ -281,7 +318,13 @@ export function Hero({ onNavigate, theme }: HeroProps) {
                   className="block overflow-visible -mt-7 sm:-mt-6 lg:-mt-12 xl:-mt-14 text-center relative z-20"
                 >
                   {"Hany".split("").map((char, ci) => (
-                    <GlitchChar key={`hany-${ci}`} char={char} isGradient={false} />
+                    <GlitchChar
+                      key={`hany-${ci}`}
+                      char={char}
+                      isGradient={false}
+                      index={ci + 7}
+                      glitchTrigger={glitchTrigger}
+                    />
                   ))}
                 </motion.span>
               </motion.h1>
