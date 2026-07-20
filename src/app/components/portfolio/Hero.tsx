@@ -11,6 +11,7 @@ import { AvatarIllustration } from "./AvatarIllustration";
 import { GlitchTicker } from "./GlitchTicker";
 import { HeroParticleCanvas } from "./HeroParticleCanvas";
 import { EditorialMonogram } from "./EditorialMonogram";
+import { HeroStatusCapsule } from "./HeroStatusCapsule";
 
 /* ─── Static data & Glitch Constants ─── */
 const NAME_LINES = ["Muhamed", "Hany"];
@@ -171,23 +172,7 @@ function BackgroundParticles() {
   );
 }
 
-/* ─── Status badge — pixel-framed, green dot ─── */
-function StatusBadge() {
-  return (
-    <motion.div {...fadeUp(0.3)} className="mb-6 flex justify-center lg:justify-start w-full">
-      <span className="hero-status-badge pixel-status-chip text-[10px]">
-        {/* Green availability dot */}
-        <span className="flex items-center gap-2 px-3 py-1.5 font-mono uppercase tracking-[0.18em] text-foreground">
-          <span className="hero-status-dot-wrap" aria-hidden="true">
-            <span className="hero-status-dot" />
-            <span className="hero-status-dot-ring" />
-          </span>
-          Available for Work
-        </span>
-      </span>
-    </motion.div>
-  );
-}
+
 
 /* ─── Particle Bridge between Portrait and Typography ─── */
 function ParticleBridge() {
@@ -252,23 +237,23 @@ export function Hero({ onNavigate, theme }: HeroProps) {
   }, [mouseX, mouseY]);
 
   return (
-    <section className="scanlines relative min-h-screen lg:h-svh flex flex-col justify-center overflow-hidden py-12 lg:py-0">
+    <section className="scanlines relative min-h-[100dvh] flex flex-col justify-center overflow-hidden pt-10 pb-28 sm:py-12 lg:py-0">
       <AmbientGlow />
       <BackgroundParticles />
       <HeroParticleCanvas />
       <ParticleBridge />
 
-      <div className="relative mx-auto w-full max-w-7xl px-6 sm:px-10 lg:px-14 z-20">
-        <div className="relative grid grid-cols-1 lg:grid-cols-12 items-center gap-8 lg:gap-4">
+      <div className="relative mx-auto w-full max-w-5xl px-4 sm:px-10 lg:px-14 z-20">
+        <div className="relative flex flex-col items-center text-center">
 
-          {/* ── Editorial Headline & Main Details ── */}
-          <div className="lg:col-span-8 z-20 flex flex-col items-center text-center lg:items-start lg:text-left pt-2 lg:pt-0">
+          {/* ── Editorial Headline & Main Details (Centered) ── */}
+          <div className="z-20 flex flex-col items-center text-center pt-2 lg:pt-0 w-full max-w-4xl mx-auto">
 
-            {/* Status chip */}
-            <StatusBadge />
+            {/* Status capsule */}
+            <HeroStatusCapsule onNavigate={onNavigate} />
 
             {/* Creative Luxury Editorial Name Composition with Monogram Watermark */}
-            <div className="relative w-full my-2">
+            <div className="relative w-full my-1 sm:my-2">
               {/* Massive background watermark monogram 'MH' */}
               <EditorialMonogram mouseX={mouseX} mouseY={mouseY} />
 
@@ -276,13 +261,13 @@ export function Hero({ onNavigate, theme }: HeroProps) {
                 variants={nameContainer}
                 initial="hidden"
                 animate="show"
-                className="relative z-10 font-display leading-[0.80] tracking-tight select-none text-center lg:text-left w-full"
+                className="relative z-10 font-display leading-[0.82] tracking-tight select-none text-center w-full"
               >
                 {/* Line 1: MUHAMED (Purple gradient display, top interlocked layer) */}
                 <motion.span
                   variants={nameLineContainer}
-                  style={{ x: line1X, y: line1Y, fontSize: "clamp(3.8rem, 11vw, 9.6rem)" }}
-                  className="block overflow-visible text-gradient-hover text-center lg:text-left relative z-10"
+                  style={{ x: line1X, y: line1Y, fontSize: "clamp(4.5rem, 9.5vw, 9.6rem)" }}
+                  className="block overflow-visible text-gradient-hover text-center relative z-10"
                 >
                   {"Muhamed".split("").map((char, ci) => (
                     <GlitchChar key={`muh-${ci}`} char={char} isGradient={true} />
@@ -292,8 +277,8 @@ export function Hero({ onNavigate, theme }: HeroProps) {
                 {/* Line 2: HANY (Interlocking directly into MUHAMED baseline with negative top margin) */}
                 <motion.span
                   variants={nameLineContainer}
-                  style={{ x: line2X, y: line2Y, fontSize: "clamp(3.8rem, 11vw, 9.6rem)" }}
-                  className="block overflow-visible -mt-4 sm:-mt-8 lg:-mt-12 xl:-mt-14 pl-0 lg:pl-36 xl:pl-48 text-center lg:text-left relative z-20"
+                  style={{ x: line2X, y: line2Y, fontSize: "clamp(4rem, 9.5vw, 9.6rem)" }}
+                  className="block overflow-visible -mt-2 sm:-mt-6 lg:-mt-12 xl:-mt-14 text-center relative z-20"
                 >
                   {"Hany".split("").map((char, ci) => (
                     <GlitchChar key={`hany-${ci}`} char={char} isGradient={false} />
@@ -307,7 +292,7 @@ export function Hero({ onNavigate, theme }: HeroProps) {
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.9, duration: 0.55 }}
-              className="mt-6 flex flex-wrap items-center justify-center lg:justify-start gap-3 font-mono text-[11px] uppercase tracking-[0.25em] text-muted-foreground w-full"
+              className="mt-4 sm:mt-6 flex flex-wrap items-center justify-center gap-2 sm:gap-3 font-mono text-[10px] sm:text-[11px] uppercase tracking-[0.16em] sm:tracking-[0.25em] text-muted-foreground w-full px-2"
             >
               <GlitchTicker />
               <span className="hidden md:block text-muted-foreground/70">•</span>
@@ -321,10 +306,10 @@ export function Hero({ onNavigate, theme }: HeroProps) {
             </motion.div>
 
             {/* CTAs */}
-            <motion.div {...fadeUp(1.2)} className="mt-8 flex flex-wrap items-center justify-center lg:justify-start gap-3.5 w-full">
+            <motion.div {...fadeUp(1.2)} className="mt-6 sm:mt-8 flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-3.5 w-full max-w-xs sm:max-w-none mx-auto">
               <button
                 onClick={() => onNavigate("projects")}
-                className="pixel-cta-btn"
+                className="pixel-cta-btn justify-center"
               >
                 <span className="pixel-cta-btn-bg" />
                 <span className="pixel-cta-btn-text">Explore Projects</span>
@@ -335,39 +320,33 @@ export function Hero({ onNavigate, theme }: HeroProps) {
                 </span>
               </button>
 
-              <a
-                href="/cv.pdf"
-                download
-                className="inline-flex items-center gap-2 border-2 border-border bg-card px-5 py-3 text-sm font-medium text-foreground pixel-btn hover:border-foreground/30 transition-colors duration-200"
-              >
-                <Download className="h-3.5 w-3.5" aria-hidden="true" />
-                Download CV
-              </a>
+              <div className="flex items-center justify-center gap-3">
+                <a
+                  href="/cv.pdf"
+                  download
+                  className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 border-2 border-border bg-card px-4 sm:px-5 py-2.5 sm:py-3 text-xs sm:text-sm font-medium text-foreground pixel-btn hover:border-foreground/30 transition-colors duration-200"
+                >
+                  <Download className="h-3.5 w-3.5" aria-hidden="true" />
+                  Download CV
+                </a>
 
-              <a
-                href="https://github.com/muuhamedhany"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="GitHub Profile"
-                className="inline-flex items-center gap-2 border-2 border-border bg-card px-3.5 py-3 text-sm font-medium text-foreground pixel-btn hover:border-foreground/30 hover:text-foreground transition-colors duration-200"
-              >
-                <Github className="h-4 w-4" aria-hidden="true" />
-              </a>
+                <a
+                  href="https://github.com/muuhamedhany"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="GitHub Profile"
+                  className="inline-flex items-center justify-center gap-2 border-2 border-border bg-card px-3.5 py-2.5 sm:py-3 text-xs sm:text-sm font-medium text-foreground pixel-btn hover:border-foreground/30 hover:text-foreground transition-colors duration-200"
+                >
+                  <Github className="h-4 w-4" aria-hidden="true" />
+                </a>
+              </div>
             </motion.div>
           </div>
 
-          {/* ── SVG Portrait (Floating in upper right quadrant) ── */}
-          {/* HIDDEN ON MOBILE SCREEN (< 1024px) PER USER REQUIREMENTS */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9, y: 20 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            transition={{ delay: 0.65, duration: 0.85, ease: [0.16, 1, 0.3, 1] }}
-            className="hidden lg:block lg:col-span-4 relative pointer-events-auto"
-          >
-            <div className="relative w-full max-w-[460px] xl:max-w-[540px] mx-auto -mt-10 xl:-mt-16">
-              <AvatarIllustration theme={theme} />
-            </div>
-          </motion.div>
+          {/* ── SVG Portrait Hidden ── */}
+          {/* <motion.div className="hidden">
+            <AvatarIllustration theme={theme} />
+          </motion.div> */}
 
         </div>
       </div>

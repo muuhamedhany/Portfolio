@@ -69,7 +69,7 @@ export function GlitchTicker({ className = "" }: GlitchTickerProps) {
   return (
     <span className={`inline-flex items-center font-mono ${className}`}>
       <span
-        className={`text-sm transition-colors duration-150 ${isGlitching ? "text-primary font-bold tracking-[0.28em]" : "text-foreground/90 font-semibold"
+        className={`text-xs md:text-lg transition-colors duration-150 ${isGlitching ? "text-primary font-bold tracking-[0.28em]" : "text-foreground/90 font-semibold"
           }`}
       >
         {displayedText}
