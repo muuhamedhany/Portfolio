@@ -269,7 +269,6 @@ export function Hero({ onNavigate, theme }: HeroProps) {
 
   return (
     <section className="scanlines relative min-h-[100dvh] flex flex-col justify-center overflow-hidden pt-10 pb-28 sm:py-12 lg:py-0">
-      <AmbientGlow />
       <BackgroundParticles />
       <HeroParticleCanvas />
       <ParticleBridge />

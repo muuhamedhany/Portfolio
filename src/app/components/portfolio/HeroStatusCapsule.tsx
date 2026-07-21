@@ -111,12 +111,6 @@ export function HeroStatusCapsule({ onNavigate }: HeroStatusCapsuleProps) {
                   <span>Cairo (UTC+3)</span>
                 </span>
 
-                {/* Simulated Ping */}
-                <span className="hidden md:flex items-center gap-1.5 text-emerald-400/90 font-mono text-[9.5px]">
-                  <Activity className="w-3 h-3 shrink-0" />
-                  <span>24ms</span>
-                </span>
-
                 {/* Quick Hire Me CTA */}
                 {onNavigate && (
                   <button
@@ -127,7 +121,7 @@ export function HeroStatusCapsule({ onNavigate }: HeroStatusCapsuleProps) {
                     }}
                     className="inline-flex items-center gap-0.5 sm:gap-1 rounded-full bg-primary/20 px-2 sm:px-2.5 py-0.5 text-[8.5px] sm:text-[9.5px] font-semibold text-primary hover:bg-primary hover:text-primary-foreground transition-all duration-200 shrink-0"
                   >
-                    <span>Hire Me</span>
+                    <span>Get in Touche</span>
                     <ArrowUpRight className="w-2.5 sm:w-3 h-2.5 sm:h-3" />
                   </button>
                 )}

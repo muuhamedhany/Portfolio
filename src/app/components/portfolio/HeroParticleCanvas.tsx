@@ -58,7 +58,7 @@ export function HeroParticleCanvas() {
 
     const initParticles = () => {
       particles.length = 0;
-      const count = Math.min(65, Math.floor((width * height) / 18000));
+      const count = Math.min(65, Math.floor((width * height) / 50000));
 
       for (let i = 0; i < count; i++) {
         const x = Math.random() * width;
