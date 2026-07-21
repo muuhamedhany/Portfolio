@@ -271,32 +271,35 @@
   }
 
   .pixel-nav-control {
+    position: relative;
     border: 1px solid var(--border);
     background: var(--background);
     box-shadow: inset 2px 2px 0 var(--pixel-edge-light), inset -2px -2px 0 var(--pixel-edge-dark);
+    color: var(--muted-foreground);
     transition:
-      transform 80ms steps(2, end),
-      color 100ms linear,
-      background-color 100ms linear,
-      border-color 100ms linear;
+      color 150ms linear,
+      background-color 150ms linear,
+      border-color 150ms linear;
   }
 
   .pixel-nav-control:hover {
     color: var(--foreground);
     border-color: var(--pixel-frame);
-    transform: translate(1px, 1px);
   }
 
   .pixel-nav-control:active {
-    transform: translate(2px, 2px);
     box-shadow: inset 1px 1px 0 var(--pixel-edge-dark);
   }
 
   .pixel-nav-control[data-active='true'] {
     border-color: var(--pixel-active);
-    background: var(--pixel-active);
     color: var(--pixel-active-foreground);
-    box-shadow: inset 2px 2px 0 rgba(255, 255, 255, 0.16), inset -2px -2px 0 rgba(0, 0, 0, 0.28);
+  }
+
+  .pixel-nav-active-bg {
+    background: var(--pixel-active);
+    box-shadow: inset 2px 2px 0 rgba(255, 255, 255, 0.22), inset -2px -2px 0 rgba(0, 0, 0, 0.32);
+    border: 1px solid var(--pixel-frame);
   }
 
   .pixel-nav-icon {
