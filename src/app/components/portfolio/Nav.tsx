@@ -11,7 +11,7 @@ import { SECTIONS, type SectionId } from "./sections";
 
 interface NavProps {
   theme: "dark" | "light";
-  onToggle: () => void;
+  onToggle: (e?: React.MouseEvent) => void;
   active: SectionId;
   onNavigate: (id: SectionId) => void;
 }

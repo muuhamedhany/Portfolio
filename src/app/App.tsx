@@ -8,6 +8,7 @@ import { Contact } from "./components/portfolio/Contact";
 import { Transition } from "./components/portfolio/Transition";
 import { PageDots } from "./components/portfolio/PageDots";
 import { Intro } from "./components/portfolio/Intro";
+import { PixelThemeTransition } from "./components/portfolio/PixelThemeTransition";
 import { SECTIONS, type SectionId } from "./components/portfolio/sections";
 
 type Theme = "dark" | "light";
@@ -28,6 +29,13 @@ export default function App() {
   const [isProjectDialogOpen, setIsProjectDialogOpen] = useState(false);
   const [showIntro, setShowIntro] = useState(true);
   const [introReady, setIntroReady] = useState(false);
+
+  const [themeTransition, setThemeTransition] = useState<{
+    active: boolean;
+    targetTheme: Theme;
+    clickPos: { x: number; y: number } | null;
+  } | null>(null);
+
   const lockUntil = useRef(0);
 
   useEffect(() => {
@@ -69,7 +77,22 @@ export default function App() {
     [section, navigate],
   );
 
-  const toggle = () => setTheme((t) => (t === "dark" ? "light" : "dark"));
+  const toggle = useCallback((e?: React.MouseEvent) => {
+    if (themeTransition?.active) return;
+    const targetTheme: Theme = theme === "dark" ? "light" : "dark";
+    const clickPos = e ? { x: e.clientX, y: e.clientY } : null;
+    setThemeTransition({ active: true, targetTheme, clickPos });
+    document.documentElement.classList.add("theme-transitioning");
+  }, [theme, themeTransition]);
+
+  const handleThemeSwap = useCallback(() => {
+    setTheme((t) => (t === "dark" ? "light" : "dark"));
+  }, []);
+
+  const handleThemeTransitionComplete = useCallback(() => {
+    setThemeTransition(null);
+    document.documentElement.classList.remove("theme-transitioning");
+  }, []);
 
   // Wheel paging: scroll within a page until its edge, then advance.
   const onWheel = (e: React.WheelEvent<HTMLElement>) => {
@@ -162,6 +185,18 @@ export default function App() {
 
       <AnimatePresence>
         {pendingMeta && <Transition key="transition" name={pendingMeta.label} index={pendingMeta.index} />}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {themeTransition?.active && (
+          <PixelThemeTransition
+            key="pixel-theme-transition"
+            targetTheme={themeTransition.targetTheme}
+            clickPos={themeTransition.clickPos}
+            onThemeSwap={handleThemeSwap}
+            onComplete={handleThemeTransitionComplete}
+          />
+        )}
       </AnimatePresence>
 
       <AnimatePresence>

@@ -7,7 +7,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 
 interface ThemeToggleProps {
   theme: "dark" | "light";
-  onToggle: () => void;
+  onToggle: (e?: React.MouseEvent) => void;
 }
 
 export function ThemeToggle({ theme, onToggle }: ThemeToggleProps) {
@@ -44,7 +44,7 @@ export function ThemeToggle({ theme, onToggle }: ThemeToggleProps) {
         <TooltipTrigger asChild>
           <motion.button
             type="button"
-            onClick={onToggle}
+            onClick={(e) => onToggle(e)}
             whileHover={{ scale: 1.08 }}
             whileTap={{ scale: 0.92 }}
             aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} theme`}
