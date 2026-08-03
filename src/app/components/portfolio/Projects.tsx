@@ -638,18 +638,13 @@ export function Projects({ onProjectDialogOpenChange }: { onProjectDialogOpenCha
 
   return (
     <section className="relative">
-      <div className="mx-auto flex min-h-svh max-w-7xl flex-col justify-center px-5 pb-24 pt-16 sm:px-8 sm:pb-24 sm:pt-16">
+      <div className="mx-auto flex  min-h-svh max-w-7xl flex-col justify-center px-5 pb-24 pt-16 sm:px-8 sm:pb-24 sm:pt-16">
         {/* Section Header with Category Filter Bar */}
         <Reveal variant="pixel" gridCols={12} gridRows={2}>
-          <div className="mb-6 flex flex-col gap-4 sm:mb-7 sm:flex-row sm:items-end sm:justify-between">
-            <div className="flex items-end justify-between gap-4 sm:justify-start">
-              <h2 className="font-display tracking-normal" style={{ fontSize: "clamp(1.75rem, 5vw, 3rem)" }}>
-                SELECTED WORK
-              </h2>
-              <span className="font-mono text-xs uppercase tracking-[0.25em] text-muted-foreground pb-1">
-                01 / Projects ({filteredProjects.length})
-              </span>
-            </div>
+          <div className="mb-6 flex items-start justify-between flex-col lg:flex-row lg:items-center lg:justify-between  ">
+            <h2 className="font-display tracking-normal" style={{ fontSize: "clamp(1.75rem, 5vw, 3rem)" }}>
+              SELECTED WORK
+            </h2>
 
             {/* Category Filter Bar */}
             <div className="flex flex-wrap items-center gap-2 border-2 border-border bg-card p-1.5">
