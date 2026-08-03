@@ -364,13 +364,7 @@ function ProjectDetailDialog({ project }: { project: Project }) {
         {/* Header Bar */}
         <div className="project-detail-header border-b-2 border-border/60 pb-3 mb-4 flex items-center justify-between">
           <div className="min-w-0">
-            <div className="flex items-center gap-2 mb-1">
-              <span className="project-detail-index font-mono text-xs text-[var(--accent-to)] font-bold">{project.index}</span>
-              <span className="h-1 w-1 rounded-full bg-[var(--accent-to)]" />
-              <Dialog.Description className="project-detail-kicker font-mono text-[9px] uppercase tracking-[0.2em] text-muted-foreground">
-                Project details
-              </Dialog.Description>
-            </div>
+
             <Dialog.Title className="font-display text-2xl sm:text-3xl leading-none tracking-normal text-foreground">
               {project.name}
             </Dialog.Title>
@@ -392,28 +386,26 @@ function ProjectDetailDialog({ project }: { project: Project }) {
           <div className="project-detail-media-column flex flex-col gap-3">
             {/* Interactive Media Stage Switcher Tabs (if project has both video & image) */}
             {hasVideoAndImage && (
-              <div className="flex items-center gap-2 border-2 border-border bg-card p-1">
+              <div className="flex items-center gap-2  bg-card p-1">
                 <button
                   type="button"
                   onClick={() => setActiveMediaTab("video")}
-                  className={`flex flex-1 items-center justify-center gap-1.5 px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.16em] transition-all cursor-pointer ${activeMediaTab === "video"
+                  className={`flex flex-1 justify-center gap-1.5 px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.16em] transition-all cursor-pointer ${activeMediaTab === "video"
                     ? "pixel-btn border-2 border-[var(--pixel-frame)] bg-[var(--pixel-active)] text-[var(--pixel-active-foreground)] font-semibold"
                     : "border-2 border-border bg-background text-muted-foreground hover:border-[var(--pixel-frame)] hover:text-foreground"
                     }`}
                 >
-                  <Monitor className="h-3.5 w-3.5" />
-                  Video Walkthrough
+                  Video
                 </button>
                 <button
                   type="button"
                   onClick={() => setActiveMediaTab("image")}
-                  className={`flex flex-1 items-center justify-center gap-1.5 px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.16em] transition-all cursor-pointer ${activeMediaTab === "image"
+                  className={`flex flex-1 justify-center gap-1.5 px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.16em] transition-all cursor-pointer ${activeMediaTab === "image"
                     ? "pixel-btn border-2 border-[var(--pixel-frame)] bg-[var(--pixel-active)] text-[var(--pixel-active-foreground)] font-semibold"
                     : "border-2 border-border bg-background text-muted-foreground hover:border-[var(--pixel-frame)] hover:text-foreground"
                     }`}
                 >
-                  <Smartphone className="h-3.5 w-3.5" />
-                  App Screenshot
+                  Photos
                 </button>
               </div>
             )}
@@ -441,7 +433,7 @@ function ProjectDetailDialog({ project }: { project: Project }) {
                   </video>
                 </div>
               ) : (
-                <div className="aspect-[16/10] w-full overflow-hidden">
+                <div className=" w-full overflow-hidden">
                   <ProjectPreview project={project} />
                 </div>
               )}
@@ -455,18 +447,13 @@ function ProjectDetailDialog({ project }: { project: Project }) {
             initial="hidden"
             animate="show"
           >
-            {/* Graduation Project Badge */}
-            {project.featured && (
-              <motion.div variants={dialogItemVariants}>
-                <span className="inline-flex items-center gap-1.5 border border-[var(--accent-to)] bg-[var(--accent-to)]/10 px-3 py-1 font-mono text-[9.5px] uppercase tracking-widest text-[var(--accent-to)] rounded-full">
-                  <span className="h-1.5 w-1.5 rounded-full bg-[var(--accent-to)] animate-pulse" />
-                  AAST Graduation project
-                </span>
-              </motion.div>
-            )}
+
 
             {/* Full Project Description */}
             <motion.p variants={dialogItemVariants} className="project-detail-blurb text-xs sm:text-sm leading-relaxed text-muted-foreground">
+              <h4 className="project-detail-section-title font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground mb-2">
+                Description
+              </h4>
               {project.blurb}
             </motion.p>
 
