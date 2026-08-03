@@ -711,25 +711,18 @@
     grid-template-columns: 1fr;
     justify-content: center;
     gap: 24px;
+    align-items: stretch;
   }
 
   @media (min-width: 768px) {
     .project-grid {
       grid-template-columns: repeat(2, 1fr);
     }
-
-    .project-card-featured {
-      grid-column: span 2;
-    }
   }
 
   @media (min-width: 1024px) {
     .project-grid {
       grid-template-columns: repeat(3, 1fr);
-    }
-
-    .project-card-featured {
-      grid-column: span 2;
     }
   }
 

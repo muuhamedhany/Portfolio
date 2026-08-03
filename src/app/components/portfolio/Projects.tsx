@@ -248,9 +248,9 @@ function ProjectPreview({ project }: { project: Project }) {
 
   if (project.previewImage) {
     return (
-      <div className="project-card-media project-card-media-image overflow-hidden bg-background">
+      <div className="project-card-media project-card-media-image aspect-[16/10] w-full overflow-hidden bg-background">
         {!imageLoaded && !imageFailed && (
-          <div className="project-image-skeleton" aria-hidden="true">
+          <div className="project-image-skeleton h-full w-full" aria-hidden="true">
             <span className="project-image-skeleton-mark" />
             <span className="project-image-skeleton-line project-image-skeleton-line-wide" />
             <span className="project-image-skeleton-line" />
@@ -282,7 +282,7 @@ function ProjectPreview({ project }: { project: Project }) {
     .slice(0, 3);
 
   return (
-    <div className="project-card-media flex items-center justify-center bg-background" aria-label={`${project.name} technology stack`}>
+    <div className="project-card-media aspect-[16/10] w-full flex items-center justify-center bg-background" aria-label={`${project.name} technology stack`}>
       <div className="relative h-16 w-24" aria-hidden="true">
         {previewTags.map((tag, index) => {
           const Icon = tag.Icon;
@@ -487,52 +487,53 @@ function ProjectCard({
   project: Project;
   onProjectDialogOpenChange?: (open: boolean) => void;
 }) {
-  const isFeatured = Boolean(project.featured);
-
   return (
     <Dialog.Root onOpenChange={onProjectDialogOpenChange}>
       <Dialog.Trigger asChild>
         <button
           type="button"
-          className={`project-card project-card-trigger group relative flex h-full w-full flex-col border-2 border-border bg-card p-1.5 sm:p-2 text-left transition-all duration-200 hover:border-[var(--pixel-frame)] shadow-[3px_3px_0_var(--pixel-shadow)] hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[5px_5px_0_var(--pixel-shadow)] ${
-            isFeatured ? "project-card-featured" : ""
-          }`}
+          className="project-card project-card-trigger group relative flex h-full w-full flex-col border-2 border-border bg-card p-1.5 sm:p-2 text-left transition-all duration-200 hover:border-[var(--pixel-frame)] shadow-[3px_3px_0_var(--pixel-shadow)] hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[5px_5px_0_var(--pixel-shadow)]"
           aria-label={`View details for ${project.name}`}
         >
           {/* Inner Pixel Bezel Frame */}
           <div className="relative flex h-full w-full flex-1 flex-col justify-between border-2 border-border/60 bg-card p-4 sm:p-5">
-            <div>
+            <div className="flex flex-col flex-1">
               {/* Top Index & Graduation Badge */}
-              <div className="mb-3 flex items-center justify-between gap-3">
+              <div className="mb-3 flex h-6 items-center justify-between gap-2 shrink-0">
                 <span className="font-mono text-xs tracking-[0.25em] text-[var(--accent-to)] font-semibold">
                   {project.index}
                 </span>
 
-                {project.featured && (
-                  <span className="inline-flex items-center gap-1.5 border border-[var(--accent-to)] bg-[var(--accent-to)]/10 px-2 py-0.5 font-mono text-[9px] uppercase tracking-widest text-[var(--accent-to)]">
+                {project.featured ? (
+                  <span className="inline-flex items-center gap-1.5 border border-[var(--accent-to)] bg-[var(--accent-to)]/10 px-2 py-0.5 font-mono text-[9px] uppercase tracking-widest text-[var(--accent-to)] truncate">
                     AAST Graduation project
+                  </span>
+                ) : (
+                  <span className="font-mono text-[9px] uppercase tracking-widest text-muted-foreground/50">
+                    Project
                   </span>
                 )}
               </div>
 
-              {/* Media Preview Box */}
-              <div className="mb-4 overflow-hidden border-2 border-border bg-background">
-                <div className="transform-gpu transition-transform duration-300 group-hover:scale-[1.02]">
+              {/* Media Preview Box (Fixed aspect-[16/10]) */}
+              <div className="mb-4 overflow-hidden border-2 border-border bg-background  w-full shrink-0">
+                <div className="h-full w-full transform-gpu transition-transform duration-300 group-hover:scale-[1.02]">
                   <ProjectPreview project={project} />
                 </div>
               </div>
 
-              {/* Title & Description */}
-              <h3 className="font-display text-xl leading-none tracking-normal sm:text-2xl text-foreground group-hover:text-[var(--accent-to)] transition-colors duration-150">
+              {/* Title (Single line truncate) */}
+              <h3 className="font-display text-xl leading-none tracking-normal sm:text-2xl text-foreground group-hover:text-[var(--accent-to)] transition-colors duration-150 truncate shrink-0">
                 {project.name}
               </h3>
 
-              <p className="project-card-blurb mt-2.5 text-xs sm:text-sm leading-relaxed text-muted-foreground line-clamp-3">
+              {/* Description (Fixed line-clamp-2 h-10) */}
+              <p className="project-card-blurb mt-2.5 text-xs sm:text-sm leading-relaxed text-muted-foreground line-clamp-2 h-10 overflow-hidden shrink-0">
                 {project.blurb}
               </p>
 
-              {/* Mini Tech Icon Row */}
-              <div className="project-card-tech-row mt-4">
+              {/* Mini Tech Icon Row (Fixed h-7) */}
+              <div className="project-card-tech-row mt-4 flex h-7 items-center gap-2 shrink-0">
                 {project.tags
                   .map((tag) => ({ name: tag, Icon: TAG_ICON[tag] }))
                   .filter((item): item is { name: string; Icon: IconType } => Boolean(item.Icon))
@@ -541,7 +542,7 @@ function ProjectCard({
                     <span
                       key={name}
                       title={name}
-                      className="project-card-tech-icon flex h-7 w-7 items-center justify-center border-2 border-border bg-background text-[13px] text-muted-foreground transition-colors duration-150 group-hover:border-[var(--pixel-frame)] group-hover:text-foreground"
+                      className="project-card-tech-icon flex h-7 w-7 items-center justify-center border-2 border-border bg-background text-[13px] text-muted-foreground transition-colors duration-150 group-hover:border-[var(--pixel-frame)] group-hover:text-foreground shrink-0"
                     >
                       <Icon />
                     </span>
@@ -549,8 +550,8 @@ function ProjectCard({
               </div>
             </div>
 
-            {/* Action Cue with Pixel Button Styling */}
-            <div className="mt-6 flex items-center justify-between border-t-2 border-border/40 pt-3">
+            {/* Action Cue with Pixel Button Styling (Pushed to bottom edge) */}
+            <div className="mt-6 flex items-center justify-between border-t-2 border-border/40 pt-3 shrink-0">
               <span className="font-mono text-[9.5px] uppercase tracking-[0.2em] text-muted-foreground group-hover:text-foreground transition-colors">
                 View Project
               </span>
@@ -621,8 +622,8 @@ export function Projects({ onProjectDialogOpenChange }: { onProjectDialogOpenCha
           </div>
         </Reveal>
 
-        {/* Bento Grid of Projects */}
-        <motion.div layout className="project-grid">
+        {/* Grid of Projects (Equal sizes & uniform heights) */}
+        <motion.div layout className="project-grid items-stretch">
           <AnimatePresence mode="popLayout">
             {filteredProjects.map((project, i) => (
               <motion.div
@@ -632,8 +633,9 @@ export function Projects({ onProjectDialogOpenChange }: { onProjectDialogOpenCha
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.96 }}
                 transition={{ duration: 0.25, delay: i * 0.04, ease: [0.16, 1, 0.3, 1] }}
+                className="h-full flex flex-col"
               >
-                <Reveal variant="pixel" delay={(i % 2) * 0.08} gridCols={8} gridRows={5}>
+                <Reveal variant="pixel" delay={(i % 2) * 0.08} gridCols={8} gridRows={5} className="h-full flex flex-col">
                   <ProjectCard project={project} onProjectDialogOpenChange={onProjectDialogOpenChange} />
                 </Reveal>
               </motion.div>
