@@ -536,7 +536,7 @@ export function Projects({ onProjectDialogOpenChange }: { onProjectDialogOpenCha
   return (
     <section className="relative">
       <div className="mx-auto flex min-h-svh max-w-7xl flex-col justify-center px-5 pb-24 pt-16 sm:px-8 sm:pb-24 sm:pt-16">
-        <Reveal>
+        <Reveal variant="pixel" gridCols={12} gridRows={2}>
           <div className="mb-6 flex items-end justify-between gap-4 sm:mb-7">
             <h2 className="font-display tracking-normal" style={{ fontSize: "clamp(1.75rem, 5vw, 3rem)" }}>
               SELECTED WORK
@@ -547,7 +547,7 @@ export function Projects({ onProjectDialogOpenChange }: { onProjectDialogOpenCha
 
         <div className="project-grid">
           {PROJECTS.map((project, i) => (
-            <Reveal key={project.name} delay={(i % 2) * 0.08}>
+            <Reveal key={project.name} variant="pixel" delay={(i % 2) * 0.08} gridCols={8} gridRows={5}>
               <ProjectCard project={project} onProjectDialogOpenChange={onProjectDialogOpenChange} />
             </Reveal>
           ))}
