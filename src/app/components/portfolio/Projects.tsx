@@ -41,13 +41,13 @@ interface ProjectStackGroup {
 
 type ProjectStackIcon = "mobile" | "web" | "portal" | "backend" | "deploy" | "frontend" | "design" | "publish";
 
-type ProjectCategory = "all" | "mobile" | "web";
+type ProjectCategory = "all" | "web" | "mobile & full-stack" | "design";
 
 interface Project {
   index: string;
   name: string;
   blurb: string;
-  category: "mobile" | "web";
+  category: "mobile & full-stack" | "web" | "design";
   tags: string[];
   stackGroups: ProjectStackGroup[];
   links: ProjectLink[];
@@ -62,15 +62,16 @@ interface Project {
 
 const CATEGORIES: { id: ProjectCategory; label: string }[] = [
   { id: "all", label: "ALL" },
-  { id: "mobile", label: "MOBILE & FULL-STACK" },
-  { id: "web", label: "WEB & PORTALS" },
+  { id: "web", label: "WEB" },
+  { id: "mobile & full-stack", label: "MOBILE & FULL-STACK" },
+  { id: "design", label: "DESIGN" },
 ];
 
 const PROJECTS: Project[] = [
   {
     index: "01",
     name: "CarKit",
-    category: "mobile",
+    category: "mobile & full-stack",
     blurb:
       "CarKit is a multi-platform automotive marketplace and service system for the Egyptian market. It combines a customer/vendor/provider mobile app, an admin operations dashboard, and a driver/emergency employee web portal. The platform handles product shopping, vehicle management, workshop and mobile-service bookings, vendor/provider approvals, delivery tracking with proof uploads, emergency SOS dispatch, reviews, ads, notifications, and branch/location management. It runs on a Render-hosted Express API with PostgreSQL and Supabase storage, with Expo for the mobile app and Vite React for the web portals.",
     tags: ["React Native Expo", "Render", "Supabase", "Express", "Node.js", "React", "PostgreSQL", "Gemini AI"],
@@ -169,7 +170,7 @@ const PROJECTS: Project[] = [
   {
     index: "04",
     name: "Workout & Diet App",
-    category: "mobile",
+    category: "design",
     blurb: "A UI/UX case study — user research, flows, and a high-fidelity prototype in Figma. NTI graduation project.",
     tags: ["Figma", "User Research", "Prototyping"],
     stackGroups: [
