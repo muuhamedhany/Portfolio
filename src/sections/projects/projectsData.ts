@@ -37,7 +37,7 @@ export interface ProjectStackGroup {
 
 export type ProjectStackIcon = "mobile" | "web" | "portal" | "backend" | "deploy" | "frontend" | "design" | "publish";
 
-export type ProjectCategory = "all" | "web" | "mobile & full-stack" | "design";
+export type ProjectCategory = "all" | "mobile & full-stack" | "web" | "design";
 
 export interface Project {
   index: string;
@@ -59,8 +59,8 @@ export interface Project {
 /* ─── Static data ─── */
 export const CATEGORIES: { id: ProjectCategory; label: string }[] = [
   { id: "all", label: "ALL" },
-  { id: "web", label: "WEB" },
   { id: "mobile & full-stack", label: "MOBILE & FULL-STACK" },
+  { id: "web", label: "WEB" },
   { id: "design", label: "DESIGN" },
 ];
 
