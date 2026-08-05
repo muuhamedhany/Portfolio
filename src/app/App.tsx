@@ -1,15 +1,16 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
-import { Nav } from "./components/portfolio/Nav";
-import { Hero } from "./components/portfolio/Hero";
-import { About } from "./components/portfolio/About";
-import { Projects } from "./components/portfolio/Projects";
-import { Contact } from "./components/portfolio/Contact";
-import { Transition } from "./components/portfolio/Transition";
-import { PageDots } from "./components/portfolio/PageDots";
-import { Intro } from "./components/portfolio/Intro";
-import { PixelThemeTransition } from "./components/portfolio/PixelThemeTransition";
-import { SECTIONS, type SectionId } from "./components/portfolio/sections";
+import { Nav } from "@/components/layout/Nav";
+import { Hero } from "@/sections/home/Hero";
+import { About } from "@/sections/about/About";
+import { Projects } from "@/sections/projects/Projects";
+import { Contact } from "@/sections/contact/Contact";
+import { Transition } from "@/components/layout/Transition";
+import { PageDots } from "@/components/layout/PageDots";
+import { Intro } from "@/components/layout/Intro";
+import { PixelThemeTransition } from "@/components/layout/PixelThemeTransition";
+import { SECTIONS } from "@/lib/constants/sections";
+import type { SectionId } from "@/lib/constants/sections";
 
 type Theme = "dark" | "light";
 
