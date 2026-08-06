@@ -105,7 +105,7 @@ export function ProjectCard({ project }: { project: Project }) {
 
             {/* Description (Fixed line-clamp-2 h-10) */}
             <p className="project-card-blurb mt-2.5 text-xs sm:text-sm leading-relaxed text-muted-foreground line-clamp-2 h-10 overflow-hidden shrink-0">
-              {project.blurb}
+              {project.shortBlurb ?? project.blurb}
             </p>
 
             {/* Mini Tech Icon Row (Fixed h-7) */}

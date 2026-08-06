@@ -13,7 +13,23 @@ import {
   Server,
   Smartphone,
 } from "lucide-react";
-import { SiExpress, SiFigma, SiFramer, SiNodedotjs, SiPostgresql, SiReact, SiSupabase, SiTailwindcss } from "react-icons/si";
+import {
+  SiExpress,
+  SiFigma,
+  SiFramer,
+  SiNodedotjs,
+  SiPostgresql,
+  SiReact,
+  SiSupabase,
+  SiTailwindcss,
+  SiTypescript,
+  SiVite,
+  SiVercel,
+  SiRender,
+  SiAxios,
+  SiJsonwebtokens,
+  SiExpo,
+} from "react-icons/si";
 
 /* ─── Types ─── */
 export interface ProjectLink {
@@ -32,7 +48,12 @@ export interface ProjectVideo {
 export interface ProjectStackGroup {
   label: string;
   icon: ProjectStackIcon;
-  items: string[];
+  items: ProjectStackItem[];
+}
+
+export interface ProjectStackItem {
+  name: string;
+  shortName?: string; // Shorter label for the chip
 }
 
 export type ProjectStackIcon = "mobile" | "web" | "portal" | "backend" | "deploy" | "frontend" | "design" | "publish";
@@ -43,6 +64,7 @@ export interface Project {
   index: string;
   name: string;
   blurb: string;
+  shortBlurb: string; // Business-first 1-2 sentence summary
   category: "mobile & full-stack" | "web" | "design";
   tags: string[];
   stackGroups: ProjectStackGroup[];
@@ -69,29 +91,52 @@ export const PROJECTS: Project[] = [
     index: "01",
     name: "CarKit",
     category: "mobile & full-stack",
+    shortBlurb:
+      "Full-scale automotive marketplace for Egypt — customer app, vendor dashboard, driver portal, and SOS dispatch in one platform.",
     blurb:
-      "CarKit is a multi-platform automotive marketplace and service system for the Egyptian market. It combines a customer/vendor/provider mobile app, an admin operations dashboard, and a driver/emergency employee web portal. The platform handles product shopping, vehicle management, workshop and mobile-service bookings, vendor/provider approvals, delivery tracking with proof uploads, emergency SOS dispatch, reviews, ads, notifications, and branch/location management. It runs on a Render-hosted Express API with PostgreSQL and Supabase storage, with Expo for the mobile app and Vite React for the web portals.",
+      "Full-scale automotive marketplace serving the Egyptian market. Customers browse and buy parts, book workshops, and track deliveries. Vendors manage inventory and orders. Drivers handle last-mile logistics. Emergency staff respond to SOS calls — all from one integrated backend.",
     tags: ["React Native Expo", "Render", "Supabase", "Express", "Node.js", "React", "PostgreSQL", "Gemini AI"],
     stackGroups: [
       {
         label: "Mobile App",
         icon: "mobile",
-        items: ["Expo SDK 54", "React Native", "TypeScript", "Expo Router", "React Context", "AsyncStorage", "Axios", "Supabase JS"],
+        items: [
+          { name: "Expo SDK 54", shortName: "Expo" },
+          { name: "React Native", shortName: "RN" },
+          { name: "TypeScript", shortName: "TS" },
+          { name: "Expo Router", shortName: "Router" },
+          { name: "Supabase JS", shortName: "Supabase" },
+        ],
       },
       {
-        label: "Admin Web & Driver/Emergency Portal",
+        label: "Web Portals",
         icon: "web",
-        items: ["React 19", "Vite 7", "Tailwind CSS v4", "React Router 7", "Axios", "Lucide React"],
+        items: [
+          { name: "React 19", shortName: "React" },
+          { name: "Vite 7", shortName: "Vite" },
+          { name: "Tailwind CSS v4", shortName: "Tailwind" },
+          { name: "React Router 7", shortName: "Router" },
+        ],
       },
       {
         label: "Backend",
         icon: "backend",
-        items: ["Node.js", "Express 5", "PostgreSQL", "pg", "JWT authentication", "Supabase Storage", "Resend"],
+        items: [
+          { name: "Node.js", shortName: "Node" },
+          { name: "Express 5", shortName: "Express" },
+          { name: "PostgreSQL", shortName: "Postgres" },
+          { name: "JWT Auth", shortName: "JWT" },
+          { name: "Supabase Storage", shortName: "Storage" },
+        ],
       },
       {
-        label: "Deployment & Services",
+        label: "Infrastructure",
         icon: "deploy",
-        items: ["Render for backend API", "Supabase for PostgreSQL and file storage", "Vercel for web portals", "Expo for mobile app"],
+        items: [
+          { name: "Render", shortName: "Render" },
+          { name: "Supabase", shortName: "Supabase" },
+          { name: "Vercel", shortName: "Vercel" },
+        ],
       },
     ],
     links: [
@@ -114,18 +159,25 @@ export const PROJECTS: Project[] = [
     index: "02",
     name: "Car Rental Landing Page",
     category: "web",
-    blurb: "A motion-rich rental landing page with scroll choreography and crisp section reveals.",
+    shortBlurb: "Motion-rich marketing page for a car rental brand with scroll choreography and animated section reveals.",
+    blurb: "Motion-rich marketing page for a car rental brand. Scroll-driven section reveals, smooth transitions, and a conversion-focused layout — built to turn first impressions into bookings.",
     tags: ["React", "Tailwind", "Framer Motion"],
     stackGroups: [
       {
         label: "Frontend",
         icon: "frontend",
-        items: ["React", "Tailwind CSS", "Framer Motion"],
+        items: [
+          { name: "React", shortName: "React" },
+          { name: "Tailwind CSS", shortName: "Tailwind" },
+          { name: "Framer Motion", shortName: "Motion" },
+        ],
       },
       {
         label: "Deployment",
         icon: "deploy",
-        items: ["Vercel"],
+        items: [
+          { name: "Vercel", shortName: "Vercel" },
+        ],
       },
     ],
     links: [
@@ -141,18 +193,25 @@ export const PROJECTS: Project[] = [
     index: "03",
     name: "Pure Store",
     category: "web",
-    blurb: "A React e-commerce app — product browsing, cart, and a clean storefront flow.",
+    shortBlurb: "React e-commerce storefront with product browsing, cart management, and a clean checkout flow.",
+    blurb: "React e-commerce storefront with product browsing, cart management, and a clean checkout flow. Focused on performance and a frictionless shopping experience.",
     tags: ["React", "E-commerce"],
     stackGroups: [
       {
         label: "Frontend",
         icon: "frontend",
-        items: ["React", "E-commerce storefront", "Cart flow", "Product browsing"],
+        items: [
+          { name: "React", shortName: "React" },
+          { name: "E-commerce storefront", shortName: "E-comm" },
+          { name: "Cart flow", shortName: "Cart" },
+        ],
       },
       {
         label: "Deployment",
         icon: "deploy",
-        items: ["Vercel"],
+        items: [
+          { name: "Vercel", shortName: "Vercel" },
+        ],
       },
     ],
     links: [
@@ -168,18 +227,26 @@ export const PROJECTS: Project[] = [
     index: "04",
     name: "Workout & Diet App",
     category: "design",
-    blurb: "A UI/UX case study — user research, flows, and a high-fidelity prototype in Figma. NTI graduation project.",
+    shortBlurb: "UI/UX case study — research-driven design, user flows, and a high-fidelity prototype. NTI graduation project.",
+    blurb: "Research-driven UI/UX case study for a fitness app. Covers user research, journey mapping, interaction design, and a high-fidelity Figma prototype. Published as a full Behance case study.",
     tags: ["Figma", "User Research", "Prototyping"],
     stackGroups: [
       {
         label: "Design & Research",
         icon: "design",
-        items: ["Figma", "User Research", "User flows", "High-fidelity prototyping"],
+        items: [
+          { name: "Figma", shortName: "Figma" },
+          { name: "User Research", shortName: "Research" },
+          { name: "User flows", shortName: "Flows" },
+          { name: "High-fidelity prototype", shortName: "Prototype" },
+        ],
       },
       {
         label: "Publishing",
         icon: "publish",
-        items: ["Behance case study"],
+        items: [
+          { name: "Behance case study", shortName: "Behance" },
+        ],
       },
     ],
     links: [{ label: "Behance", href: "https://www.behance.net/gallery/234873613/UIUX-Workout-Diet-App", icon: "behance" }],
@@ -192,14 +259,18 @@ export const PROJECTS: Project[] = [
     index: "05",
     name: "VitalityAI",
     category: "web",
-    blurb:
-      "VitalityAI is an AI-powered wellness platform that generates personalized plans and workouts. I contributed as a frontend developer, focusing on responsive UI implementation, animation polish, interaction enhancements, and refining the landing-page experience.",
+    shortBlurb: "Frontend contribution to an AI wellness platform — responsive UI, animation polish, and landing page refinement.",
+    blurb: "Frontend contribution to an AI-powered wellness platform. Delivered responsive UI implementation, animation polish, and interaction refinements that lifted the landing-page experience from prototype to production quality.",
     tags: ["Frontend UI", "Animations", "Responsive Design"],
     stackGroups: [
       {
         label: "Frontend",
         icon: "frontend",
-        items: ["Frontend UI implementation", "Responsive landing page", "Animation polish", "Interaction enhancements"],
+        items: [
+          { name: "Responsive UI", shortName: "Responsive" },
+          { name: "Animation polish", shortName: "Animations" },
+          { name: "Landing page", shortName: "Landing" },
+        ],
       },
     ],
     links: [{ label: "Live", href: "https://ai-wellness-tracker-mocha.vercel.app/", icon: "live" }],
@@ -239,4 +310,44 @@ export const TAG_ICON: Record<string, IconType> = {
   "Frontend UI": SiReact,
   "Animations": SiFramer,
   "Responsive Design": SiTailwindcss,
+};
+
+/* ─── Stack item → icon lookup ─── */
+export const STACK_ITEM_ICON: Record<string, IconType> = {
+  // React ecosystem
+  "React": SiReact,
+  "React 19": SiReact,
+  "React Native": SiReact,
+  "React Native Expo": SiReact,
+  "Expo SDK 54": SiExpo,
+  "Expo": SiExpo,
+  "Expo Router": SiExpo,
+  // TypeScript
+  "TypeScript": SiTypescript,
+  // Node / Backend
+  "Node.js": SiNodedotjs,
+  "Express": SiExpress,
+  "Express 5": SiExpress,
+  // Databases
+  "PostgreSQL": SiPostgresql,
+  "Supabase": SiSupabase,
+  "Supabase JS": SiSupabase,
+  "Supabase Storage": SiSupabase,
+  // CSS / Styling
+  "Tailwind CSS": SiTailwindcss,
+  "Tailwind CSS v4": SiTailwindcss,
+  "Framer Motion": SiFramer,
+  // Build tools
+  "Vite": SiVite,
+  "Vite 7": SiVite,
+  // Auth
+  "JWT Auth": SiJsonwebtokens,
+  "JWT authentication": SiJsonwebtokens,
+  // HTTP
+  "Axios": SiAxios,
+  // Deployment
+  "Vercel": SiVercel,
+  "Render": SiRender,
+  // Design
+  "Figma": SiFigma,
 };

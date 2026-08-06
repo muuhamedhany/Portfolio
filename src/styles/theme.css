@@ -975,7 +975,7 @@
     overflow: auto;
     border: 2px solid var(--pixel-frame);
     background: var(--card);
-    padding: 12px;
+    padding: 14px;
     box-shadow:
       inset 2px 2px 0 var(--pixel-edge-light),
       inset -2px -2px 0 var(--pixel-edge-dark),
@@ -987,11 +987,11 @@
   }
 
   .project-detail-content[data-state="open"] {
-    animation: project-detail-enter 180ms steps(4, end) both;
+    animation: project-detail-enter 220ms cubic-bezier(0.22, 1, 0.36, 1) both;
   }
 
   .project-detail-content[data-state="closed"] {
-    animation: project-detail-exit 130ms steps(3, end) both;
+    animation: project-detail-exit 150ms ease-in both;
   }
 
   .project-detail-header {
@@ -999,8 +999,30 @@
     align-items: flex-start;
     justify-content: space-between;
     gap: 16px;
-    margin-bottom: 10px;
+    margin-bottom: 14px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid var(--border);
     padding-right: 2px;
+  }
+
+  .project-detail-close {
+    display: inline-flex;
+    flex-shrink: 0;
+    height: 36px;
+    width: 36px;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid var(--border);
+    background: var(--secondary);
+    color: var(--secondary-foreground);
+    cursor: pointer;
+    transition: background 120ms, color 120ms;
+  }
+
+  .project-detail-close:hover {
+    background: var(--pixel-active);
+    color: var(--pixel-active-foreground);
+    border-color: var(--pixel-frame);
   }
 
   .project-detail-index {
@@ -1077,10 +1099,10 @@
   }
 
   .project-detail-blurb {
-    max-width: 70ch;
+    max-width: 66ch;
     margin: 0;
     font-size: 13px;
-    line-height: 1.55;
+    line-height: 1.65;
     color: var(--muted-foreground);
   }
 
@@ -1088,13 +1110,32 @@
     margin-top: 0;
   }
 
+  .project-detail-links-section {
+    border-top: 2px solid var(--border);
+    padding-top: 14px;
+    margin-top: 4px;
+  }
+
   .project-detail-section-title {
-    margin-bottom: 7px;
+    margin-bottom: 9px;
     font-family: var(--font-mono);
     font-size: 9px;
-    letter-spacing: 0.2em;
+    letter-spacing: 0.22em;
     text-transform: uppercase;
     color: var(--muted-foreground);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .project-detail-section-title::before {
+    content: '';
+    display: block;
+    width: 14px;
+    height: 1px;
+    background: var(--accent-to);
+    opacity: 0.6;
+    flex-shrink: 0;
   }
 
   .project-stack-groups {
@@ -1158,29 +1199,79 @@
     color: color-mix(in oklab, var(--foreground) 82%, transparent);
   }
 
+  /* ── Tech Chips ── */
+  .tech-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin-top: 4px;
+  }
+
+  .tech-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    border: 1px solid var(--border);
+    background: var(--background);
+    padding: 3px 7px 3px 5px;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    line-height: 1.2;
+    color: var(--foreground);
+    color: color-mix(in oklab, var(--foreground) 88%, transparent);
+    transition: border-color 120ms, color 120ms, background 120ms;
+    box-shadow: inset 1px 1px 0 var(--pixel-edge-light);
+  }
+
+  .tech-chip:hover {
+    border-color: var(--accent-to);
+    color: var(--foreground);
+    background: color-mix(in oklab, var(--accent-to) 8%, var(--background));
+  }
+
+  .tech-chip-icon {
+    width: 11px;
+    height: 11px;
+    flex-shrink: 0;
+    color: var(--accent-to);
+    opacity: 0.9;
+  }
+
+  .tech-chip-label {
+    font-size: 10px;
+    white-space: nowrap;
+  }
+
   .project-detail-links {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    gap: 8px;
+    gap: 7px;
   }
 
   .project-detail-link {
     display: inline-flex;
-    min-height: 34px;
+    min-height: 32px;
     align-items: center;
-    gap: 5px;
+    gap: 6px;
     border: 2px solid var(--border);
     background: var(--secondary);
-    padding: 5px 9px;
-    font-size: 12px;
+    padding: 4px 10px;
+    font-family: var(--font-mono);
+    font-size: 10px;
     font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
     color: var(--secondary-foreground);
+    text-decoration: none;
+    cursor: pointer;
+    transition: background 120ms, color 120ms, border-color 120ms;
   }
 
   .project-detail-link:hover {
     background: var(--pixel-active);
     color: var(--pixel-active-foreground);
+    border-color: var(--pixel-frame);
   }
 
   .project-detail-link:focus-visible {
