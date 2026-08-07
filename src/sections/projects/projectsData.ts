@@ -95,27 +95,23 @@ export const PROJECTS: Project[] = [
       "Full-scale automotive marketplace for Egypt — customer app, vendor dashboard, driver portal, and SOS dispatch in one platform.",
     blurb:
       "Full-scale automotive marketplace serving the Egyptian market. Customers browse and buy parts, book workshops, and track deliveries. Vendors manage inventory and orders. Drivers handle last-mile logistics. Emergency staff respond to SOS calls — all from one integrated backend.",
-    tags: ["React Native Expo", "Render", "Supabase", "Express", "Node.js", "React", "PostgreSQL", "Gemini AI"],
+    tags: ["React Native Expo", "Express", "Node.js", "PostgreSQL", "Render", "Supabase"],
     stackGroups: [
       {
         label: "Mobile App",
         icon: "mobile",
         items: [
-          { name: "Expo SDK 54", shortName: "Expo" },
+          { name: "Expo SDK", shortName: "Expo" },
           { name: "React Native", shortName: "RN" },
           { name: "TypeScript", shortName: "TS" },
-          { name: "Expo Router", shortName: "Router" },
-          { name: "Supabase JS", shortName: "Supabase" },
         ],
       },
       {
         label: "Web Portals",
         icon: "web",
         items: [
-          { name: "React 19", shortName: "React" },
-          { name: "Vite 7", shortName: "Vite" },
-          { name: "Tailwind CSS v4", shortName: "Tailwind" },
-          { name: "React Router 7", shortName: "Router" },
+          { name: "React", shortName: "React" },
+          { name: "Tailwind CSS", shortName: "Tailwind" },
         ],
       },
       {
@@ -123,10 +119,10 @@ export const PROJECTS: Project[] = [
         icon: "backend",
         items: [
           { name: "Node.js", shortName: "Node" },
-          { name: "Express 5", shortName: "Express" },
+          { name: "Express", shortName: "Express" },
           { name: "PostgreSQL", shortName: "Postgres" },
           { name: "JWT Auth", shortName: "JWT" },
-          { name: "Supabase Storage", shortName: "Storage" },
+          { name: "Supabase", shortName: "Supabase" },
         ],
       },
       {
@@ -140,9 +136,9 @@ export const PROJECTS: Project[] = [
       },
     ],
     links: [
-      { label: "App Repo", href: "https://github.com/muuhamedhany/CarKitApp", icon: "github" },
-      { label: "Admin Repo", href: "https://github.com/muuhamedhany/CarKit-Admin-Web", icon: "github" },
-      { label: "Driver Repo", href: "https://github.com/muuhamedhany/CarKit-Driver-Web", icon: "github" }
+      { label: "App", href: "https://github.com/muuhamedhany/CarKitApp", icon: "github" },
+      { label: "Admin", href: "https://github.com/muuhamedhany/CarKit-Admin-Web", icon: "github" },
+      { label: "Driver", href: "https://github.com/muuhamedhany/CarKit-Driver-Web", icon: "github" }
     ],
     previewVideo: {
       src: "/projects/CarKitVid-optimized.mp4",
@@ -202,7 +198,7 @@ export const PROJECTS: Project[] = [
         icon: "frontend",
         items: [
           { name: "React", shortName: "React" },
-          { name: "E-commerce storefront", shortName: "E-comm" },
+          { name: "E-commerce", shortName: "E-comm" },
           { name: "Cart flow", shortName: "Cart" },
         ],
       },
@@ -238,14 +234,14 @@ export const PROJECTS: Project[] = [
           { name: "Figma", shortName: "Figma" },
           { name: "User Research", shortName: "Research" },
           { name: "User flows", shortName: "Flows" },
-          { name: "High-fidelity prototype", shortName: "Prototype" },
+          { name: "Prototyping", shortName: "Prototype" },
         ],
       },
       {
         label: "Publishing",
         icon: "publish",
         items: [
-          { name: "Behance case study", shortName: "Behance" },
+          { name: "Case study", shortName: "case study" },
         ],
       },
     ],

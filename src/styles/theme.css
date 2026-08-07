@@ -1235,8 +1235,8 @@
   }
 
   .rpg-inventory-grid {
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 8px;
     max-height: 280px;
     overflow-y: auto;
@@ -1873,6 +1873,10 @@
 
     .rpg-inventory-box {
       padding: 10px;
+    }
+
+    .rpg-inventory-grid {
+      gap: 6px;
     }
 
     .rpg-inventory-header {

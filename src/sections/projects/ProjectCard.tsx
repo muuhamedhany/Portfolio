@@ -126,7 +126,7 @@ export function ProjectCard({ project }: { project: Project }) {
           <div className="mt-auto flex flex-col gap-3 border-t-2 border-border/40 pt-3 shrink-0">
             {/* Direct External Links Row (Fixed min-height across cards to keep gap uniform) */}
             {project.links && project.links.length > 0 && (
-              <div className="flex min-h-[58px] flex-wrap items-start content-start gap-1.5">
+              <div className="flex flex-wrap items-start content-start gap-1.5">
                 {project.links.map((link) => {
                   const Icon = LINK_ICON[link.icon];
                   return (
