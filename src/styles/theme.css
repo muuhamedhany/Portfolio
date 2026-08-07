@@ -1178,9 +1178,269 @@
     font-size: 9.5px;
     letter-spacing: 0.14em;
     line-height: 1.2;
+  }
+
+  /* ─── RPG Equipment Inventory Tech Stack Redesign (Theme-aware & Responsive) ─── */
+  .rpg-inventory-box {
+    position: relative;
+    background: var(--card);
+    border: 2px solid var(--pixel-frame);
+    padding: 16px;
+    box-shadow:
+      inset 1px 1px 0 var(--pixel-edge-light),
+      inset -1px -1px 0 var(--pixel-edge-dark),
+      4px 4px 0 var(--pixel-shadow);
+    clip-path: polygon(0 6px, 6px 6px, 6px 0,
+        calc(100% - 6px) 0, calc(100% - 6px) 6px, 100% 6px,
+        100% calc(100% - 6px), calc(100% - 6px) calc(100% - 6px), calc(100% - 6px) 100%,
+        6px 100%, 6px calc(100% - 6px), 0 calc(100% - 6px));
+    color: var(--foreground);
+    transition: background-color 150ms linear, border-color 150ms linear;
+  }
+
+  .rpg-inventory-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 10px;
+    margin-bottom: 12px;
+    border-bottom: 1px dashed var(--border);
+  }
+
+  .rpg-inventory-title {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.22em;
     text-transform: uppercase;
     color: var(--foreground);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .rpg-inventory-title-dot {
+    width: 6px;
+    height: 6px;
+    background: var(--accent-to);
+    box-shadow: 0 0 8px var(--accent-to);
+  }
+
+  .rpg-inventory-close-icon {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--muted-foreground);
+    line-height: 1;
+    cursor: default;
+  }
+
+  .rpg-inventory-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    max-height: 280px;
+    overflow-y: auto;
+    padding-right: 4px;
+    overscroll-behavior: contain;
+  }
+
+  .rpg-inventory-slot {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    background: var(--background);
+    border: 1px solid var(--border);
+    padding: 8px 12px;
+    clip-path: polygon(0 3px, 3px 3px, 3px 0,
+        calc(100% - 3px) 0, calc(100% - 3px) 3px, 100% 3px,
+        100% calc(100% - 3px), calc(100% - 3px) calc(100% - 3px), calc(100% - 3px) 100%,
+        3px 100%, 3px calc(100% - 3px), 0 calc(100% - 3px));
+    box-shadow:
+      inset 1px 1px 0 var(--pixel-edge-light),
+      1px 1px 0 var(--pixel-shadow);
+    transition: background 150ms ease, border-color 150ms ease, transform 150ms ease, box-shadow 150ms ease;
+  }
+
+  .rpg-inventory-slot:hover {
+    background: color-mix(in oklab, var(--accent-to) 10%, var(--card));
+    border-color: var(--accent-to);
+    box-shadow:
+      inset 1px 1px 0 var(--pixel-edge-light),
+      3px 3px 0 var(--pixel-shadow);
+  }
+
+  .rpg-inventory-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 0;
+  }
+
+  /* Pixel framed icon slot box */
+  .rpg-inventory-icon-frame {
+    position: relative;
+    width: 38px;
+    height: 38px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--card);
+    border: 2px solid var(--border);
+    flex-shrink: 0;
+    clip-path: polygon(0 2px, 2px 2px, 2px 0,
+        calc(100% - 2px) 0, calc(100% - 2px) 2px, 100% 2px,
+        100% calc(100% - 2px), calc(100% - 2px) calc(100% - 2px), calc(100% - 2px) 100%,
+        2px 100%, 2px calc(100% - 2px), 0 calc(100% - 2px));
+    box-shadow: inset 1px 1px 0 var(--pixel-edge-light), inset -1px -1px 0 var(--pixel-edge-dark);
+    transition: border-color 150ms ease, transform 150ms ease, box-shadow 150ms ease;
+  }
+
+  .rpg-inventory-slot:hover .rpg-inventory-icon-frame {
+    border-color: var(--accent-to);
+  }
+
+  /* Color-coded slot glows */
+  .rpg-inventory-icon-frame.glow-cyan {
+    border-color: #0284c7;
+    box-shadow: 0 0 8px rgba(56, 189, 248, 0.4), inset 0 0 4px rgba(56, 189, 248, 0.2);
+  }
+
+  .rpg-inventory-icon-frame.glow-green {
+    border-color: #16a34a;
+    box-shadow: 0 0 8px rgba(74, 222, 128, 0.4), inset 0 0 4px rgba(74, 222, 128, 0.2);
+  }
+
+  .rpg-inventory-icon-frame.glow-amber {
+    border-color: #d97706;
+    box-shadow: 0 0 8px rgba(251, 191, 36, 0.4), inset 0 0 4px rgba(251, 191, 36, 0.2);
+  }
+
+  .rpg-inventory-icon-frame.glow-purple {
+    border-color: #9333ea;
+    box-shadow: 0 0 8px rgba(192, 132, 252, 0.4), inset 0 0 4px rgba(192, 132, 252, 0.2);
+  }
+
+  .rpg-inventory-icon-frame.glow-blue {
+    border-color: #2563eb;
+    box-shadow: 0 0 8px rgba(96, 165, 250, 0.4), inset 0 0 4px rgba(96, 165, 250, 0.2);
+  }
+
+  .rpg-inventory-icon-frame.glow-mint {
+    border-color: #059669;
+    box-shadow: 0 0 8px rgba(52, 211, 153, 0.4), inset 0 0 4px rgba(52, 211, 153, 0.2);
+  }
+
+  .rpg-inventory-icon-frame.glow-pink {
+    border-color: #db2777;
+    box-shadow: 0 0 8px rgba(244, 114, 182, 0.4), inset 0 0 4px rgba(244, 114, 182, 0.2);
+  }
+
+  .rpg-inventory-icon {
+    width: 20px;
+    height: 20px;
+    object-fit: contain;
+    color: var(--foreground);
+    transition: color 150ms ease, transform 150ms ease;
+  }
+
+  .rpg-inventory-slot:hover .rpg-inventory-icon {
+    color: var(--accent-to);
+  }
+
+  .rpg-inventory-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+  }
+
+  .rpg-inventory-item-name {
+    font-family: var(--font-mono);
+    font-size: 12.5px;
     font-weight: 600;
+    color: var(--foreground);
+    line-height: 1.2;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transition: color 150ms ease;
+  }
+
+  .rpg-inventory-slot:hover .rpg-inventory-item-name {
+    color: var(--accent-to);
+  }
+
+  .rpg-inventory-item-role {
+    font-family: var(--font-mono);
+    font-size: 9.5px;
+    color: var(--muted-foreground);
+    line-height: 1.2;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .rpg-inventory-dot-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-left: 4px;
+    flex-shrink: 0;
+  }
+
+  .rpg-inventory-status-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 9999px;
+    flex-shrink: 0;
+    transition: transform 150ms ease, box-shadow 150ms ease;
+  }
+
+  .rpg-inventory-slot:hover .rpg-inventory-status-dot {
+    transform: scale(1.25);
+  }
+
+  /* XP Level Progress Bar Footer */
+  .rpg-inventory-footer {
+    margin-top: 14px;
+    padding-top: 10px;
+    border-top: 1px dashed var(--border);
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .rpg-inventory-xp-label {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-family: var(--font-mono);
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted-foreground);
+  }
+
+  .rpg-inventory-xp-track {
+    position: relative;
+    width: 100%;
+    height: 9px;
+    background: var(--background);
+    border: 1px solid var(--border);
+    padding: 1px;
+    clip-path: polygon(0 2px, 2px 2px, 2px 0,
+        calc(100% - 2px) 0, calc(100% - 2px) 2px, 100% 2px,
+        100% calc(100% - 2px), calc(100% - 2px) calc(100% - 2px), calc(100% - 2px) 100%,
+        2px 100%, 2px calc(100% - 2px), 0 calc(100% - 2px));
+  }
+
+  .rpg-inventory-xp-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent-from), var(--accent-mid), var(--accent-to));
+    box-shadow: 0 0 10px var(--accent-to);
+    transition: width 0.8s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   .terminal-sys-prefix {
@@ -1550,9 +1810,74 @@
     }
   }
 
-  @media (min-width: 1024px) {
-    .project-grid {
-      gap: 24px;
+  /* ═══ PROJECT DETAIL & TECH STACK MOBILE RESPONSIVENESS ═══ */
+  @media (max-width: 868px) {
+    .project-detail-content {
+      width: min(calc(100vw - 24px), 100%);
+      max-height: calc(100svh - 24px);
+      padding: 16px;
+    }
+
+    .project-detail-header {
+      margin-bottom: 14px;
+      padding-bottom: 10px;
+    }
+
+    .project-detail-layout {
+      grid-template-columns: 1fr;
+      gap: 18px;
+    }
+
+    .project-detail-stage {
+      order: -1;
+    }
+
+    .rpg-inventory-box {
+      padding: 12px;
+    }
+
+    .rpg-inventory-grid {
+      max-height: 220px;
+      gap: 6px;
+    }
+
+    .rpg-inventory-slot {
+      padding: 6px 10px;
+      gap: 8px;
+    }
+
+    .rpg-inventory-icon-frame {
+      width: 32px;
+      height: 32px;
+    }
+
+    .rpg-inventory-icon {
+      width: 16px;
+      height: 16px;
+    }
+
+    .rpg-inventory-item-name {
+      font-size: 11.5px;
+    }
+
+    .rpg-inventory-item-role {
+      font-size: 9px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .project-detail-content {
+      width: calc(100vw - 16px);
+      padding: 12px;
+    }
+
+    .rpg-inventory-box {
+      padding: 10px;
+    }
+
+    .rpg-inventory-header {
+      margin-bottom: 8px;
+      padding-bottom: 8px;
     }
   }
 

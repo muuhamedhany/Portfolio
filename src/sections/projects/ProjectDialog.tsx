@@ -3,7 +3,7 @@ import { useState } from "react";
 import { X, ArrowUpRight } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import type { Project } from "@/sections/projects/projectsData";
-import { LINK_ICON, STACK_GROUP_ICON, STACK_ITEM_ICON } from "@/sections/projects/projectsData";
+import { LINK_ICON, STACK_ITEM_ICON } from "@/sections/projects/projectsData";
 import { ProjectPreview } from "@/sections/projects/ProjectCard";
 
 /* ─── Spring config ─── */
@@ -53,38 +53,125 @@ const chipVariants = {
   },
 };
 
-/* ─── System Prefix Helper ─── */
-function getSystemPrefix(icon: string, label: string): string {
-  const i = icon.toLowerCase();
-  const l = label.toLowerCase();
-  if (i.includes("mobile") || l.includes("mobile") || l.includes("app")) return "[SYS_MOBILE]";
-  if (i.includes("backend") || l.includes("backend") || l.includes("server")) return "[SYS_SERVER]";
-  if (i.includes("deploy") || l.includes("infra") || l.includes("cloud")) return "[SYS_INFRA]";
-  if (i.includes("design") || l.includes("design") || l.includes("ui")) return "[SYS_DESIGN]";
-  return "[SYS_WEB]";
+interface TechRoleMeta {
+  role: string;
+  glowClass: string;
+  dotColor: string;
 }
 
-/* ─── Tech Chip — icon + short label + hover physics ─── */
-function TechChip({ name, shortName }: { name: string; shortName?: string }) {
-  const Icon = STACK_ITEM_ICON[name] ?? STACK_ITEM_ICON[shortName ?? ""];
-  const label = shortName ?? name;
+function getTechRoleMeta(name: string, groupLabel: string): TechRoleMeta {
+  const n = name.toLowerCase();
+  const g = groupLabel.toLowerCase();
+
+  if (n.includes("react native") || n.includes("expo")) {
+    return { role: "Mobile Framework", glowClass: "glow-cyan", dotColor: "#38bdf8" };
+  }
+  if (n.includes("react") || n.includes("vite")) {
+    return { role: "UI Library", glowClass: "glow-cyan", dotColor: "#38bdf8" };
+  }
+  if (n.includes("tailwind") || n.includes("figma") || g.includes("design")) {
+    return { role: "UI Styling", glowClass: "glow-pink", dotColor: "#f472b6" };
+  }
+  if (n.includes("typescript") || n.includes("js") || n.includes("javascript")) {
+    return { role: "Language", glowClass: "glow-blue", dotColor: "#60a5fa" };
+  }
+  if (n.includes("express") || n.includes("router")) {
+    return { role: "Web Framework", glowClass: "glow-amber", dotColor: "#fbbf24" };
+  }
+  if (n.includes("node")) {
+    return { role: "Runtime Environment", glowClass: "glow-green", dotColor: "#4ade80" };
+  }
+  if (n.includes("postgres") || n.includes("sql") || n.includes("supabase")) {
+    return { role: "Database", glowClass: "glow-purple", dotColor: "#c084fc" };
+  }
+  if (n.includes("jwt") || n.includes("auth")) {
+    return { role: "Security & Auth", glowClass: "glow-amber", dotColor: "#f59e0b" };
+  }
+  if (n.includes("render") || n.includes("vercel") || g.includes("deploy") || g.includes("infra")) {
+    return { role: "Deployment", glowClass: "glow-mint", dotColor: "#34d399" };
+  }
+  if (n.includes("framer") || n.includes("motion")) {
+    return { role: "Animation Engine", glowClass: "glow-pink", dotColor: "#ec4899" };
+  }
+
+  // Fallbacks by group label
+  if (g.includes("mobile")) return { role: "Mobile Stack", glowClass: "glow-cyan", dotColor: "#38bdf8" };
+  if (g.includes("backend")) return { role: "Backend Server", glowClass: "glow-green", dotColor: "#4ade80" };
+  if (g.includes("deploy") || g.includes("infra")) return { role: "Infrastructure", glowClass: "glow-mint", dotColor: "#34d399" };
+
+  return { role: "Core Module", glowClass: "glow-cyan", dotColor: "#38bdf8" };
+}
+
+/* ─── Equipped RPG Inventory Tech Stack Component ─── */
+function EquippedInventory({ project }: { project: Project }) {
+  // Collect all unique equipped items from stack groups
+  const itemsMap = new Map<string, { name: string; shortName?: string; groupLabel: string }>();
+
+  project.stackGroups.forEach((group) => {
+    group.items.forEach((item) => {
+      if (!itemsMap.has(item.name)) {
+        itemsMap.set(item.name, {
+          name: item.name,
+          shortName: item.shortName,
+          groupLabel: group.label,
+        });
+      }
+    });
+  });
+
+  const equippedItems = Array.from(itemsMap.values());
 
   return (
-    <motion.span
-      variants={chipVariants}
-      className="tech-chip"
-      whileHover={{ y: -2, scale: 1.04 }}
-      whileTap={{ scale: 0.96 }}
-      transition={{ duration: 0.12 }}
-      title={name !== label ? name : undefined}
-    >
-      {Icon && (
-        <span className="tech-chip-icon-wrap">
-          <Icon className="tech-chip-icon" aria-hidden="true" />
-        </span>
-      )}
-      <span className="tech-chip-label">{label}</span>
-    </motion.span>
+    <div className="rpg-inventory-box">
+      {/* Header */}
+      <div className="rpg-inventory-header">
+        <div className="rpg-inventory-title">
+          <span className="rpg-inventory-title-dot" />
+          TECH USED
+        </div>
+      </div>
+
+      {/* Grid of Equipped Items */}
+      <motion.div
+        className="rpg-inventory-grid"
+        variants={chipContainerVariants}
+        initial="hidden"
+        animate="show"
+      >
+        {equippedItems.map((item) => {
+          const Icon = STACK_ITEM_ICON[item.name] ?? STACK_ITEM_ICON[item.shortName ?? ""];
+          const meta = getTechRoleMeta(item.name, item.groupLabel);
+
+          return (
+            <motion.div
+              key={item.name}
+              variants={chipVariants}
+              className="rpg-inventory-slot group cursor-pointer"
+            >
+              <div className="rpg-inventory-left">
+                {/* Icon Frame */}
+                <div className={`rpg-inventory-icon-frame ${meta.glowClass}`}>
+                  {Icon ? (
+                    <Icon className="rpg-inventory-icon text-foreground" aria-hidden="true" />
+                  ) : (
+                    <span className="font-mono text-[10px] font-bold text-foreground">
+                      {item.shortName?.slice(0, 2) ?? item.name.slice(0, 2)}
+                    </span>
+                  )}
+                </div>
+
+                {/* Name + Subtitle */}
+                <div className="rpg-inventory-meta">
+                  <span className="rpg-inventory-item-name">{item.name}</span>
+                  <span className="rpg-inventory-item-role">{meta.role}</span>
+                </div>
+              </div>
+
+            </motion.div>
+          );
+        })}
+      </motion.div>
+    </div>
   );
 }
 
@@ -149,51 +236,9 @@ export function ProjectDetailDialog({ project }: { project: Project }) {
               <p className="project-detail-blurb">{project.blurb}</p>
             </motion.div>
 
-            {/* Tech Stack — Terminal Architecture Nodes */}
+            {/* Tech Stack — RPG Equipped Components Inventory */}
             <motion.div variants={infoItemVariants} className="project-detail-section">
-              <h4 className="project-detail-section-title">System Stack Architecture</h4>
-              <div className="project-stack-groups">
-                {project.stackGroups.map((group) => {
-                  const StackIcon = STACK_GROUP_ICON[group.icon];
-                  const sysPrefix = getSystemPrefix(group.icon, group.label);
-
-                  return (
-                    <motion.section
-                      key={group.label}
-                      variants={infoItemVariants}
-                      className="project-stack-group"
-                      aria-label={`${group.label} stack node`}
-                    >
-                      {/* Terminal Node Header */}
-                      <div className="terminal-node-header">
-                        <h5 className="project-stack-label">
-                          {group.label}
-                        </h5>
-                        <span className="terminal-node-count">
-                          <span className="terminal-node-dot" />
-                          {group.items.length}
-                        </span>
-                      </div>
-
-                      {/* Tech Chips */}
-                      <motion.div
-                        className="tech-chips"
-                        variants={chipContainerVariants}
-                        initial="hidden"
-                        animate="show"
-                      >
-                        {group.items.map((item) => (
-                          <TechChip
-                            key={item.name}
-                            name={item.name}
-                            shortName={item.shortName}
-                          />
-                        ))}
-                      </motion.div>
-                    </motion.section>
-                  );
-                })}
-              </div>
+              <EquippedInventory project={project} />
             </motion.div>
 
             {/* Links */}
@@ -277,7 +322,6 @@ export function ProjectDetailDialog({ project }: { project: Project }) {
                       controls
                       muted
                       loop
-                      preload="metadata"
                       poster={project.previewVideo.poster}
                       aria-label={project.previewVideo.title}
                     >
