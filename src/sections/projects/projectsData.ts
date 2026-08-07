@@ -29,6 +29,8 @@ import {
   SiAxios,
   SiJsonwebtokens,
   SiExpo,
+  SiThreedotjs,
+  SiReactrouter,
 } from "react-icons/si";
 
 /* ─── Types ─── */
@@ -189,17 +191,36 @@ export const PROJECTS: Project[] = [
     index: "03",
     name: "Pure Store",
     category: "web",
-    shortBlurb: "React e-commerce storefront with product browsing, cart management, and a clean checkout flow.",
-    blurb: "React e-commerce storefront with product browsing, cart management, and a clean checkout flow. Focused on performance and a frictionless shopping experience.",
-    tags: ["React", "E-commerce"],
+    shortBlurb:
+      "Responsive React e-commerce storefront optimized for product discovery, cart management, and seamless customer checkout.",
+    blurb:
+      "Modern frontend e-commerce storefront designed for speed and conversion. Delivers a frictionless shopping experience with instant product filtering, persistent cart & wishlist management, interactive product showcases, and secure user account flows.",
+    tags: ["Frontend", "React 19", "Tailwind CSS v4", "React Router 7", "Framer Motion"],
     stackGroups: [
       {
-        label: "Frontend",
+        label: "Frontend Core",
         icon: "frontend",
         items: [
-          { name: "React", shortName: "React" },
-          { name: "E-commerce", shortName: "E-comm" },
-          { name: "Cart flow", shortName: "Cart" },
+          { name: "React 19", shortName: "React" },
+          { name: "Tailwind CSS", shortName: "Tailwind" },
+          { name: "React Router 7", shortName: "Router" },
+        ],
+      },
+      {
+        label: "UI & Animations",
+        icon: "web",
+        items: [
+          { name: "Framer Motion", shortName: "Motion" },
+          { name: "React Icons", shortName: "Icons" },
+        ],
+      },
+      {
+        label: "Client State & Features",
+        icon: "frontend",
+        items: [
+          { name: "Auth Context", shortName: "Auth" },
+          { name: "Cart", shortName: "Cart" },
+          { name: "Wishlist", shortName: "Wishlist" },
         ],
       },
       {
@@ -295,12 +316,15 @@ export const TAG_ICON: Record<string, IconType> = {
   "React Native": SiReact,
   "React Native Expo": SiReact,
   React: SiReact,
+  "React 19": SiReact,
+  "Three.js": SiThreedotjs,
   "Node.js": SiNodedotjs,
   Express: SiExpress,
   PostgreSQL: SiPostgresql,
   Supabase: SiSupabase,
   Tailwind: SiTailwindcss,
   "Tailwind CSS v4": SiTailwindcss,
+  "React Router 7": SiReactrouter,
   "Framer Motion": SiFramer,
   Figma: SiFigma,
   "Frontend UI": SiReact,
@@ -318,6 +342,12 @@ export const STACK_ITEM_ICON: Record<string, IconType> = {
   "Expo SDK 54": SiExpo,
   "Expo": SiExpo,
   "Expo Router": SiExpo,
+  "React Router 7": SiReactrouter,
+  // 3D & Graphics
+  "Three.js": SiThreedotjs,
+  "React Three Fiber": SiThreedotjs,
+  "R3F": SiThreedotjs,
+  "OGL WebGL": SiThreedotjs,
   // TypeScript
   "TypeScript": SiTypescript,
   // Node / Backend
@@ -339,6 +369,7 @@ export const STACK_ITEM_ICON: Record<string, IconType> = {
   // Auth
   "JWT Auth": SiJsonwebtokens,
   "JWT authentication": SiJsonwebtokens,
+  "Auth Context": SiJsonwebtokens,
   // HTTP
   "Axios": SiAxios,
   // Deployment

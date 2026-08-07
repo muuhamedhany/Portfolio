@@ -90,6 +90,12 @@ function getTechRoleMeta(name: string, groupLabel: string): TechRoleMeta {
   if (n.includes("render") || n.includes("vercel") || g.includes("deploy") || g.includes("infra")) {
     return { role: "Deployment", glowClass: "glow-mint", dotColor: "#34d399" };
   }
+  if (n.includes("three") || n.includes("r3f") || n.includes("ogl")) {
+    return { role: "3D & WebGL Engine", glowClass: "glow-purple", dotColor: "#c084fc" };
+  }
+  if (n.includes("cart") || n.includes("wishlist") || n.includes("guard")) {
+    return { role: "State Engine", glowClass: "glow-amber", dotColor: "#fbbf24" };
+  }
   if (n.includes("framer") || n.includes("motion")) {
     return { role: "Animation Engine", glowClass: "glow-pink", dotColor: "#ec4899" };
   }
