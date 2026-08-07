@@ -31,6 +31,7 @@ import {
   SiExpo,
   SiThreedotjs,
   SiReactrouter,
+  SiGsap,
 } from "react-icons/si";
 
 /* ─── Types ─── */
@@ -62,6 +63,12 @@ export type ProjectStackIcon = "mobile" | "web" | "portal" | "backend" | "deploy
 
 export type ProjectCategory = "all" | "mobile & full-stack" | "web" | "design";
 
+export interface ProjectGalleryImage {
+  src: string;
+  alt: string;
+  title?: string;
+}
+
 export interface Project {
   index: string;
   name: string;
@@ -75,6 +82,7 @@ export interface Project {
     src: string;
     alt: string;
   };
+  galleryImages?: ProjectGalleryImage[];
   previewVideo?: ProjectVideo;
   featured?: boolean;
   note?: string;
@@ -155,18 +163,28 @@ export const PROJECTS: Project[] = [
   },
   {
     index: "02",
-    name: "Car Rental Landing Page",
+    name: "Car Rental Platform",
     category: "web",
-    shortBlurb: "Motion-rich marketing page for a car rental brand with scroll choreography and animated section reveals.",
-    blurb: "Motion-rich marketing page for a car rental brand. Scroll-driven section reveals, smooth transitions, and a conversion-focused layout — built to turn first impressions into bookings.",
-    tags: ["React", "Tailwind", "Framer Motion"],
+    shortBlurb:
+      "Frontend React car rental platform optimized for vehicle reservation, rate estimation, and lead conversion.",
+    blurb:
+      "High-converting frontend car rental web platform engineered for instant booking and fleet exploration. Features an interactive vehicle reservation form, dynamic price calculator, vehicle specs comparison, GSAP scroll choreography, and seamless mobile responsiveness.",
+    tags: ["Frontend", "React 19", "Tailwind CSS", "GSAP", "Framer Motion"],
     stackGroups: [
       {
-        label: "Frontend",
+        label: "Frontend Core",
         icon: "frontend",
         items: [
-          { name: "React", shortName: "React" },
+          { name: "React 19", shortName: "React" },
           { name: "Tailwind CSS", shortName: "Tailwind" },
+          { name: "React Router", shortName: "Router" },
+        ],
+      },
+      {
+        label: "UI & Animations",
+        icon: "web",
+        items: [
+          { name: "GSAP", shortName: "GSAP" },
           { name: "Framer Motion", shortName: "Motion" },
         ],
       },
@@ -185,7 +203,12 @@ export const PROJECTS: Project[] = [
     previewImage: {
       src: "/projects/CarRental.png",
       alt: "Car Rental Preview"
-    }
+    },
+    galleryImages: [
+      { src: "/projects/CarRental.png", alt: "Car Rental Landing Page", title: "Hero & Reservation" },
+      { src: "/projects/CarRentalModels.png", alt: "Car Rental Vehicle Models", title: "Fleet & Rates" },
+      { src: "/projects/CarRentalTeam.png", alt: "Car Rental Team Page", title: "Team Showcase" },
+    ]
   },
   {
     index: "03",
@@ -326,6 +349,7 @@ export const TAG_ICON: Record<string, IconType> = {
   "Tailwind CSS v4": SiTailwindcss,
   "React Router 7": SiReactrouter,
   "Framer Motion": SiFramer,
+  GSAP: SiGsap,
   Figma: SiFigma,
   "Frontend UI": SiReact,
   "Animations": SiFramer,
@@ -343,6 +367,9 @@ export const STACK_ITEM_ICON: Record<string, IconType> = {
   "Expo": SiExpo,
   "Expo Router": SiExpo,
   "React Router 7": SiReactrouter,
+  "React Router": SiReactrouter,
+  // Animation / Motion
+  "GSAP": SiGsap,
   // 3D & Graphics
   "Three.js": SiThreedotjs,
   "React Three Fiber": SiThreedotjs,

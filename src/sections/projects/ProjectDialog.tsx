@@ -1,6 +1,6 @@
 import * as Dialog from "@radix-ui/react-dialog";
 import { useState } from "react";
-import { X, ArrowUpRight } from "lucide-react";
+import { X, ArrowUpRight, ChevronLeft, ChevronRight } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import type { Project } from "@/sections/projects/projectsData";
 import { LINK_ICON, STACK_ITEM_ICON } from "@/sections/projects/projectsData";
@@ -181,6 +181,110 @@ function EquippedInventory({ project }: { project: Project }) {
   );
 }
 
+/* ─── Image Carousel Component ─── */
+function ProjectGalleryCarousel({ images }: { images: { src: string; alt: string; title?: string }[] }) {
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [direction, setDirection] = useState<1 | -1>(1);
+
+  const prevImage = () => {
+    setDirection(-1);
+    setCurrentIndex((prev) => (prev === 0 ? images.length - 1 : prev - 1));
+  };
+
+  const nextImage = () => {
+    setDirection(1);
+    setCurrentIndex((prev) => (prev === images.length - 1 ? 0 : prev + 1));
+  };
+
+  const current = images[currentIndex];
+
+  const slideVariants = {
+    enter: (dir: number) => ({
+      x: dir > 0 ? "100%" : "-100%",
+      opacity: 0,
+    }),
+    center: {
+      x: "0%",
+      opacity: 1,
+    },
+    exit: (dir: number) => ({
+      x: dir < 0 ? "100%" : "-100%",
+      opacity: 0,
+    }),
+  };
+
+  return (
+    <div className="relative w-full aspect-[16/10] overflow-hidden bg-background group">
+      <AnimatePresence custom={direction} mode="wait" initial={false}>
+        <motion.img
+          key={currentIndex}
+          src={current.src}
+          alt={current.alt}
+          custom={direction}
+          variants={slideVariants}
+          initial="enter"
+          animate="center"
+          exit="exit"
+          transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
+          className="h-full w-full object-cover select-none"
+        />
+      </AnimatePresence>
+
+      {/* Prev / Next Arrows */}
+      {images.length > 1 && (
+        <>
+          <button
+            type="button"
+            onClick={prevImage}
+            className="absolute left-2 top-1/2 -translate-y-1/2 z-10 flex h-8 w-8 items-center justify-center border border-[var(--pixel-frame)] bg-background/90 text-foreground shadow-[2px_2px_0_var(--pixel-shadow)] hover:bg-[var(--pixel-active)] hover:text-[var(--pixel-active-foreground)] transition-colors cursor-pointer"
+            aria-label="Previous image"
+          >
+            <ChevronLeft className="h-4 w-4" />
+          </button>
+
+          <button
+            type="button"
+            onClick={nextImage}
+            className="absolute right-2 top-1/2 -translate-y-1/2 z-10 flex h-8 w-8 items-center justify-center border border-[var(--pixel-frame)] bg-background/90 text-foreground shadow-[2px_2px_0_var(--pixel-shadow)] hover:bg-[var(--pixel-active)] hover:text-[var(--pixel-active-foreground)] transition-colors cursor-pointer"
+            aria-label="Next image"
+          >
+            <ChevronRight className="h-4 w-4" />
+          </button>
+        </>
+      )}
+
+      {/* Title & Dots Overlay Bar */}
+      <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/85 via-black/50 to-transparent p-3 flex items-center justify-between z-10 pointer-events-none">
+        <span className="font-mono text-[10px] uppercase tracking-wider text-white truncate max-w-[65%] shadow-sm">
+          {current.title ?? current.alt}
+        </span>
+
+        {/* Carousel Indicators */}
+        {images.length > 1 && (
+          <div className="flex items-center gap-1.5 pointer-events-auto">
+            {images.map((img, idx) => (
+              <button
+                key={img.src}
+                type="button"
+                onClick={() => {
+                  setDirection(idx > currentIndex ? 1 : -1);
+                  setCurrentIndex(idx);
+                }}
+                className={`h-2 transition-all cursor-pointer ${
+                  idx === currentIndex
+                    ? "w-5 bg-[var(--accent-to)] shadow-[0_0_8px_var(--accent-to)]"
+                    : "w-2 bg-white/40 hover:bg-white/70"
+                }`}
+                aria-label={`Go to slide ${idx + 1}`}
+              />
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
 /* ─── Detail Dialog Content ─── */
 export function ProjectDetailDialog({ project }: { project: Project }) {
   const [activeMediaTab, setActiveMediaTab] = useState<"video" | "image">(
@@ -334,6 +438,17 @@ export function ProjectDetailDialog({ project }: { project: Project }) {
                       <source src={project.previewVideo.src} type={project.previewVideo.type ?? "video/mp4"} />
                       Your browser does not support the video player.
                     </video>
+                  </motion.div>
+                ) : project.galleryImages && project.galleryImages.length > 0 ? (
+                  <motion.div
+                    key="gallery"
+                    className="w-full overflow-hidden"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.18 }}
+                  >
+                    <ProjectGalleryCarousel images={project.galleryImages} />
                   </motion.div>
                 ) : (
                   <motion.div
