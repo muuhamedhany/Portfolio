@@ -943,25 +943,30 @@
     height: 14px;
   }
 
+  /* ─────────────────────────────────────────────────
+     Project Detail Modal — Clean Minimalist Pixel Glass
+  ───────────────────────────────────────────────── */
   .project-detail-overlay {
     position: fixed;
     inset: 0;
     z-index: 50;
-    background:
-      linear-gradient(rgba(6, 6, 10, 0.88), rgba(6, 6, 10, 0.92)),
-      repeating-linear-gradient(0deg,
-        rgba(255, 255, 255, 0.03) 0,
-        rgba(255, 255, 255, 0.03) 1px,
-        transparent 1px,
-        transparent 4px);
+    background: rgba(8, 7, 13, 0.78);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+
+  html:not(.dark) .project-detail-overlay {
+    background: rgba(20, 18, 30, 0.55);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
   }
 
   .project-detail-overlay[data-state="open"] {
-    animation: project-detail-overlay-in 120ms steps(3, end) both;
+    animation: project-detail-overlay-in 140ms ease-out both;
   }
 
   .project-detail-overlay[data-state="closed"] {
-    animation: project-detail-overlay-out 110ms steps(2, end) both;
+    animation: project-detail-overlay-out 120ms ease-in both;
   }
 
   .project-detail-content {
@@ -969,29 +974,29 @@
     left: 50%;
     top: 50%;
     z-index: 51;
-    width: min(calc(100vw - 28px), 1180px);
-    max-height: calc(100svh - 28px);
+    width: min(calc(100vw - 32px), 1140px);
+    max-height: calc(100svh - 32px);
     transform: translate(-50%, -50%);
     overflow: auto;
     border: 2px solid var(--pixel-frame);
     background: var(--card);
-    padding: 14px;
+    padding: 20px 24px 24px 24px;
     box-shadow:
-      inset 2px 2px 0 var(--pixel-edge-light),
-      inset -2px -2px 0 var(--pixel-edge-dark),
-      6px 6px 0 var(--pixel-shadow);
-    clip-path: polygon(0 7px, 7px 7px, 7px 0,
-        calc(100% - 7px) 0, calc(100% - 7px) 7px, 100% 7px,
-        100% calc(100% - 7px), calc(100% - 7px) calc(100% - 7px), calc(100% - 7px) 100%,
-        7px 100%, 7px calc(100% - 7px), 0 calc(100% - 7px));
+      inset 1px 1px 0 var(--pixel-edge-light),
+      inset -1px -1px 0 var(--pixel-edge-dark),
+      8px 8px 0 var(--pixel-shadow);
+    clip-path: polygon(0 8px, 8px 8px, 8px 0,
+        calc(100% - 8px) 0, calc(100% - 8px) 8px, 100% 8px,
+        100% calc(100% - 8px), calc(100% - 8px) calc(100% - 8px), calc(100% - 8px) 100%,
+        8px 100%, 8px calc(100% - 8px), 0 calc(100% - 8px));
   }
 
   .project-detail-content[data-state="open"] {
-    animation: project-detail-enter 220ms cubic-bezier(0.22, 1, 0.36, 1) both;
+    animation: project-detail-enter 240ms cubic-bezier(0.16, 1, 0.3, 1) both;
   }
 
   .project-detail-content[data-state="closed"] {
-    animation: project-detail-exit 150ms ease-in both;
+    animation: project-detail-exit 160ms ease-in both;
   }
 
   .project-detail-header {
@@ -999,24 +1004,30 @@
     align-items: flex-start;
     justify-content: space-between;
     gap: 16px;
-    margin-bottom: 14px;
-    padding-bottom: 12px;
-    border-bottom: 2px solid var(--border);
-    padding-right: 2px;
+    margin-bottom: 18px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--border);
   }
 
   .project-detail-close {
     display: inline-flex;
     flex-shrink: 0;
-    height: 36px;
-    width: 36px;
+    height: 34px;
+    width: 34px;
     align-items: center;
     justify-content: center;
-    border: 2px solid var(--border);
-    background: var(--secondary);
-    color: var(--secondary-foreground);
+    border: 1px solid var(--pixel-frame);
+    background: var(--background);
+    color: var(--foreground);
     cursor: pointer;
-    transition: background 120ms, color 120ms;
+    box-shadow:
+      inset 1px 1px 0 var(--pixel-edge-light),
+      2px 2px 0 var(--pixel-shadow);
+    clip-path: polygon(0 4px, 4px 4px, 4px 0,
+        calc(100% - 4px) 0, calc(100% - 4px) 4px, 100% 4px,
+        100% calc(100% - 4px), calc(100% - 4px) calc(100% - 4px), calc(100% - 4px) 100%,
+        4px 100%, 4px calc(100% - 4px), 0 calc(100% - 4px));
+    transition: background 120ms, color 120ms, border-color 120ms;
   }
 
   .project-detail-close:hover {
@@ -1026,57 +1037,37 @@
   }
 
   .project-detail-index {
-    display: block;
-    margin-bottom: 5px;
+    display: inline-block;
     font-family: var(--font-mono);
-    font-size: 11px;
-    letter-spacing: 0.26em;
+    font-size: 10px;
+    letter-spacing: 0.24em;
     color: var(--accent-to);
+    font-weight: 600;
   }
 
   .project-detail-kicker {
-    margin-top: 6px;
     font-family: var(--font-mono);
     font-size: 9px;
-    letter-spacing: 0.2em;
+    letter-spacing: 0.18em;
     text-transform: uppercase;
     color: var(--muted-foreground);
   }
 
   .project-detail-layout {
     display: grid;
-    grid-template-columns: minmax(300px, 0.68fr) minmax(0, 1.32fr);
-    gap: 16px;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.45fr);
+    gap: 24px;
     align-items: start;
   }
 
-  .project-detail-media-column {
-    display: grid;
-    gap: 10px;
-    align-content: start;
+  .project-detail-dossier {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
   }
 
-  .project-detail-media-column> :only-child {
-    grid-column: 1 / -1;
-  }
-
-  .project-detail-media-column .project-card-media,
-  .project-detail-video-frame {
-    aspect-ratio: 16 / 9;
-    width: 100%;
-    overflow: hidden;
-    border: 2px solid var(--border);
-    background: #050508;
-    box-shadow:
-      inset 2px 2px 0 rgba(255, 255, 255, 0.08),
-      inset -2px -2px 0 rgba(0, 0, 0, 0.55);
-  }
-
-  .project-detail-media-column .project-card-media img {
-    object-fit: cover;
-  }
-
-  .project-detail-info {
+  .project-detail-stage {
     min-width: 0;
     display: flex;
     flex-direction: column;
@@ -1085,24 +1076,26 @@
 
   .project-detail-badge {
     display: inline-flex;
-    width: max-content;
     align-items: center;
+    gap: 5px;
     border: 1px solid var(--accent-to);
-    background: rgba(143, 128, 255, 0.12);
-    background: color-mix(in oklab, var(--accent-to) 12%, transparent);
-    padding: 4px 7px;
+    background: color-mix(in oklab, var(--accent-to) 10%, var(--background));
+    padding: 3px 8px;
     font-family: var(--font-mono);
-    font-size: 8px;
-    letter-spacing: 0.18em;
+    font-size: 9px;
+    letter-spacing: 0.16em;
     text-transform: uppercase;
     color: var(--accent-to);
+    clip-path: polygon(0 3px, 3px 3px, 3px 0,
+        calc(100% - 3px) 0, calc(100% - 3px) 3px, 100% 3px,
+        100% calc(100% - 3px), calc(100% - 3px) calc(100% - 3px), calc(100% - 3px) 100%,
+        3px 100%, 3px calc(100% - 3px), 0 calc(100% - 3px));
   }
 
   .project-detail-blurb {
-    max-width: 66ch;
     margin: 0;
-    font-size: 13px;
-    line-height: 1.65;
+    font-size: 13.5px;
+    line-height: 1.68;
     color: var(--muted-foreground);
   }
 
@@ -1111,13 +1104,12 @@
   }
 
   .project-detail-links-section {
-    border-top: 2px solid var(--border);
-    padding-top: 14px;
-    margin-top: 4px;
+    border-top: 1px solid var(--border);
+    padding-top: 16px;
   }
 
   .project-detail-section-title {
-    margin-bottom: 9px;
+    margin-bottom: 10px;
     font-family: var(--font-mono);
     font-size: 9px;
     letter-spacing: 0.22em;
@@ -1131,40 +1123,40 @@
   .project-detail-section-title::before {
     content: '';
     display: block;
-    width: 14px;
-    height: 1px;
+    width: 12px;
+    height: 2px;
     background: var(--accent-to);
-    opacity: 0.6;
+    opacity: 0.8;
     flex-shrink: 0;
   }
 
   .project-stack-groups {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 8px;
+    gap: 10px;
   }
 
   .project-stack-group {
     border: 1px solid var(--border);
-    background:
-      linear-gradient(90deg, rgba(143, 128, 255, 0.06), transparent 34%),
-      var(--background);
-    padding: 8px;
+    background: var(--background);
+    padding: 10px 12px;
     box-shadow:
       inset 1px 1px 0 var(--pixel-edge-light),
       2px 2px 0 var(--pixel-shadow);
+    clip-path: polygon(0 4px, 4px 4px, 4px 0,
+        calc(100% - 4px) 0, calc(100% - 4px) 4px, 100% 4px,
+        100% calc(100% - 4px), calc(100% - 4px) calc(100% - 4px), calc(100% - 4px) 100%,
+        4px 100%, 4px calc(100% - 4px), 0 calc(100% - 4px));
   }
 
   .project-stack-label {
     display: flex;
     align-items: center;
-    gap: 7px;
-    margin-bottom: 6px;
-    border-left: 3px solid var(--accent-to);
-    padding-left: 7px;
+    gap: 6px;
+    margin-bottom: 8px;
     font-family: var(--font-mono);
     font-size: 9px;
-    letter-spacing: 0.17em;
+    letter-spacing: 0.16em;
     line-height: 1.2;
     text-transform: uppercase;
     color: var(--foreground);
@@ -1172,39 +1164,21 @@
 
   .project-stack-icon {
     display: inline-flex;
-    width: 20px;
-    height: 20px;
+    width: 18px;
+    height: 18px;
     flex: 0 0 auto;
     align-items: center;
     justify-content: center;
     border: 1px solid var(--pixel-frame);
     background: var(--card);
     color: var(--accent-to);
-    box-shadow:
-      inset 1px 1px 0 var(--pixel-edge-light),
-      2px 2px 0 var(--pixel-shadow);
-    transition:
-      transform 120ms steps(2, end),
-      color 120ms linear;
+    box-shadow: 1px 1px 0 var(--pixel-shadow);
   }
 
-  .project-stack-tag {
-    border: 1px solid var(--border);
-    background: var(--background);
-    padding: 3px 6px;
-    font-family: var(--font-mono);
-    font-size: 9px;
-    line-height: 1.2;
-    color: var(--foreground);
-    color: color-mix(in oklab, var(--foreground) 82%, transparent);
-  }
-
-  /* ── Tech Chips ── */
   .tech-chips {
     display: flex;
     flex-wrap: wrap;
-    gap: 5px;
-    margin-top: 4px;
+    gap: 6px;
   }
 
   .tech-chip {
@@ -1212,29 +1186,31 @@
     align-items: center;
     gap: 5px;
     border: 1px solid var(--border);
-    background: var(--background);
-    padding: 3px 7px 3px 5px;
+    background: var(--card);
+    padding: 3px 8px 3px 6px;
     font-family: var(--font-mono);
     font-size: 10px;
     line-height: 1.2;
     color: var(--foreground);
-    color: color-mix(in oklab, var(--foreground) 88%, transparent);
-    transition: border-color 120ms, color 120ms, background 120ms;
+    transition: border-color 120ms, color 120ms, background 120ms, transform 120ms;
     box-shadow: inset 1px 1px 0 var(--pixel-edge-light);
+    clip-path: polygon(0 3px, 3px 3px, 3px 0,
+        calc(100% - 3px) 0, calc(100% - 3px) 3px, 100% 3px,
+        100% calc(100% - 3px), calc(100% - 3px) calc(100% - 3px), calc(100% - 3px) 100%,
+        3px 100%, 3px calc(100% - 3px), 0 calc(100% - 3px));
   }
 
   .tech-chip:hover {
     border-color: var(--accent-to);
     color: var(--foreground);
-    background: color-mix(in oklab, var(--accent-to) 8%, var(--background));
+    background: color-mix(in oklab, var(--accent-to) 12%, var(--card));
   }
 
   .tech-chip-icon {
-    width: 11px;
-    height: 11px;
+    width: 12px;
+    height: 12px;
     flex-shrink: 0;
     color: var(--accent-to);
-    opacity: 0.9;
   }
 
   .tech-chip-label {
@@ -1246,32 +1222,60 @@
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    gap: 7px;
+    gap: 8px;
   }
 
   .project-detail-link {
     display: inline-flex;
-    min-height: 32px;
+    min-height: 34px;
     align-items: center;
-    gap: 6px;
-    border: 2px solid var(--border);
-    background: var(--secondary);
-    padding: 4px 10px;
+    gap: 7px;
+    border: 1px solid var(--pixel-frame);
+    background: var(--background);
+    padding: 5px 12px;
     font-family: var(--font-mono);
     font-size: 10px;
     font-weight: 500;
-    letter-spacing: 0.1em;
+    letter-spacing: 0.12em;
     text-transform: uppercase;
-    color: var(--secondary-foreground);
+    color: var(--foreground);
     text-decoration: none;
     cursor: pointer;
-    transition: background 120ms, color 120ms, border-color 120ms;
+    box-shadow:
+      inset 1px 1px 0 var(--pixel-edge-light),
+      2px 2px 0 var(--pixel-shadow);
+    clip-path: polygon(0 4px, 4px 4px, 4px 0,
+        calc(100% - 4px) 0, calc(100% - 4px) 4px, 100% 4px,
+        100% calc(100% - 4px), calc(100% - 4px) calc(100% - 4px), calc(100% - 4px) 100%,
+        4px 100%, 4px calc(100% - 4px), 0 calc(100% - 4px));
+    transition: background 120ms, color 120ms, border-color 120ms, transform 120ms;
   }
 
   .project-detail-link:hover {
     background: var(--pixel-active);
     color: var(--pixel-active-foreground);
     border-color: var(--pixel-frame);
+  }
+
+  .project-detail-stage-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+  }
+
+  .project-detail-stage-frame {
+    overflow: hidden;
+    border: 2px solid var(--pixel-frame);
+    background: #050508;
+    box-shadow:
+      inset 2px 2px 0 rgba(255, 255, 255, 0.08),
+      inset -2px -2px 0 rgba(0, 0, 0, 0.6),
+      4px 4px 0 var(--pixel-shadow);
+    clip-path: polygon(0 6px, 6px 6px, 6px 0,
+        calc(100% - 6px) 0, calc(100% - 6px) 6px, 100% 6px,
+        100% calc(100% - 6px), calc(100% - 6px) calc(100% - 6px), calc(100% - 6px) 100%,
+        6px 100%, 6px calc(100% - 6px), 0 calc(100% - 6px));
   }
 
   .project-detail-link:focus-visible {

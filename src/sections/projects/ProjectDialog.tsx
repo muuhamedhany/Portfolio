@@ -80,15 +80,14 @@ export function ProjectDetailDialog({ project }: { project: Project }) {
 
   return (
     <Dialog.Portal>
-      {/* Overlay — CSS keyframes handle enter/exit (Radix controls unmount) */}
+      {/* Overlay — CSS keyframes handle enter/exit */}
       <Dialog.Overlay className="project-detail-overlay" />
 
       {/* Content */}
       <Dialog.Content className="project-detail-content select-none" aria-label={`${project.name} project details`}>
         {/* ── Header ── */}
         <div className="project-detail-header">
-          <div className="min-w-0 flex-1">
-            {/* Index kicker */}
+          <div className="min-w-0 flex-1 flex flex-wrap items-baseline gap-x-3 gap-y-1">
             <span className="project-detail-index" aria-hidden="true">
               {project.index} / 05
             </span>
@@ -98,7 +97,8 @@ export function ProjectDetailDialog({ project }: { project: Project }) {
             </Dialog.Title>
 
             {project.featured && (
-              <span className="project-detail-badge mt-2 inline-flex">
+              <span className="project-detail-badge">
+                <span className="h-1.5 w-1.5 rounded-full bg-[var(--accent-to)]" />
                 AAST Graduation Project
               </span>
             )}
@@ -108,9 +108,9 @@ export function ProjectDetailDialog({ project }: { project: Project }) {
           <Dialog.Close asChild>
             <motion.button
               type="button"
-              className="project-detail-close pixel-btn"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95, transition: { duration: 0.08 } }}
+              className="project-detail-close"
+              whileHover={{ scale: 1.06 }}
+              whileTap={{ scale: 0.94 }}
               aria-label={`Close ${project.name} details`}
             >
               <X className="h-4 w-4" aria-hidden="true" />
@@ -118,83 +118,12 @@ export function ProjectDetailDialog({ project }: { project: Project }) {
           </Dialog.Close>
         </div>
 
-        {/* ── Body Layout ── */}
+        {/* ── Body Layout (40% Left Dossier / 60% Right Media Stage) ── */}
         <div className="project-detail-layout">
 
-          {/* Left — Media Stage */}
-          <div className="project-detail-media-column flex flex-col gap-3">
-            {/* Tab switcher */}
-            {hasVideoAndImage && (
-              <div className="flex items-center gap-2 bg-card p-1">
-                {(["video", "image"] as const).map((tab) => (
-                  <button
-                    key={tab}
-                    type="button"
-                    onClick={() => setActiveMediaTab(tab)}
-                    className={`flex flex-1 justify-center gap-1.5 px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.16em] transition-all cursor-pointer ${
-                      activeMediaTab === tab
-                        ? "pixel-btn border-2 border-[var(--pixel-frame)] bg-[var(--pixel-active)] text-[var(--pixel-active-foreground)] font-semibold"
-                        : "border-2 border-border bg-background text-muted-foreground hover:border-[var(--pixel-frame)] hover:text-foreground"
-                    }`}
-                  >
-                    {tab === "video" ? "Video" : "Photos"}
-                  </button>
-                ))}
-              </div>
-            )}
-
-            {/* Media frame */}
-            <div className="overflow-hidden border-2 border-border bg-black shadow-[3px_3px_0_var(--pixel-shadow)]">
-              <AnimatePresence mode="wait" initial={false}>
-                {activeMediaTab === "video" && project.previewVideo ? (
-                  <motion.div
-                    key="video"
-                    className="relative aspect-video w-full overflow-hidden bg-black"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    transition={{ duration: 0.18 }}
-                  >
-                    <div className="absolute top-2 left-2 z-10 flex items-center gap-1.5 border border-emerald-500/50 bg-emerald-950/80 px-2 py-0.5 font-mono text-[9px] uppercase tracking-widest text-emerald-400 backdrop-blur-md">
-                      <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                      LIVE DEMO
-                    </div>
-                    <video
-                      className="h-full w-full object-cover"
-                      controls
-                      autoPlay
-                      muted
-                      loop
-                      preload="metadata"
-                      poster={project.previewVideo.poster}
-                      aria-label={project.previewVideo.title}
-                    >
-                      <source src={project.previewVideo.src} type={project.previewVideo.type ?? "video/mp4"} />
-                      Your browser does not support the video player.
-                    </video>
-                  </motion.div>
-                ) : (
-                  <motion.div
-                    key="image"
-                    className="w-full overflow-hidden"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    transition={{ duration: 0.18 }}
-                  >
-                    <ProjectPreview project={project} />
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
-
-            {/* Category kicker */}
-            <span className="project-detail-kicker capitalize">{project.category}</span>
-          </div>
-
-          {/* Right — Info Pane (spring entrance + stagger) */}
+          {/* Left Column — Dossier (Overview, Tech Stack, Links) */}
           <motion.div
-            className="project-detail-info flex flex-col gap-5"
+            className="project-detail-dossier"
             variants={infoContainerVariants}
             initial="hidden"
             animate="show"
@@ -258,21 +187,101 @@ export function ProjectDetailDialog({ project }: { project: Project }) {
                       href={link.href}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="project-detail-link pixel-btn"
-                      whileHover={{ y: -1 }}
+                      className="project-detail-link"
+                      whileHover={{ y: -2, scale: 1.02 }}
                       whileTap={{ y: 1, scale: 0.98 }}
                       transition={{ duration: 0.1 }}
                       aria-label={`Open ${project.name} ${link.label}`}
                     >
-                      <Icon className="h-3.5 w-3.5" aria-hidden="true" />
+                      <Icon className="h-3.5 w-3.5 text-[var(--accent-to)]" aria-hidden="true" />
                       {link.label}
-                      <ArrowUpRight className="h-3 w-3 opacity-50" aria-hidden="true" />
+                      <ArrowUpRight className="h-3 w-3 opacity-60" aria-hidden="true" />
                     </motion.a>
                   );
                 })}
               </div>
             </motion.div>
           </motion.div>
+
+          {/* Right Column — Media Stage */}
+          <div className="project-detail-stage">
+            {/* Stage header bar: Tab switcher + Live Demo badge */}
+            <div className="project-detail-stage-header">
+              {hasVideoAndImage ? (
+                <div className="flex items-center gap-1.5 border border-border bg-background p-1 shadow-[inset_1px_1px_0_var(--pixel-edge-light)]">
+                  {(["video", "image"] as const).map((tab) => (
+                    <button
+                      key={tab}
+                      type="button"
+                      onClick={() => setActiveMediaTab(tab)}
+                      className={`px-3 py-1 font-mono text-[10px] uppercase tracking-[0.16em] transition-all cursor-pointer ${
+                        activeMediaTab === tab
+                          ? "border border-[var(--pixel-frame)] bg-[var(--pixel-active)] text-[var(--pixel-active-foreground)] font-semibold shadow-[1px_1px_0_var(--pixel-shadow)]"
+                          : "border border-transparent bg-transparent text-muted-foreground hover:text-foreground"
+                      }`}
+                    >
+                      {tab === "video" ? "Video" : "Photos"}
+                    </button>
+                  ))}
+                </div>
+              ) : (
+                <span className="project-detail-kicker uppercase tracking-widest text-[10px]">
+                  Project Media
+                </span>
+              )}
+
+              <div className="flex items-center gap-2">
+                {activeMediaTab === "video" && project.previewVideo && (
+                  <span className="flex items-center gap-1.5 border border-emerald-500/40 bg-emerald-950/60 px-2 py-0.5 font-mono text-[9px] uppercase tracking-widest text-emerald-400">
+                    <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                    LIVE DEMO
+                  </span>
+                )}
+                <span className="project-detail-kicker capitalize">{project.category}</span>
+              </div>
+            </div>
+
+            {/* Media frame */}
+            <div className="project-detail-stage-frame">
+              <AnimatePresence mode="wait" initial={false}>
+                {activeMediaTab === "video" && project.previewVideo ? (
+                  <motion.div
+                    key="video"
+                    className="relative aspect-video w-full overflow-hidden bg-black"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.18 }}
+                  >
+                    <video
+                      className="h-full w-full object-cover"
+                      controls
+                      autoPlay
+                      muted
+                      loop
+                      preload="metadata"
+                      poster={project.previewVideo.poster}
+                      aria-label={project.previewVideo.title}
+                    >
+                      <source src={project.previewVideo.src} type={project.previewVideo.type ?? "video/mp4"} />
+                      Your browser does not support the video player.
+                    </video>
+                  </motion.div>
+                ) : (
+                  <motion.div
+                    key="image"
+                    className="w-full overflow-hidden"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.18 }}
+                  >
+                    <ProjectPreview project={project} />
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+          </div>
 
         </div>
       </Dialog.Content>
