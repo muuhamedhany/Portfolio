@@ -140,9 +140,9 @@ export const PROJECTS: Project[] = [
       },
     ],
     links: [
-      { label: "App repo", href: "https://github.com/muuhamedhany/CarKitApp", icon: "github" },
-      { label: "Admin Web repo", href: "https://github.com/muuhamedhany/CarKit-Admin-Web", icon: "github" },
-      { label: "Driver Web repo", href: "https://github.com/muuhamedhany/CarKit-Driver-Web", icon: "github" }
+      { label: "App Repo", href: "https://github.com/muuhamedhany/CarKitApp", icon: "github" },
+      { label: "Admin Repo", href: "https://github.com/muuhamedhany/CarKit-Admin-Web", icon: "github" },
+      { label: "Driver Repo", href: "https://github.com/muuhamedhany/CarKit-Driver-Web", icon: "github" }
     ],
     previewVideo: {
       src: "/projects/CarKitVid-optimized.mp4",

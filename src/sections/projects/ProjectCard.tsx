@@ -3,7 +3,7 @@ import type { IconType } from "react-icons";
 import { ArrowUpRight } from "lucide-react";
 import * as Dialog from "@radix-ui/react-dialog";
 import type { Project } from "@/sections/projects/projectsData";
-import { TAG_ICON } from "@/sections/projects/projectsData";
+import { LINK_ICON, TAG_ICON } from "@/sections/projects/projectsData";
 import { ProjectDetailDialog } from "@/sections/projects/ProjectDialog";
 
 /* ─── Project Preview (image/tech-tile fallback) ─── */
@@ -75,24 +75,25 @@ export function ProjectPreview({ project }: { project: Project }) {
 export function ProjectCard({ project }: { project: Project }) {
   return (
     <Dialog.Trigger asChild>
-      <button
-        type="button"
-        className="project-card project-card-trigger group relative flex h-full w-full flex-col border-2 border-border bg-card p-1.5 sm:p-2 text-left transition-all duration-200 hover:border-[var(--pixel-frame)] shadow-[3px_3px_0_var(--pixel-shadow)] hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[5px_5px_0_var(--pixel-shadow)]"
+      <div
+        role="button"
+        tabIndex={0}
+        className="project-card project-card-trigger group relative flex h-full w-full flex-col border-2 border-border bg-card p-1.5 sm:p-2 text-left transition-all duration-200 hover:border-[var(--pixel-frame)] shadow-[3px_3px_0_var(--pixel-shadow)] hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[5px_5px_0_var(--pixel-shadow)] cursor-pointer"
         aria-label={`View details for ${project.name}`}
       >
         {/* Inner Pixel Bezel Frame */}
-        <div className="relative flex h-full w-full flex-1 flex-col justify-between border-2 border-border/60 bg-card p-4 sm:p-5">
-          <div className="flex flex-col flex-1">
+        <div className="relative flex h-full w-full flex-1 flex-col border-2 border-border/60 bg-card p-4 sm:p-5">
+          <div className="flex flex-col mb-2">
 
             {/* Media Preview Box (Fixed aspect-[16/10]) */}
-            <div className="mb-4 overflow-hidden border-2 border-border bg-background w-full shrink-0">
+            <div className="relative mb-4 overflow-hidden border-2 border-border bg-background w-full shrink-0">
               <div className="h-full w-full transform-gpu transition-transform duration-300 group-hover:scale-[1.02]">
                 <ProjectPreview project={project} />
               </div>
             </div>
 
             {/* Title (Single line truncate) */}
-            <h3 className="font-display items-center flex text-xl leading-none tracking-normal sm:text-2xl text-foreground group-hover:text-[var(--accent-to)] transition-colors duration-150 truncate shrink-0">
+            <h3 className="font-display items-center flex text-2xl leading-none tracking-normal sm:text-3xl text-foreground group-hover:text-[var(--accent-to)] transition-colors duration-150 truncate shrink-0">
               {project.name}
               {project.featured ? (
                 <span className="inline-flex items-center ml-2 gap-1.5 border border-[var(--accent-to)] bg-[var(--accent-to)]/10 px-2 py-1 font-mono text-[9px] uppercase tracking-widest text-[var(--accent-to)] truncate">
@@ -102,11 +103,6 @@ export function ProjectCard({ project }: { project: Project }) {
                 <></>
               )}
             </h3>
-
-            {/* Description (Fixed line-clamp-2 h-10) */}
-            <p className="project-card-blurb mt-2.5 text-xs sm:text-sm leading-relaxed text-muted-foreground line-clamp-2 h-10 overflow-hidden shrink-0">
-              {project.shortBlurb ?? project.blurb}
-            </p>
 
             {/* Mini Tech Icon Row (Fixed h-7) */}
             <div className="project-card-tech-row mt-4 flex h-7 items-center gap-2 shrink-0">
@@ -126,19 +122,48 @@ export function ProjectCard({ project }: { project: Project }) {
             </div>
           </div>
 
-          {/* Action Cue with Pixel Button Styling (Pushed to bottom edge) */}
-          <div className="mt-6 flex items-center justify-between border-t-2 border-border/40 pt-3 shrink-0">
-            <span className="font-mono text-[9.5px] uppercase tracking-[0.2em] text-muted-foreground group-hover:text-foreground transition-colors">
-              View Project
-            </span>
+          {/* Action Cue with Pixel Button Styling & Outer Project Links */}
+          <div className="mt-auto flex flex-col gap-3 border-t-2 border-border/40 pt-3 shrink-0">
+            {/* Direct External Links Row (Fixed min-height across cards to keep gap uniform) */}
+            {project.links && project.links.length > 0 && (
+              <div className="flex min-h-[58px] flex-wrap items-start content-start gap-1.5">
+                {project.links.map((link) => {
+                  const Icon = LINK_ICON[link.icon];
+                  return (
+                    <a
+                      key={link.label}
+                      href={link.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={(e) => e.stopPropagation()}
+                      onKeyDown={(e) => e.stopPropagation()}
+                      className="pixel-btn inline-flex items-center gap-1 border-2 border-border bg-background px-2 py-1 font-mono text-[9.5px] uppercase tracking-wider text-muted-foreground hover:border-[var(--pixel-frame)] hover:bg-[var(--pixel-active)] hover:text-[var(--pixel-active-foreground)] transition-colors duration-150"
+                      title={`Open ${link.label}`}
+                      aria-label={`Open ${project.name} ${link.label}`}
+                    >
+                      {Icon && <Icon className="h-3 w-3" aria-hidden="true" />}
+                      <span>{link.label}</span>
+                      <ArrowUpRight className="h-2.5 w-2.5 opacity-60" aria-hidden="true" />
+                    </a>
+                  );
+                })}
+              </div>
+            )}
 
-            <span className="project-card-cue pixel-btn inline-flex items-center gap-1.5 border-2 border-border bg-background px-3 py-1 font-mono text-[10px] uppercase tracking-[0.18em] text-[var(--accent-to)] group-hover:bg-[var(--pixel-active)] group-hover:text-[var(--pixel-active-foreground)] transition-colors duration-150">
-              View details
-              <ArrowUpRight className="h-3.5 w-3.5 transform-gpu transition-transform duration-150 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-            </span>
+            {/* View Details Footer Bar */}
+            <div className="flex items-center justify-between border-t border-border/20 pt-2.5">
+              <span className="font-mono text-[9.5px] uppercase tracking-[0.2em] text-muted-foreground group-hover:text-foreground transition-colors">
+                Project Details
+              </span>
+
+              <span className="project-card-cue pixel-btn inline-flex items-center gap-1.5 border-2 border-border bg-background px-3 py-1 font-mono text-[10px] uppercase tracking-[0.18em] text-[var(--accent-to)] group-hover:bg-[var(--pixel-active)] group-hover:text-[var(--pixel-active-foreground)] transition-colors duration-150">
+                View details
+                <ArrowUpRight className="h-3.5 w-3.5 transform-gpu transition-transform duration-150 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+              </span>
+            </div>
           </div>
         </div>
-      </button>
+      </div>
     </Dialog.Trigger>
   );
 }
@@ -158,3 +183,4 @@ export function ProjectCardWithDialog({
     </Dialog.Root>
   );
 }
+
