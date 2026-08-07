@@ -1133,33 +1133,89 @@
   .project-stack-groups {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 10px;
+    gap: 12px;
   }
 
   .project-stack-group {
+    position: relative;
     border: 1px solid var(--border);
-    background: var(--background);
-    padding: 10px 12px;
+    background:
+      linear-gradient(135deg, color-mix(in oklab, var(--accent-to) 6%, transparent) 0%, transparent 40%),
+      var(--background);
+    padding: 12px;
     box-shadow:
       inset 1px 1px 0 var(--pixel-edge-light),
-      2px 2px 0 var(--pixel-shadow);
-    clip-path: polygon(0 4px, 4px 4px, 4px 0,
-        calc(100% - 4px) 0, calc(100% - 4px) 4px, 100% 4px,
-        100% calc(100% - 4px), calc(100% - 4px) calc(100% - 4px), calc(100% - 4px) 100%,
-        4px 100%, 4px calc(100% - 4px), 0 calc(100% - 4px));
+      3px 3px 0 var(--pixel-shadow);
+    clip-path: polygon(0 5px, 5px 5px, 5px 0,
+        calc(100% - 5px) 0, calc(100% - 5px) 5px, 100% 5px,
+        100% calc(100% - 5px), calc(100% - 5px) calc(100% - 5px), calc(100% - 5px) 100%,
+        5px 100%, 5px calc(100% - 5px), 0 calc(100% - 5px));
+    transition: border-color 160ms ease, box-shadow 160ms ease;
+  }
+
+  .project-stack-group:hover {
+    border-color: color-mix(in oklab, var(--accent-to) 50%, var(--border));
+    box-shadow:
+      inset 1px 1px 0 var(--pixel-edge-light),
+      4px 4px 0 var(--pixel-shadow);
+  }
+
+  .terminal-node-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin-bottom: 10px;
+    padding-bottom: 6px;
+    border-bottom: 1px dashed color-mix(in oklab, var(--border) 80%, transparent);
   }
 
   .project-stack-label {
     display: flex;
     align-items: center;
     gap: 6px;
-    margin-bottom: 8px;
     font-family: var(--font-mono);
-    font-size: 9px;
-    letter-spacing: 0.16em;
+    font-size: 9.5px;
+    letter-spacing: 0.14em;
     line-height: 1.2;
     text-transform: uppercase;
     color: var(--foreground);
+    font-weight: 600;
+  }
+
+  .terminal-sys-prefix {
+    font-family: var(--font-mono);
+    font-size: 8.5px;
+    letter-spacing: 0.16em;
+    color: var(--accent-to);
+    font-weight: 700;
+    opacity: 0.9;
+  }
+
+  .terminal-node-count {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    border: 1px solid color-mix(in oklab, var(--accent-to) 30%, var(--border));
+    background: color-mix(in oklab, var(--accent-to) 8%, var(--card));
+    padding: 1px 5px;
+    font-family: var(--font-mono);
+    font-size: 8px;
+    letter-spacing: 0.12em;
+    color: var(--accent-to);
+    font-weight: 600;
+    clip-path: polygon(0 2px, 2px 2px, 2px 0,
+        calc(100% - 2px) 0, calc(100% - 2px) 2px, 100% 2px,
+        100% calc(100% - 2px), calc(100% - 2px) calc(100% - 2px), calc(100% - 2px) 100%,
+        2px 100%, 2px calc(100% - 2px), 0 calc(100% - 2px));
+  }
+
+  .terminal-node-dot {
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--accent-to);
+    box-shadow: 0 0 4px var(--accent-to);
   }
 
   .project-stack-icon {
@@ -1184,38 +1240,55 @@
   .tech-chip {
     display: inline-flex;
     align-items: center;
-    gap: 5px;
+    gap: 6px;
     border: 1px solid var(--border);
     background: var(--card);
-    padding: 3px 8px 3px 6px;
+    padding: 4px 9px 4px 6px;
     font-family: var(--font-mono);
     font-size: 10px;
     line-height: 1.2;
     color: var(--foreground);
-    transition: border-color 120ms, color 120ms, background 120ms, transform 120ms;
-    box-shadow: inset 1px 1px 0 var(--pixel-edge-light);
+    cursor: default;
+    box-shadow:
+      inset 1px 1px 0 var(--pixel-edge-light),
+      1px 1px 0 var(--pixel-shadow);
     clip-path: polygon(0 3px, 3px 3px, 3px 0,
         calc(100% - 3px) 0, calc(100% - 3px) 3px, 100% 3px,
         100% calc(100% - 3px), calc(100% - 3px) calc(100% - 3px), calc(100% - 3px) 100%,
         3px 100%, 3px calc(100% - 3px), 0 calc(100% - 3px));
+    transition: border-color 140ms ease, color 140ms ease, background 140ms ease, box-shadow 140ms ease;
   }
 
   .tech-chip:hover {
     border-color: var(--accent-to);
     color: var(--foreground);
-    background: color-mix(in oklab, var(--accent-to) 12%, var(--card));
+    background: color-mix(in oklab, var(--accent-to) 14%, var(--card));
+    box-shadow:
+      inset 1px 1px 0 var(--pixel-edge-light),
+      2px 2px 0 var(--pixel-shadow);
+  }
+
+  .tech-chip-icon-wrap {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 14px;
+    height: 14px;
+    flex-shrink: 0;
+    color: var(--accent-to);
   }
 
   .tech-chip-icon {
     width: 12px;
     height: 12px;
     flex-shrink: 0;
-    color: var(--accent-to);
+    color: currentColor;
   }
 
   .tech-chip-label {
     font-size: 10px;
     white-space: nowrap;
+    letter-spacing: 0.02em;
   }
 
   .project-detail-links {

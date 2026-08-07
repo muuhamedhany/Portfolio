@@ -53,7 +53,18 @@ const chipVariants = {
   },
 };
 
-/* ─── Tech Chip — icon + short label ─── */
+/* ─── System Prefix Helper ─── */
+function getSystemPrefix(icon: string, label: string): string {
+  const i = icon.toLowerCase();
+  const l = label.toLowerCase();
+  if (i.includes("mobile") || l.includes("mobile") || l.includes("app")) return "[SYS_MOBILE]";
+  if (i.includes("backend") || l.includes("backend") || l.includes("server")) return "[SYS_SERVER]";
+  if (i.includes("deploy") || l.includes("infra") || l.includes("cloud")) return "[SYS_INFRA]";
+  if (i.includes("design") || l.includes("design") || l.includes("ui")) return "[SYS_DESIGN]";
+  return "[SYS_WEB]";
+}
+
+/* ─── Tech Chip — icon + short label + hover physics ─── */
 function TechChip({ name, shortName }: { name: string; shortName?: string }) {
   const Icon = STACK_ITEM_ICON[name] ?? STACK_ITEM_ICON[shortName ?? ""];
   const label = shortName ?? name;
@@ -62,9 +73,16 @@ function TechChip({ name, shortName }: { name: string; shortName?: string }) {
     <motion.span
       variants={chipVariants}
       className="tech-chip"
+      whileHover={{ y: -2, scale: 1.04 }}
+      whileTap={{ scale: 0.96 }}
+      transition={{ duration: 0.12 }}
       title={name !== label ? name : undefined}
     >
-      {Icon && <Icon className="tech-chip-icon" aria-hidden="true" />}
+      {Icon && (
+        <span className="tech-chip-icon-wrap">
+          <Icon className="tech-chip-icon" aria-hidden="true" />
+        </span>
+      )}
       <span className="tech-chip-label">{label}</span>
     </motion.span>
   );
@@ -87,10 +105,8 @@ export function ProjectDetailDialog({ project }: { project: Project }) {
       <Dialog.Content className="project-detail-content select-none" aria-label={`${project.name} project details`}>
         {/* ── Header ── */}
         <div className="project-detail-header">
-          <div className="min-w-0 flex-1 flex flex-wrap items-baseline gap-x-3 gap-y-1">
-            <span className="project-detail-index" aria-hidden="true">
-              {project.index} / 05
-            </span>
+          <div className="min-w-0 flex-1 flex flex-wrap items-center gap-x-3 gap-y-1">
+
 
             <Dialog.Title className="font-display text-2xl sm:text-3xl leading-none tracking-normal text-foreground">
               {project.name}
@@ -98,7 +114,6 @@ export function ProjectDetailDialog({ project }: { project: Project }) {
 
             {project.featured && (
               <span className="project-detail-badge">
-                <span className="h-1.5 w-1.5 rounded-full bg-[var(--accent-to)]" />
                 AAST Graduation Project
               </span>
             )}
@@ -134,27 +149,33 @@ export function ProjectDetailDialog({ project }: { project: Project }) {
               <p className="project-detail-blurb">{project.blurb}</p>
             </motion.div>
 
-            {/* Tech Stack */}
+            {/* Tech Stack — Terminal Architecture Nodes */}
             <motion.div variants={infoItemVariants} className="project-detail-section">
-              <h4 className="project-detail-section-title">Tech Stack</h4>
+              <h4 className="project-detail-section-title">System Stack Architecture</h4>
               <div className="project-stack-groups">
                 {project.stackGroups.map((group) => {
                   const StackIcon = STACK_GROUP_ICON[group.icon];
+                  const sysPrefix = getSystemPrefix(group.icon, group.label);
 
                   return (
                     <motion.section
                       key={group.label}
                       variants={infoItemVariants}
                       className="project-stack-group"
-                      aria-label={`${group.label} stack`}
+                      aria-label={`${group.label} stack node`}
                     >
-                      <h5 className="project-stack-label">
-                        <span className="project-stack-icon">
-                          <StackIcon aria-hidden="true" />
+                      {/* Terminal Node Header */}
+                      <div className="terminal-node-header">
+                        <h5 className="project-stack-label">
+                          {group.label}
+                        </h5>
+                        <span className="terminal-node-count">
+                          <span className="terminal-node-dot" />
+                          {group.items.length}
                         </span>
-                        {group.label}
-                      </h5>
+                      </div>
 
+                      {/* Tech Chips */}
                       <motion.div
                         className="tech-chips"
                         variants={chipContainerVariants}
@@ -214,11 +235,10 @@ export function ProjectDetailDialog({ project }: { project: Project }) {
                       key={tab}
                       type="button"
                       onClick={() => setActiveMediaTab(tab)}
-                      className={`px-3 py-1 font-mono text-[10px] uppercase tracking-[0.16em] transition-all cursor-pointer ${
-                        activeMediaTab === tab
-                          ? "border border-[var(--pixel-frame)] bg-[var(--pixel-active)] text-[var(--pixel-active-foreground)] font-semibold shadow-[1px_1px_0_var(--pixel-shadow)]"
-                          : "border border-transparent bg-transparent text-muted-foreground hover:text-foreground"
-                      }`}
+                      className={`px-3 py-1 font-mono text-[10px] uppercase tracking-[0.16em] transition-all cursor-pointer ${activeMediaTab === tab
+                        ? "border border-[var(--pixel-frame)] bg-[var(--pixel-active)] text-[var(--pixel-active-foreground)] font-semibold shadow-[1px_1px_0_var(--pixel-shadow)]"
+                        : "border border-transparent bg-transparent text-muted-foreground hover:text-foreground"
+                        }`}
                     >
                       {tab === "video" ? "Video" : "Photos"}
                     </button>
@@ -237,7 +257,6 @@ export function ProjectDetailDialog({ project }: { project: Project }) {
                     LIVE DEMO
                   </span>
                 )}
-                <span className="project-detail-kicker capitalize">{project.category}</span>
               </div>
             </div>
 
@@ -256,7 +275,6 @@ export function ProjectDetailDialog({ project }: { project: Project }) {
                     <video
                       className="h-full w-full object-cover"
                       controls
-                      autoPlay
                       muted
                       loop
                       preload="metadata"
