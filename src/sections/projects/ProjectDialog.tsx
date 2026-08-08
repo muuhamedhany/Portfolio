@@ -245,7 +245,17 @@ function HighEndGalleryCarousel({ images }: { images: { src: string; alt: string
             animate="center"
             exit="exit"
             transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
-            className={`h-full w-full ${
+            drag="x"
+            dragConstraints={{ left: 0, right: 0 }}
+            dragElastic={0.25}
+            onDragEnd={(_e, info) => {
+              if (info.offset.x < -40 || info.velocity.x < -250) {
+                nextImage();
+              } else if (info.offset.x > 40 || info.velocity.x > 250) {
+                prevImage();
+              }
+            }}
+            className={`h-full w-full cursor-grab active:cursor-grabbing touch-pan-y select-none ${
               isDocument ? "object-contain bg-transparent p-1" : "object-cover"
             }`}
           />
