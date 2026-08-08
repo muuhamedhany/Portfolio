@@ -422,7 +422,7 @@ export function ProjectDetailDialog({ project }: { project: Project }) {
                         : "border border-transparent bg-transparent text-muted-foreground hover:text-foreground"
                         }`}
                     >
-                      {tab === "video" ? "Video" : "Photos"}
+                      {tab === "video" ? "Video" : "PROJECT MANUAL"}
                     </button>
                   ))}
                 </div>
