@@ -181,17 +181,26 @@ function EquippedInventory({ project }: { project: Project }) {
   );
 }
 
+/* ─── Swipe Config ─── */
+const swipeConfidenceThreshold = 10000;
+const swipePower = (offset: number, velocity: number) => {
+  return Math.abs(offset) * velocity;
+};
+
 /* ─── High-End Image Gallery Component ─── */
 function HighEndGalleryCarousel({ images }: { images: { src: string; alt: string; title?: string }[] }) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [direction, setDirection] = useState<1 | -1>(1);
+  const [isFullscreen, setIsFullscreen] = useState(false);
 
-  const prevImage = () => {
+  const prevImage = (e?: React.MouseEvent) => {
+    e?.stopPropagation();
     setDirection(-1);
     setCurrentIndex((prev) => (prev === 0 ? images.length - 1 : prev - 1));
   };
 
-  const nextImage = () => {
+  const nextImage = (e?: React.MouseEvent) => {
+    e?.stopPropagation();
     setDirection(1);
     setCurrentIndex((prev) => (prev === images.length - 1 ? 0 : prev + 1));
   };
@@ -201,10 +210,11 @@ function HighEndGalleryCarousel({ images }: { images: { src: string; alt: string
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "ArrowLeft") prevImage();
       if (e.key === "ArrowRight") nextImage();
+      if (e.key === "Escape" && isFullscreen) setIsFullscreen(false);
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [currentIndex, images.length]);
+  }, [currentIndex, images.length, isFullscreen]);
 
   const current = images[currentIndex];
   const isDocument = images.length > 5;
@@ -245,19 +255,21 @@ function HighEndGalleryCarousel({ images }: { images: { src: string; alt: string
             animate="center"
             exit="exit"
             transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+            className={`h-full w-full cursor-zoom-in ${
+              isDocument ? "object-contain bg-transparent p-1" : "object-cover"
+            }`}
+            onClick={() => setIsFullscreen(true)}
             drag="x"
             dragConstraints={{ left: 0, right: 0 }}
-            dragElastic={0.25}
-            onDragEnd={(_e, info) => {
-              if (info.offset.x < -40 || info.velocity.x < -250) {
+            dragElastic={0.8}
+            onDragEnd={(e, { offset, velocity }) => {
+              const swipe = swipePower(offset.x, velocity.x);
+              if (swipe < -swipeConfidenceThreshold) {
                 nextImage();
-              } else if (info.offset.x > 40 || info.velocity.x > 250) {
+              } else if (swipe > swipeConfidenceThreshold) {
                 prevImage();
               }
             }}
-            className={`h-full w-full cursor-grab active:cursor-grabbing touch-pan-y select-none ${
-              isDocument ? "object-contain bg-transparent p-1" : "object-cover"
-            }`}
           />
         </AnimatePresence>
 
@@ -267,7 +279,7 @@ function HighEndGalleryCarousel({ images }: { images: { src: string; alt: string
             <button
               type="button"
               onClick={prevImage}
-              className="absolute left-3 top-1/2 -translate-y-1/2 z-10 flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center border border-[var(--pixel-frame)] bg-background/90 text-foreground shadow-[2px_2px_0_var(--pixel-shadow)] hover:bg-[var(--pixel-active)] hover:text-[var(--pixel-active-foreground)] transition-colors cursor-pointer"
+              className="absolute left-2 sm:left-3 top-1/2 -translate-y-1/2 z-20 flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center border border-[var(--pixel-frame)] bg-background/90 text-foreground shadow-[2px_2px_0_var(--pixel-shadow)] hover:bg-[var(--pixel-active)] hover:text-[var(--pixel-active-foreground)] transition-colors cursor-pointer"
               aria-label="Previous image"
             >
               <ChevronLeft className="h-4 w-4 sm:h-5 sm:w-5" />
@@ -276,7 +288,7 @@ function HighEndGalleryCarousel({ images }: { images: { src: string; alt: string
             <button
               type="button"
               onClick={nextImage}
-              className="absolute right-3 top-1/2 -translate-y-1/2 z-10 flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center border border-[var(--pixel-frame)] bg-background/90 text-foreground shadow-[2px_2px_0_var(--pixel-shadow)] hover:bg-[var(--pixel-active)] hover:text-[var(--pixel-active-foreground)] transition-colors cursor-pointer"
+              className="absolute right-2 sm:right-3 top-1/2 -translate-y-1/2 z-20 flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center border border-[var(--pixel-frame)] bg-background/90 text-foreground shadow-[2px_2px_0_var(--pixel-shadow)] hover:bg-[var(--pixel-active)] hover:text-[var(--pixel-active-foreground)] transition-colors cursor-pointer"
               aria-label="Next image"
             >
               <ChevronRight className="h-4 w-4 sm:h-5 sm:w-5" />
@@ -318,6 +330,127 @@ function HighEndGalleryCarousel({ images }: { images: { src: string; alt: string
           )}
         </div>
       </div>
+
+      {/* Fullscreen Portal Overlay */}
+      <Dialog.Root open={isFullscreen} onOpenChange={setIsFullscreen}>
+        <AnimatePresence>
+          {isFullscreen && (
+            <Dialog.Portal forceMount>
+              <Dialog.Overlay asChild forceMount>
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.2 }}
+                  className="fixed inset-0 z-[99999] bg-black/95 backdrop-blur-sm"
+                />
+              </Dialog.Overlay>
+              
+              <Dialog.Content asChild forceMount>
+                <motion.div
+                  className="fixed inset-0 z-[99999] flex items-center justify-center p-4 sm:p-8 outline-none"
+                  aria-describedby={undefined}
+                  onClick={() => setIsFullscreen(false)}
+                >
+                  <Dialog.Title className="sr-only">Fullscreen Image</Dialog.Title>
+
+                  {/* Close Button */}
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setIsFullscreen(false);
+                    }}
+                    className="absolute top-4 right-4 z-[999] flex h-10 w-10 sm:h-12 sm:w-12 items-center justify-center border border-[var(--pixel-frame)] bg-background/90 text-foreground shadow-[2px_2px_0_var(--pixel-shadow)] sm:shadow-[4px_4px_0_var(--pixel-shadow)] hover:bg-[var(--pixel-active)] hover:text-[var(--pixel-active-foreground)] transition-colors cursor-pointer"
+                    aria-label="Close fullscreen"
+                  >
+                    <X className="h-5 w-5 sm:h-6 sm:w-6" />
+                  </button>
+
+                  {/* Prev/Next Arrows for Fullscreen (Desktop Only) */}
+                  {images.length > 1 && (
+                    <>
+                      <button
+                        type="button"
+                        onClick={(e) => { e.stopPropagation(); prevImage(e); }}
+                        className="hidden sm:flex absolute left-6 top-1/2 -translate-y-1/2 z-[999] h-12 w-12 items-center justify-center border border-[var(--pixel-frame)] bg-background/90 text-foreground shadow-[4px_4px_0_var(--pixel-shadow)] hover:bg-[var(--pixel-active)] hover:text-[var(--pixel-active-foreground)] transition-colors cursor-pointer"
+                        aria-label="Previous image"
+                      >
+                        <ChevronLeft className="h-8 w-8" />
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={(e) => { e.stopPropagation(); nextImage(e); }}
+                        className="hidden sm:flex absolute right-6 top-1/2 -translate-y-1/2 z-[999] h-12 w-12 items-center justify-center border border-[var(--pixel-frame)] bg-background/90 text-foreground shadow-[4px_4px_0_var(--pixel-shadow)] hover:bg-[var(--pixel-active)] hover:text-[var(--pixel-active-foreground)] transition-colors cursor-pointer"
+                        aria-label="Next image"
+                      >
+                        <ChevronRight className="h-8 w-8" />
+                      </button>
+                    </>
+                  )}
+
+                  {/* Fullscreen Image */}
+                  <motion.img
+                    key={currentIndex}
+                    initial={{ scale: 0.95, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    exit={{ scale: 0.95, opacity: 0 }}
+                    transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                    src={current.src}
+                    alt={current.alt}
+                    className="max-h-full max-w-full object-contain cursor-zoom-out shadow-2xl relative z-10"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setIsFullscreen(false);
+                    }}
+                    drag="x"
+                    dragConstraints={{ left: 0, right: 0 }}
+                    dragElastic={0.8}
+                    onDragEnd={(e, { offset, velocity }) => {
+                      const swipe = swipePower(offset.x, velocity.x);
+                      if (swipe < -swipeConfidenceThreshold) {
+                        nextImage();
+                      } else if (swipe > swipeConfidenceThreshold) {
+                        prevImage();
+                      }
+                    }}
+                  />
+
+                  {/* Bottom Navigation Pill (Counter always, Arrows Mobile Only) */}
+                  <div className="absolute bottom-6 sm:bottom-8 left-1/2 -translate-x-1/2 flex items-center bg-background/90 z-[999] border border-[var(--pixel-frame)] shadow-[4px_4px_0_var(--pixel-shadow)] pointer-events-auto">
+                    {images.length > 1 && (
+                      <button
+                        type="button"
+                        onClick={(e) => { e.stopPropagation(); prevImage(e); }}
+                        className="flex sm:hidden h-10 w-10 items-center justify-center border-r border-[var(--pixel-frame)] text-foreground hover:bg-[var(--pixel-active)] hover:text-[var(--pixel-active-foreground)] transition-colors cursor-pointer"
+                        aria-label="Previous image"
+                      >
+                        <ChevronLeft className="h-6 w-6" />
+                      </button>
+                    )}
+
+                    <span className="font-mono text-xs sm:text-sm text-foreground px-4 py-2 min-w-[4.5rem] sm:min-w-[5rem] text-center select-none pointer-events-none tracking-widest font-bold">
+                      {currentIndex + 1} / {images.length}
+                    </span>
+
+                    {images.length > 1 && (
+                      <button
+                        type="button"
+                        onClick={(e) => { e.stopPropagation(); nextImage(e); }}
+                        className="flex sm:hidden h-10 w-10 items-center justify-center border-l border-[var(--pixel-frame)] text-foreground hover:bg-[var(--pixel-active)] hover:text-[var(--pixel-active-foreground)] transition-colors cursor-pointer"
+                        aria-label="Next image"
+                      >
+                        <ChevronRight className="h-6 w-6" />
+                      </button>
+                    )}
+                  </div>
+                </motion.div>
+              </Dialog.Content>
+            </Dialog.Portal>
+          )}
+        </AnimatePresence>
+      </Dialog.Root>
     </div>
   );
 }
