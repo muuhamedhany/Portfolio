@@ -72,9 +72,8 @@ function NavItem({ section, isActive, isHint, onNavigate }: NavItemProps) {
       aria-label={`Go to ${section.label}`}
       aria-current={isActive ? "page" : undefined}
       data-active={isActive}
-      className={`pixel-nav-control relative flex h-11 items-center justify-center overflow-hidden focus-visible:z-10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring cursor-pointer transition-all duration-200 ${
-        isActive ? "px-3.5 gap-2.5 text-white" : "w-11 text-muted-foreground"
-      }`}
+      className={`pixel-nav-control relative flex h-11 items-center justify-center overflow-hidden focus-visible:z-10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring cursor-pointer transition-all duration-200 ${isActive ? "px-3.5 gap-2.5 text-white" : "w-11 text-muted-foreground"
+        }`}
     >
       {/* Animated active background pill using layoutId */}
       {isActive && (
@@ -104,7 +103,7 @@ function NavItem({ section, isActive, isHint, onNavigate }: NavItemProps) {
             animate={{ opacity: 1, width: "auto" }}
             exit={{ opacity: 0, width: 0 }}
             transition={{ duration: 0.18, ease: "easeOut" }}
-            className="relative z-10 whitespace-nowrap font-mono text-[11px] font-bold uppercase tracking-[0.18em]"
+            className="hidden sm:block relative z-10 whitespace-nowrap font-mono text-[11px] font-bold uppercase tracking-[0.18em]"
           >
             {section.label}
           </motion.span>
