@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import type { IconType } from "react-icons";
 import { ArrowUpRight } from "lucide-react";
 import * as Dialog from "@radix-ui/react-dialog";
@@ -7,13 +7,64 @@ import { LINK_ICON, TAG_ICON } from "@/sections/projects/projectsData";
 import { ProjectDetailDialog } from "@/sections/projects/ProjectDialog";
 
 /* ─── Project Preview (image/tech-tile fallback) ─── */
-export function ProjectPreview({ project }: { project: Project }) {
+export function ProjectPreview({
+  project,
+  isHovered,
+}: {
+  project: Project;
+  isHovered: boolean;
+}) {
   const [imageLoaded, setImageLoaded] = useState(false);
   const [imageFailed, setImageFailed] = useState(false);
 
+  // Gallery cycling state — only active when there are multiple images
+  const allImages: { src: string; alt: string }[] = [];
+  if (project.previewImage) allImages.push(project.previewImage);
+  if (project.galleryImages) {
+    project.galleryImages.forEach((gi) => {
+      if (!allImages.some((img) => img.src === gi.src)) {
+        allImages.push({ src: gi.src, alt: gi.alt });
+      }
+    });
+  }
+  const hasMultiple = allImages.length > 1;
+
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [fadingIn, setFadingIn] = useState(true);
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  useEffect(() => {
+    if (!hasMultiple) return;
+
+    if (isHovered) {
+      intervalRef.current = setInterval(() => {
+        setFadingIn(false);
+        setTimeout(() => {
+          setActiveIndex((prev) => (prev + 1) % allImages.length);
+          setFadingIn(true);
+        }, 200); // crossfade out duration
+      }, 1400);
+    } else {
+      if (intervalRef.current) clearInterval(intervalRef.current);
+      // Reset to first image with a brief fade
+      setFadingIn(false);
+      setTimeout(() => {
+        setActiveIndex(0);
+        setFadingIn(true);
+      }, 200);
+    }
+
+    return () => {
+      if (intervalRef.current) clearInterval(intervalRef.current);
+    };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isHovered, hasMultiple]);
+
   if (project.previewImage) {
+    const activeImage = allImages[activeIndex] ?? project.previewImage;
+
     return (
-      <div className="project-card-media project-card-media-image aspect-[16/10] w-full overflow-hidden bg-background">
+      <div className="project-card-media project-card-media-image aspect-[16/10] w-full overflow-hidden bg-background relative">
         {!imageLoaded && !imageFailed && (
           <div className="project-image-skeleton h-full w-full" aria-hidden="true">
             <span className="project-image-skeleton-mark" />
@@ -28,14 +79,34 @@ export function ProjectPreview({ project }: { project: Project }) {
             Preview unavailable
           </div>
         ) : (
-          <img
-            src={project.previewImage.src}
-            alt={project.previewImage.alt}
-            className={`h-full w-full object-cover transition-opacity duration-150 ${imageLoaded ? "opacity-100" : "opacity-0"}`}
-            loading="lazy"
-            onLoad={() => setImageLoaded(true)}
-            onError={() => setImageFailed(true)}
-          />
+          <>
+            <img
+              key={activeImage.src}
+              src={activeImage.src}
+              alt={activeImage.alt}
+              className={`h-full w-full object-cover transition-opacity duration-200 ${
+                imageLoaded && fadingIn ? "opacity-100" : "opacity-0"
+              }`}
+              loading="lazy"
+              onLoad={() => setImageLoaded(true)}
+              onError={() => setImageFailed(true)}
+            />
+            {/* Image counter dots — only shown when multiple images exist */}
+            {hasMultiple && imageLoaded && (
+              <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1.5 z-10 pointer-events-none">
+                {allImages.map((_, i) => (
+                  <span
+                    key={i}
+                    className={`block h-1 rounded-full transition-all duration-300 ${
+                      i === activeIndex
+                        ? "w-4 bg-[var(--accent-to)]"
+                        : "w-1 bg-white/40"
+                    }`}
+                  />
+                ))}
+              </div>
+            )}
+          </>
         )}
       </div>
     );
@@ -73,6 +144,8 @@ export function ProjectPreview({ project }: { project: Project }) {
 
 /* ─── Project Card Trigger (no Dialog.Root — must be nested inside one) ─── */
 export function ProjectCard({ project }: { project: Project }) {
+  const [isHovered, setIsHovered] = useState(false);
+
   return (
     <Dialog.Trigger asChild>
       <div
@@ -80,6 +153,8 @@ export function ProjectCard({ project }: { project: Project }) {
         tabIndex={0}
         className="project-card project-card-trigger group relative flex h-full w-full flex-col border-2 border-border bg-card p-1.5 sm:p-2 text-left transition-all duration-200 hover:border-[var(--pixel-frame)] shadow-[3px_3px_0_var(--pixel-shadow)] hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[5px_5px_0_var(--pixel-shadow)] cursor-pointer"
         aria-label={`View details for ${project.name}`}
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
       >
         {/* Inner Pixel Bezel Frame */}
         <div className="relative flex h-full w-full flex-1 flex-col border-2 border-border/60 bg-card p-4 sm:p-5">
@@ -88,7 +163,7 @@ export function ProjectCard({ project }: { project: Project }) {
             {/* Media Preview Box (Fixed aspect-[16/10]) */}
             <div className="relative mb-4 overflow-hidden border-2 border-border bg-background w-full shrink-0">
               <div className="h-full w-full transform-gpu transition-transform duration-300 group-hover:scale-[1.02]">
-                <ProjectPreview project={project} />
+                <ProjectPreview project={project} isHovered={isHovered} />
               </div>
             </div>
 
