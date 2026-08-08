@@ -238,11 +238,10 @@ function HighEndGalleryCarousel({ images }: { images: { src: string; alt: string
     <div className="flex flex-col w-full h-full bg-background group select-none overflow-hidden">
       {/* ── Main Viewport ── */}
       <div
-        className={`relative w-full overflow-hidden ${
-          isDocument
-            ? "h-[540px] sm:h-[640px] max-h-[72vh] flex items-center justify-center bg-black/40"
-            : "aspect-[16/10] bg-background"
-        }`}
+        className={`relative w-full overflow-hidden ${isDocument
+          ? "h-[540px] sm:h-[640px] max-h-[72vh] flex items-center justify-center bg-black/40"
+          : "aspect-[16/10] bg-background"
+          }`}
       >
         <AnimatePresence custom={direction} mode="wait" initial={false}>
           <motion.img
@@ -255,9 +254,8 @@ function HighEndGalleryCarousel({ images }: { images: { src: string; alt: string
             animate="center"
             exit="exit"
             transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
-            className={`h-full w-full cursor-zoom-in ${
-              isDocument ? "object-contain bg-transparent p-1" : "object-cover"
-            }`}
+            className={`h-full w-full cursor-zoom-in ${isDocument ? "object-contain bg-transparent p-1" : "object-cover"
+              }`}
             onClick={() => setIsFullscreen(true)}
             drag="x"
             dragConstraints={{ left: 0, right: 0 }}
@@ -317,11 +315,10 @@ function HighEndGalleryCarousel({ images }: { images: { src: string; alt: string
                       setDirection(idx > currentIndex ? 1 : -1);
                       setCurrentIndex(idx);
                     }}
-                    className={`h-2 transition-all cursor-pointer ${
-                      idx === currentIndex
-                        ? "w-5 bg-[var(--accent-to)] shadow-[0_0_8px_var(--accent-to)]"
-                        : "w-2 bg-white/40 hover:bg-white/70"
-                    }`}
+                    className={`h-2 transition-all cursor-pointer ${idx === currentIndex
+                      ? "w-5 bg-[var(--accent-to)] shadow-[0_0_8px_var(--accent-to)]"
+                      : "w-2 bg-white/40 hover:bg-white/70"
+                      }`}
                     aria-label={`Go to slide ${idx + 1}`}
                   />
                 ))}
@@ -345,7 +342,7 @@ function HighEndGalleryCarousel({ images }: { images: { src: string; alt: string
                   className="fixed inset-0 z-[99999] bg-black/95 backdrop-blur-sm"
                 />
               </Dialog.Overlay>
-              
+
               <Dialog.Content asChild forceMount>
                 <motion.div
                   className="fixed inset-0 z-[99999] flex items-center justify-center p-4 sm:p-8 outline-none"
@@ -418,7 +415,9 @@ function HighEndGalleryCarousel({ images }: { images: { src: string; alt: string
                   />
 
                   {/* Bottom Navigation Pill (Counter always, Arrows Mobile Only) */}
-                  <div className="absolute bottom-6 sm:bottom-8 left-1/2 -translate-x-1/2 flex items-center bg-background/90 z-[999] border border-[var(--pixel-frame)] shadow-[4px_4px_0_var(--pixel-shadow)] pointer-events-auto">
+                  <div className="absolute bottom-2 sm:bottom-2 left-1/2 -translate-x-1/2
+                   flex items-center bg-background/90 z-[999] border border-[var(--pixel-frame)]
+                    shadow-[4px_4px_0_var(--pixel-shadow)] pointer-events-auto">
                     {images.length > 1 && (
                       <button
                         type="button"
@@ -430,7 +429,9 @@ function HighEndGalleryCarousel({ images }: { images: { src: string; alt: string
                       </button>
                     )}
 
-                    <span className="font-mono text-xs sm:text-sm text-foreground px-4 py-2 min-w-[4.5rem] sm:min-w-[5rem] text-center select-none pointer-events-none tracking-widest font-bold">
+                    <span className="text-xs sm:text-sm text-foreground px-4 py-2
+                     min-w-[4.5rem] sm:min-w-[5rem] text-center select-none
+                     pointer-events-none tracking-widest font-bold">
                       {currentIndex + 1} / {images.length}
                     </span>
 
