@@ -261,7 +261,12 @@ export const PROJECTS: Project[] = [
     previewImage: {
       src: "/projects/PureStore.png",
       alt: "PureStore Preview"
-    }
+    },
+    galleryImages: [
+      { src: "/projects/PureStoreShop.png", alt: "Pure Store Shop Page", title: "Product Catalog & Filtering" },
+      { src: "/projects/PureStoreDetails.png", alt: "Pure Store Product Details", title: "Product Details & Specs" },
+      { src: "/projects/PureStoreCart.png", alt: "Pure Store Shopping Cart", title: "Shopping Cart & Checkout" },
+    ]
   },
   {
     index: "04",
