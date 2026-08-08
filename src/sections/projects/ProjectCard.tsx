@@ -21,7 +21,7 @@ export function ProjectPreview({
   const allImages: { src: string; alt: string }[] = [];
   if (project.previewImage) allImages.push(project.previewImage);
   if (project.galleryImages) {
-    project.galleryImages.forEach((gi) => {
+    project.galleryImages.slice(0, 5).forEach((gi) => {
       if (!allImages.some((img) => img.src === gi.src)) {
         allImages.push({ src: gi.src, alt: gi.alt });
       }
@@ -62,6 +62,8 @@ export function ProjectPreview({
 
   if (project.previewImage) {
     const activeImage = allImages[activeIndex] ?? project.previewImage;
+    const isDocument = (project.galleryImages?.length ?? 0) > 5 || project.name === "CarKit";
+    const imageFitClass = isDocument ? "object-contain bg-black/30" : "object-cover";
 
     return (
       <div className="project-card-media project-card-media-image aspect-[16/10] w-full overflow-hidden bg-background relative">
@@ -84,7 +86,7 @@ export function ProjectPreview({
               key={activeImage.src}
               src={activeImage.src}
               alt={activeImage.alt}
-              className={`h-full w-full object-cover transition-opacity duration-200 ${
+              className={`h-full w-full ${imageFitClass} transition-opacity duration-200 ${
                 imageLoaded && fadingIn ? "opacity-100" : "opacity-0"
               }`}
               loading="lazy"

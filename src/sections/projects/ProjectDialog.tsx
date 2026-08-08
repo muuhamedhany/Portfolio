@@ -1,5 +1,5 @@
 import * as Dialog from "@radix-ui/react-dialog";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { X, ArrowUpRight, ChevronLeft, ChevronRight } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import type { Project } from "@/sections/projects/projectsData";
@@ -181,8 +181,8 @@ function EquippedInventory({ project }: { project: Project }) {
   );
 }
 
-/* ─── Image Carousel Component ─── */
-function ProjectGalleryCarousel({ images }: { images: { src: string; alt: string; title?: string }[] }) {
+/* ─── High-End Image Gallery Component ─── */
+function HighEndGalleryCarousel({ images }: { images: { src: string; alt: string; title?: string }[] }) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [direction, setDirection] = useState<1 | -1>(1);
 
@@ -196,11 +196,22 @@ function ProjectGalleryCarousel({ images }: { images: { src: string; alt: string
     setCurrentIndex((prev) => (prev === images.length - 1 ? 0 : prev + 1));
   };
 
+  // Keyboard navigation
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "ArrowLeft") prevImage();
+      if (e.key === "ArrowRight") nextImage();
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [currentIndex, images.length]);
+
   const current = images[currentIndex];
+  const isDocument = images.length > 5;
 
   const slideVariants = {
     enter: (dir: number) => ({
-      x: dir > 0 ? "100%" : "-100%",
+      x: dir > 0 ? "20%" : "-20%",
       opacity: 0,
     }),
     center: {
@@ -208,78 +219,94 @@ function ProjectGalleryCarousel({ images }: { images: { src: string; alt: string
       opacity: 1,
     },
     exit: (dir: number) => ({
-      x: dir < 0 ? "100%" : "-100%",
+      x: dir < 0 ? "20%" : "-20%",
       opacity: 0,
     }),
   };
 
   return (
-    <div className="relative w-full aspect-[16/10] overflow-hidden bg-background group">
-      <AnimatePresence custom={direction} mode="wait" initial={false}>
-        <motion.img
-          key={currentIndex}
-          src={current.src}
-          alt={current.alt}
-          custom={direction}
-          variants={slideVariants}
-          initial="enter"
-          animate="center"
-          exit="exit"
-          transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
-          className="h-full w-full object-cover select-none"
-        />
-      </AnimatePresence>
+    <div className="flex flex-col w-full h-full bg-background group select-none overflow-hidden">
+      {/* ── Main Viewport ── */}
+      <div
+        className={`relative w-full overflow-hidden ${
+          isDocument
+            ? "h-[540px] sm:h-[640px] max-h-[72vh] flex items-center justify-center bg-black/40"
+            : "aspect-[16/10] bg-background"
+        }`}
+      >
+        <AnimatePresence custom={direction} mode="wait" initial={false}>
+          <motion.img
+            key={currentIndex}
+            src={current.src}
+            alt={current.alt}
+            custom={direction}
+            variants={slideVariants}
+            initial="enter"
+            animate="center"
+            exit="exit"
+            transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+            className={`h-full w-full ${
+              isDocument ? "object-contain bg-transparent p-1" : "object-cover"
+            }`}
+          />
+        </AnimatePresence>
 
-      {/* Prev / Next Arrows */}
-      {images.length > 1 && (
-        <>
-          <button
-            type="button"
-            onClick={prevImage}
-            className="absolute left-2 top-1/2 -translate-y-1/2 z-10 flex h-8 w-8 items-center justify-center border border-[var(--pixel-frame)] bg-background/90 text-foreground shadow-[2px_2px_0_var(--pixel-shadow)] hover:bg-[var(--pixel-active)] hover:text-[var(--pixel-active-foreground)] transition-colors cursor-pointer"
-            aria-label="Previous image"
-          >
-            <ChevronLeft className="h-4 w-4" />
-          </button>
-
-          <button
-            type="button"
-            onClick={nextImage}
-            className="absolute right-2 top-1/2 -translate-y-1/2 z-10 flex h-8 w-8 items-center justify-center border border-[var(--pixel-frame)] bg-background/90 text-foreground shadow-[2px_2px_0_var(--pixel-shadow)] hover:bg-[var(--pixel-active)] hover:text-[var(--pixel-active-foreground)] transition-colors cursor-pointer"
-            aria-label="Next image"
-          >
-            <ChevronRight className="h-4 w-4" />
-          </button>
-        </>
-      )}
-
-      {/* Title & Dots Overlay Bar */}
-      <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/85 via-black/50 to-transparent p-3 flex items-center justify-between z-10 pointer-events-none">
-        <span className="font-mono text-[10px] uppercase tracking-wider text-white truncate max-w-[65%] shadow-sm">
-          {current.title ?? current.alt}
-        </span>
-
-        {/* Carousel Indicators */}
+        {/* Prev / Next Arrows (Overlay) */}
         {images.length > 1 && (
-          <div className="flex items-center gap-1.5 pointer-events-auto">
-            {images.map((img, idx) => (
-              <button
-                key={img.src}
-                type="button"
-                onClick={() => {
-                  setDirection(idx > currentIndex ? 1 : -1);
-                  setCurrentIndex(idx);
-                }}
-                className={`h-2 transition-all cursor-pointer ${
-                  idx === currentIndex
-                    ? "w-5 bg-[var(--accent-to)] shadow-[0_0_8px_var(--accent-to)]"
-                    : "w-2 bg-white/40 hover:bg-white/70"
-                }`}
-                aria-label={`Go to slide ${idx + 1}`}
-              />
-            ))}
-          </div>
+          <>
+            <button
+              type="button"
+              onClick={prevImage}
+              className="absolute left-3 top-1/2 -translate-y-1/2 z-10 flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center border border-[var(--pixel-frame)] bg-background/90 text-foreground shadow-[2px_2px_0_var(--pixel-shadow)] hover:bg-[var(--pixel-active)] hover:text-[var(--pixel-active-foreground)] transition-colors cursor-pointer"
+              aria-label="Previous image"
+            >
+              <ChevronLeft className="h-4 w-4 sm:h-5 sm:w-5" />
+            </button>
+
+            <button
+              type="button"
+              onClick={nextImage}
+              className="absolute right-3 top-1/2 -translate-y-1/2 z-10 flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center border border-[var(--pixel-frame)] bg-background/90 text-foreground shadow-[2px_2px_0_var(--pixel-shadow)] hover:bg-[var(--pixel-active)] hover:text-[var(--pixel-active-foreground)] transition-colors cursor-pointer"
+              aria-label="Next image"
+            >
+              <ChevronRight className="h-4 w-4 sm:h-5 sm:w-5" />
+            </button>
+          </>
         )}
+
+        {/* Title & Navigation Overlay */}
+        <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/85 via-black/40 to-transparent p-3 flex items-center justify-between z-10 pointer-events-none">
+          <span className="font-mono text-[10px] sm:text-[11px] uppercase tracking-wider text-white truncate max-w-[65%] shadow-sm">
+            {current.title ?? current.alt}
+          </span>
+
+          {isDocument ? (
+            <span className="font-mono text-[11px] font-medium text-white/90 bg-black/50 px-2 py-0.5 rounded border border-white/10">
+              {currentIndex + 1} / {images.length}
+            </span>
+          ) : (
+            images.length > 1 && (
+              <div className="flex items-center gap-1.5 pointer-events-auto">
+                {images.map((img, idx) => (
+                  <button
+                    key={img.src}
+                    type="button"
+                    onClick={() => {
+                      setDirection(idx > currentIndex ? 1 : -1);
+                      setCurrentIndex(idx);
+                    }}
+                    className={`h-2 transition-all cursor-pointer ${
+                      idx === currentIndex
+                        ? "w-5 bg-[var(--accent-to)] shadow-[0_0_8px_var(--accent-to)]"
+                        : "w-2 bg-white/40 hover:bg-white/70"
+                    }`}
+                    aria-label={`Go to slide ${idx + 1}`}
+                  />
+                ))}
+              </div>
+            )
+          )}
+        </div>
       </div>
     </div>
   );
@@ -448,7 +475,7 @@ export function ProjectDetailDialog({ project }: { project: Project }) {
                     exit={{ opacity: 0 }}
                     transition={{ duration: 0.18 }}
                   >
-                    <ProjectGalleryCarousel images={project.galleryImages} />
+                    <HighEndGalleryCarousel images={project.galleryImages} />
                   </motion.div>
                 ) : (
                   <motion.div

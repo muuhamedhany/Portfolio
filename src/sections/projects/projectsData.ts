@@ -159,6 +159,11 @@ export const PROJECTS: Project[] = [
       src: "/projects/CarKitIPhone.png",
       alt: "CarKit Preview"
     },
+    galleryImages: Array.from({ length: 49 }, (_, i) => ({
+      src: `/projects/CarKit-Manual-${i + 1}.png`,
+      alt: `CarKit Manual Page ${i + 1}`,
+      title: `Page ${i + 1}`
+    })),
     featured: true,
   },
   {
