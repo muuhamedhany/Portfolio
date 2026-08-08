@@ -2,7 +2,7 @@ import { useEffect, useState, useRef } from "react";
 
 const ROLES = [
   "FULL-STACK DEV",
-  "UI/UX DESIGNER",
+  "FRONT-END FOCUSED",
 ];
 
 const GLITCH_GLYPHS = "!@#$%^&*()_+-=[]{}|;:<>?/░▒▓█+=";

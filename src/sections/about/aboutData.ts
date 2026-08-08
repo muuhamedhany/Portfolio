@@ -28,14 +28,11 @@ export type TechName =
   | "Tailwind"
   | "Node.js"
   | "Express.js"
-  | "PHP"
   | "PostgreSQL"
-  | "MySQL"
   | "Supabase"
   | "Git"
   | "Github"
-  | "Figma"
-  | "Framer Motion";
+  | "Figma";
 
 export const TECH_STACK: TechName[] = [
   "JavaScript",
@@ -45,7 +42,6 @@ export const TECH_STACK: TechName[] = [
   "Node.js",
   "Express.js",
   "PostgreSQL",
-  "MySQL",
   "Supabase",
   "Git",
   "Github",
@@ -61,14 +57,11 @@ export const TECH_ICONS: Record<TechName, { Icon: IconType; color: string }> = {
   Tailwind: { Icon: SiTailwindcss, color: "#06b6d4" },
   "Node.js": { Icon: SiNodedotjs, color: "#5fa04e" },
   "Express.js": { Icon: SiExpress, color: "#f2f2f2" },
-  PHP: { Icon: SiPhp, color: "#777bb4" },
   PostgreSQL: { Icon: SiPostgresql, color: "#4169e1" },
-  MySQL: { Icon: SiMysql, color: "#4479a1" },
   Supabase: { Icon: SiSupabase, color: "#3ecf8e" },
   Git: { Icon: SiGit, color: "#f05032" },
   Github: { Icon: SiGithub, color: "black" },
   Figma: { Icon: SiFigma, color: "#bb8cff" },
-  "Framer Motion": { Icon: SiFramer, color: "#f2f2f2" },
 };
 
 export const SOCIALS = [

@@ -194,7 +194,7 @@ export function Hero({ onNavigate, theme: _theme }: HeroProps) {
                   style={{ x: line1X, y: line1Y, fontSize: "clamp(5.5rem, 9.5vw, 9.6rem)" }}
                   className="block overflow-visible text-gradient-hover text-center relative z-10"
                 >
-                  {"Muhamed".split("").map((char, ci) => (
+                  {"Muuhamed".split("").map((char, ci) => (
                     <GlitchChar
                       key={`muh-${ci}`}
                       char={char}
