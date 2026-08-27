@@ -191,8 +191,8 @@ export function Hero({ onNavigate, theme: _theme }: HeroProps) {
                 {/* Line 1: MUHAMED (Purple gradient display, top interlocked layer) */}
                 <motion.span
                   variants={nameLineContainer}
-                  style={{ x: line1X, y: line1Y, fontSize: "clamp(5.5rem, 9.5vw, 9.6rem)" }}
-                  className="block overflow-visible text-gradient-hover text-center relative z-10"
+                  style={{ x: line1X, y: line1Y, fontSize: "clamp(3.85rem, 15vw, 9.6rem)" }}
+                  className="block overflow-visible text-gradient-hover text-center relative z-10 whitespace-nowrap"
                 >
                   {"Muuhamed".split("").map((char, ci) => (
                     <GlitchChar
@@ -208,8 +208,8 @@ export function Hero({ onNavigate, theme: _theme }: HeroProps) {
                 {/* Line 2: HANY (Interlocking directly into MUHAMED baseline with negative top margin) */}
                 <motion.span
                   variants={nameLineContainer}
-                  style={{ x: line2X, y: line2Y, fontSize: "clamp(5rem, 9.5vw, 9.6rem)" }}
-                  className="block overflow-visible -mt-7 sm:-mt-6 lg:-mt-12 xl:-mt-14 text-center relative z-20"
+                  style={{ x: line2X, y: line2Y, fontSize: "clamp(3.85rem, 15vw, 9.6rem)" }}
+                  className="block overflow-visible -mt-4 sm:-mt-6 lg:-mt-12 xl:-mt-14 text-center relative z-20 whitespace-nowrap"
                 >
                   {"Hany".split("").map((char, ci) => (
                     <GlitchChar
