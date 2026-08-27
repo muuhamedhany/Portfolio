@@ -14,11 +14,14 @@ import {
   Smartphone,
 } from "lucide-react";
 import {
+  SiCloudflare,
   SiExpress,
   SiFigma,
   SiFramer,
+  SiNextdotjs,
   SiNodedotjs,
   SiPostgresql,
+  SiPrisma,
   SiReact,
   SiSupabase,
   SiTailwindcss,
@@ -168,6 +171,67 @@ export const PROJECTS: Project[] = [
   },
   {
     index: "02",
+    name: "Nokhba",
+    category: "web",
+    shortBlurb:
+      "Bilingual EdTech marketplace and LMS for Egyptian secondary education — featuring code-based course monetization, automated assessments, and parent tracking.",
+    blurb:
+      "Commercial EdTech platform built to scale high-school education across Egypt. Educators publish and monetize curriculums via prepaid activation codes, students access interactive video lectures and timed exam engines, and parents monitor real-time academic progress — all powered by Neon Serverless Postgres and Cloudflare R2 edge storage.",
+    tags: ["Next.js 16", "React 19", "Neon Postgres", "Cloudflare R2", "Prisma", "Tailwind CSS v4", "TypeScript"],
+    stackGroups: [
+      {
+        label: "Frontend Core",
+        icon: "frontend",
+        items: [
+          { name: "Next.js 16", shortName: "Next 16" },
+          { name: "React 19", shortName: "React 19" },
+          { name: "TypeScript", shortName: "TS" },
+          { name: "Tailwind CSS v4", shortName: "Tailwind v4" },
+        ],
+      },
+      {
+        label: "Backend & Cloud",
+        icon: "backend",
+        items: [
+          { name: "Neon Serverless Postgres", shortName: "Neon Postgres" },
+          { name: "Cloudflare R2 Storage", shortName: "Cloudflare R2" },
+          { name: "Prisma ORM", shortName: "Prisma" },  
+        ],
+      },
+      {
+        label: "UI & Animations",
+        icon: "web",
+        items: [
+          { name: "Framer Motion", shortName: "Motion" },
+        ],
+      },
+      {
+        label: "Deployment & Edge",
+        icon: "deploy",
+        items: [
+          { name: "Vercel", shortName: "Vercel" },
+          { name: "Cloudflare CDN", shortName: "Cloudflare" },
+        ],
+      },
+    ],
+    links: [
+      { label: "Live", href: "https://nokhba-v2.vercel.app/", icon: "live" },
+      { label: "GitHub", href: "https://github.com/muuhamedhany/nokhba-v2", icon: "github" },
+    ],
+    previewImage: {
+      src: "/projects/Nokhba-Hero.png",
+      alt: "Nokhba Educational Platform Preview",
+    },
+    galleryImages: [
+      { src: "/projects/Nokhba-Hero.png", alt: "Nokhba Landing Page & Trust Metrics", title: "Landing Page & Live Trust Metrics" },
+      { src: "/projects/Nokhba-Library.png", alt: "Nokhba Curriculum Library & Filters", title: "Curriculum Library & Smart Filters" },
+      { src: "/projects/Nokhba-Teacher-Dashboard.png", alt: "Nokhba Teacher Management Studio", title: "Teacher Management Studio" },
+      { src: "/projects/Nokhba-Course-Builder.png", alt: "Nokhba Course Builder & Syllabus Editor", title: "Course Builder & Syllabus Editor" },
+      { src: "/projects/Nokhba-Registration.png", alt: "Nokhba Role-Based Onboarding", title: "Role-Based Registration & Onboarding" },
+    ],
+  },
+  {
+    index: "03",
     name: "Car Rental Platform",
     category: "web",
     shortBlurb:
@@ -216,7 +280,7 @@ export const PROJECTS: Project[] = [
     ]
   },
   {
-    index: "03",
+    index: "04",
     name: "Pure Store",
     category: "web",
     shortBlurb:
@@ -274,7 +338,7 @@ export const PROJECTS: Project[] = [
     ]
   },
   {
-    index: "04",
+    index: "05",
     name: "Workout & Diet App",
     category: "design",
     shortBlurb: "UI/UX case study — research-driven design, user flows, and a high-fidelity prototype. NTI graduation project.",
@@ -306,7 +370,7 @@ export const PROJECTS: Project[] = [
     }
   },
   {
-    index: "05",
+    index: "06",
     name: "VitalityAI",
     category: "web",
     shortBlurb: "Frontend contribution to an AI wellness platform — responsive UI, animation polish, and landing page refinement.",
@@ -346,10 +410,18 @@ export const STACK_GROUP_ICON: Record<ProjectStackIcon, LucideIcon> = {
 };
 
 export const TAG_ICON: Record<string, IconType> = {
+  "Next.js 16": SiNextdotjs,
+  "Next.js": SiNextdotjs,
+  "Neon Postgres": SiPostgresql,
+  "Neon": SiPostgresql,
+  "Cloudflare R2": SiCloudflare,
+  "Cloudflare": SiCloudflare,
+  "Prisma": SiPrisma,
   "React Native": SiReact,
   "React Native Expo": SiReact,
   React: SiReact,
   "React 19": SiReact,
+  "TypeScript": SiTypescript,
   "Three.js": SiThreedotjs,
   "Node.js": SiNodedotjs,
   Express: SiExpress,
@@ -359,6 +431,7 @@ export const TAG_ICON: Record<string, IconType> = {
   "Tailwind CSS v4": SiTailwindcss,
   "React Router 7": SiReactrouter,
   "Framer Motion": SiFramer,
+  "Bilingual i18n": SiReact,
   GSAP: SiGsap,
   Figma: SiFigma,
   "Frontend UI": SiReact,
@@ -368,7 +441,10 @@ export const TAG_ICON: Record<string, IconType> = {
 
 /* ─── Stack item → icon lookup ─── */
 export const STACK_ITEM_ICON: Record<string, IconType> = {
-  // React ecosystem
+  // Next & React ecosystem
+  "Next.js 16": SiNextdotjs,
+  "Next.js": SiNextdotjs,
+  "Next.js Route Handlers": SiNextdotjs,
   "React": SiReact,
   "React 19": SiReact,
   "React Native": SiReact,
@@ -391,8 +467,17 @@ export const STACK_ITEM_ICON: Record<string, IconType> = {
   "Node.js": SiNodedotjs,
   "Express": SiExpress,
   "Express 5": SiExpress,
-  // Databases
+  // Databases & Cloud Infrastructure
+  "Neon Serverless Postgres": SiPostgresql,
+  "Neon Postgres": SiPostgresql,
+  "Neon": SiPostgresql,
   "PostgreSQL": SiPostgresql,
+  "Prisma ORM": SiPrisma,
+  "Prisma": SiPrisma,
+  "Cloudflare R2 Storage": SiCloudflare,
+  "Cloudflare R2": SiCloudflare,
+  "Cloudflare CDN": SiCloudflare,
+  "Cloudflare": SiCloudflare,
   "Supabase": SiSupabase,
   "Supabase JS": SiSupabase,
   "Supabase Storage": SiSupabase,
@@ -400,6 +485,13 @@ export const STACK_ITEM_ICON: Record<string, IconType> = {
   "Tailwind CSS": SiTailwindcss,
   "Tailwind CSS v4": SiTailwindcss,
   "Framer Motion": SiFramer,
+  "Phosphor Icons": SiReact,
+  "High-End Haptics": SiTailwindcss,
+  // Architecture & Features
+  "Bilingual i18n (RTL/LTR)": SiReact,
+  "Role-Based Portals": SiReact,
+  "Interactive Quiz Engine": SiReact,
+  "Teacher Course Studio": SiReact,
   // Build tools
   "Vite": SiVite,
   "Vite 7": SiVite,
