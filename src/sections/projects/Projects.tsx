@@ -3,14 +3,16 @@ import { AnimatePresence, motion } from "motion/react";
 import { SlidersHorizontal, ChevronDown, Check, X } from "lucide-react";
 import { Reveal } from "@/components/shared/Reveal";
 import { ProjectCardWithDialog } from "@/sections/projects/ProjectCard";
-import { CATEGORIES, PROJECTS } from "@/sections/projects/projectsData";
+import { CATEGORIES } from "@/sections/projects/projectsData";
 import type { ProjectCategory } from "@/sections/projects/projectsData";
+import { useProjects } from "@/lib/context/ProjectsContext";
 
 export function Projects({ onProjectDialogOpenChange }: { onProjectDialogOpenChange?: (open: boolean) => void }) {
   const [activeCategory, setActiveCategory] = useState<ProjectCategory>("all");
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const { projects } = useProjects();
 
-  const filteredProjects = PROJECTS.filter((p) => {
+  const filteredProjects = projects.filter((p) => {
     if (activeCategory === "all") return true;
     return p.category === activeCategory;
   });
@@ -18,8 +20,9 @@ export function Projects({ onProjectDialogOpenChange }: { onProjectDialogOpenCha
   const activeCatObj = CATEGORIES.find((c) => c.id === activeCategory) ?? CATEGORIES[0];
   const activeCount =
     activeCategory === "all"
-      ? PROJECTS.length
-      : PROJECTS.filter((p) => p.category === activeCategory).length;
+      ? projects.length
+      : projects.filter((p) => p.category === activeCategory).length;
+
 
   return (
     <section className="relative">
@@ -36,8 +39,8 @@ export function Projects({ onProjectDialogOpenChange }: { onProjectDialogOpenCha
               {CATEGORIES.map((cat) => {
                 const count =
                   cat.id === "all"
-                    ? PROJECTS.length
-                    : PROJECTS.filter((p) => p.category === cat.id).length;
+                    ? projects.length
+                    : projects.filter((p) => p.category === cat.id).length;
 
                 const isActive = activeCategory === cat.id;
 
@@ -130,8 +133,8 @@ export function Projects({ onProjectDialogOpenChange }: { onProjectDialogOpenCha
                   {CATEGORIES.map((cat) => {
                     const count =
                       cat.id === "all"
-                        ? PROJECTS.length
-                        : PROJECTS.filter((p) => p.category === cat.id).length;
+                        ? projects.length
+                        : projects.filter((p) => p.category === cat.id).length;
                     const isActive = activeCategory === cat.id;
 
                     return (

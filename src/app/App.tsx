@@ -1,5 +1,11 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
+import { GoogleOAuthProvider } from "@react-oauth/google";
+import { AdminAuthProvider } from "@/lib/context/AdminAuthContext";
+import { ProjectsProvider } from "@/lib/context/ProjectsContext";
+import { AdminActionBar } from "@/components/admin/AdminActionBar";
+import { AdminLoginModal } from "@/components/admin/AdminLoginModal";
+import { AdminProjectDrawer } from "@/components/admin/AdminProjectDrawer";
 import { Nav } from "@/components/layout/Nav";
 import { Hero } from "@/sections/home/Hero";
 import { About } from "@/sections/about/About";
@@ -12,6 +18,8 @@ import { PixelThemeTransition } from "@/components/layout/PixelThemeTransition";
 import { SECTIONS } from "@/lib/constants/sections";
 import type { SectionId } from "@/lib/constants/sections";
 
+const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID || "";
+
 type Theme = "dark" | "light";
 
 const ORDER: SectionId[] = SECTIONS.map((s) => s.id);
@@ -23,7 +31,7 @@ function getInitialTheme(): Theme {
   return "dark"; // dark is the primary experience
 }
 
-export default function App() {
+function PortfolioApp() {
   const [theme, setTheme] = useState<Theme>(getInitialTheme);
   const [section, setSection] = useState<SectionId>("home");
   const [pending, setPending] = useState<SectionId | null>(null);
@@ -159,6 +167,10 @@ export default function App() {
 
   return (
     <div className="pixel-canvas relative h-svh overflow-hidden text-foreground">
+      <AdminActionBar />
+      <AdminLoginModal />
+      <AdminProjectDrawer />
+
       {!showIntro && (
         <>
           <Nav theme={theme} onToggle={toggle} active={section} onNavigate={navigate} />
@@ -206,3 +218,16 @@ export default function App() {
     </div>
   );
 }
+
+export default function App() {
+  return (
+    <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
+      <AdminAuthProvider>
+        <ProjectsProvider>
+          <PortfolioApp />
+        </ProjectsProvider>
+      </AdminAuthProvider>
+    </GoogleOAuthProvider>
+  );
+}
+

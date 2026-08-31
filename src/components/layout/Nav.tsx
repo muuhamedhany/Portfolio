@@ -9,6 +9,8 @@ import { ThemeToggle } from "@/components/shared/ThemeToggle";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { SECTIONS } from "@/lib/constants/sections";
 import type { SectionId } from "@/lib/constants/sections";
+import { KeyRound, ShieldCheck } from "lucide-react";
+import { useAdminAuth } from "@/lib/context/AdminAuthContext";
 
 interface NavProps {
   theme: "dark" | "light";
@@ -141,6 +143,7 @@ function NavItem({ section, isActive, isHint, onNavigate }: NavItemProps) {
 export function Nav({ theme, onToggle, active, onNavigate }: NavProps) {
   const [hintSectionId, setHintSectionId] = useState<SectionId | null>(null);
   const [isDockHovered, setIsDockHovered] = useState(false);
+  const { isAdmin, setIsLoginModalOpen } = useAdminAuth();
 
   useEffect(() => {
     if (isDockHovered) {
@@ -210,6 +213,34 @@ export function Nav({ theme, onToggle, active, onNavigate }: NavProps) {
 
           <span aria-hidden="true" className="mx-0.5 h-8 w-0.5 bg-[var(--pixel-frame)] opacity-60 shrink-0" />
           <ThemeToggle theme={theme} onToggle={onToggle} />
+
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <motion.button
+                type="button"
+                onClick={() => setIsLoginModalOpen(true)}
+                aria-label={isAdmin ? "Admin Console Active" : "Admin Login"}
+                className={`pixel-nav-control relative flex h-11 w-11 items-center justify-center overflow-hidden transition-all duration-200 cursor-pointer ${
+                  isAdmin ? "text-emerald-400 border-emerald-500/50" : "text-muted-foreground hover:text-foreground"
+                }`}
+                whileHover={{ y: -2, scale: 1.08 }}
+                whileTap={{ scale: 0.92 }}
+              >
+                {isAdmin ? (
+                  <ShieldCheck className="h-4 w-4" />
+                ) : (
+                  <KeyRound className="h-4 w-4" />
+                )}
+              </motion.button>
+            </TooltipTrigger>
+            <TooltipContent
+              side="top"
+              sideOffset={10}
+              className="pixel-tooltip px-3 py-2 font-mono text-[11px] uppercase tracking-[0.16em] [&>svg]:hidden"
+            >
+              {isAdmin ? "ADMIN ACTIVE" : "ADMIN ACCESS"}
+            </TooltipContent>
+          </Tooltip>
         </div>
       </div>
     </motion.nav>

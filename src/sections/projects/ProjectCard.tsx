@@ -1,10 +1,12 @@
 import { useState, useEffect, useRef } from "react";
 import type { IconType } from "react-icons";
-import { ArrowUpRight } from "lucide-react";
+import { ArrowUpRight, Pencil, Trash2 } from "lucide-react";
 import * as Dialog from "@radix-ui/react-dialog";
 import type { Project } from "@/sections/projects/projectsData";
 import { LINK_ICON, TAG_ICON } from "@/sections/projects/projectsData";
 import { ProjectDetailDialog } from "@/sections/projects/ProjectDialog";
+import { useAdminAuth } from "@/lib/context/AdminAuthContext";
+import { useProjects } from "@/lib/context/ProjectsContext";
 
 /* ─── Project Preview (image/tech-tile fallback) ─── */
 export function ProjectPreview({
@@ -147,6 +149,8 @@ export function ProjectPreview({
 /* ─── Project Card Trigger (no Dialog.Root — must be nested inside one) ─── */
 export function ProjectCard({ project }: { project: Project }) {
   const [isHovered, setIsHovered] = useState(false);
+  const { isAdmin } = useAdminAuth();
+  const { openEditDrawer, deleteProject } = useProjects();
 
   return (
     <Dialog.Trigger asChild>
@@ -164,6 +168,43 @@ export function ProjectCard({ project }: { project: Project }) {
 
             {/* Media Preview Box (Fixed aspect-[16/10]) */}
             <div className="relative mb-4 overflow-hidden border-2 border-border bg-background w-full shrink-0">
+              {/* Admin Quick Action Controls Overlay */}
+              {isAdmin && (
+                <div
+                  className="absolute top-2 right-2 z-20 flex items-center gap-1.5"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      e.preventDefault();
+                      openEditDrawer(project);
+                    }}
+                    className="flex h-7 items-center gap-1 border-2 border-[var(--pixel-frame)] bg-[var(--pixel-active)] px-2 font-mono text-[10px] font-bold uppercase text-white shadow-[2px_2px_0_var(--pixel-shadow)] hover:brightness-110 cursor-pointer"
+                    title="Edit project in Neon CMS"
+                  >
+                    <Pencil className="h-3 w-3" />
+                    <span>EDIT</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      e.preventDefault();
+                      if (window.confirm(`Delete project "${project.name}" from Neon database?`)) {
+                        deleteProject(project.id || project.name.toLowerCase().replace(/[^a-z0-9]+/g, '-'));
+                      }
+                    }}
+                    className="flex h-7 w-7 items-center justify-center border-2 border-red-500/80 bg-red-950 px-1 font-mono text-[10px] font-bold uppercase text-red-400 shadow-[2px_2px_0_var(--pixel-shadow)] hover:bg-red-900 cursor-pointer"
+                    title="Delete project from Neon CMS"
+                  >
+                    <Trash2 className="h-3 w-3" />
+                  </button>
+                </div>
+              )}
+
               <div className="h-full w-full transform-gpu transition-transform duration-300 group-hover:scale-[1.02]">
                 <ProjectPreview project={project} isHovered={isHovered} />
               </div>
