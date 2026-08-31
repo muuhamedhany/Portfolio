@@ -1,73 +1,83 @@
 import type { IconType } from "react-icons";
 import { Github, Instagram, Linkedin } from "lucide-react";
 import {
-  SiCss,
-  SiExpress,
-  SiFigma,
-  SiFramer,
-  SiGit,
-  SiGithub,
-  SiHtml5,
-  SiJavascript,
-  SiMysql,
-  SiNodedotjs,
-  SiPhp,
-  SiPostgresql,
   SiReact,
-  SiSupabase,
-  SiTailwindcss,
+  SiNextdotjs,
   SiTypescript,
+  SiJavascript,
+  SiTailwindcss,
+  SiFigma,
 } from "react-icons/si";
 
-export type TechName =
-  | "HTML"
-  | "CSS"
-  | "JavaScript"
-  | "TypeScript"
-  | "React"
-  | "Tailwind"
-  | "Node.js"
-  | "Express.js"
-  | "PostgreSQL"
-  | "Supabase"
-  | "Git"
-  | "Github"
-  | "Figma";
+export interface CoreTech {
+  id: string;
+  name: string;
+  category: "FRAMEWORK" | "LANGUAGE" | "STYLING" | "DESIGN";
+  description: string;
+  level: string;
+  color: string;
+  Icon: IconType;
+}
 
-export const TECH_STACK: TechName[] = [
-  "JavaScript",
-  "React",
-  "TypeScript",
-  "Tailwind",
-  "Node.js",
-  "Express.js",
-  "PostgreSQL",
-  "Supabase",
-  "Git",
-  "Github",
-  "Figma",
+export const CORE_TECH_STACK: CoreTech[] = [
+  {
+    id: "react",
+    name: "React",
+    category: "FRAMEWORK",
+    description: "Component-driven architecture, custom hooks, and reactive state systems.",
+    level: "Core Expert",
+    color: "#61dafb",
+    Icon: SiReact,
+  },
+  {
+    id: "nextjs",
+    name: "Next.js",
+    category: "FRAMEWORK",
+    description: "Server components, App Router, SSR/SSG, and fullstack API performance.",
+    level: "Production Ready",
+    color: "#ededed",
+    Icon: SiNextdotjs,
+  },
+  {
+    id: "typescript",
+    name: "TypeScript",
+    category: "LANGUAGE",
+    description: "Strict static typing, complex generic architectures, and rock-solid codebases.",
+    level: "Type-Safe Daily",
+    color: "#3178c6",
+    Icon: SiTypescript,
+  },
+  {
+    id: "javascript",
+    name: "JavaScript",
+    category: "LANGUAGE",
+    description: "Modern ESNext, asynchronous runtime, DOM performance, and web standards.",
+    level: "Foundation Deep",
+    color: "#f7df1e",
+    Icon: SiJavascript,
+  },
+  {
+    id: "tailwind",
+    name: "Tailwind CSS",
+    category: "STYLING",
+    description: "Utility-first design systems, v4 architecture, fluid responsive layouts.",
+    level: "Design System",
+    color: "#38bdf8",
+    Icon: SiTailwindcss,
+  },
+  {
+    id: "figma",
+    name: "Figma",
+    category: "DESIGN",
+    description: "UI/UX design, interactive prototyping, design tokens, and pixel craft.",
+    level: "Pixel Craft",
+    color: "#a259ff",
+    Icon: SiFigma,
+  },
 ];
-
-export const TECH_ICONS: Record<TechName, { Icon: IconType; color: string }> = {
-  HTML: { Icon: SiHtml5, color: "#e34f26" },
-  CSS: { Icon: SiCss, color: "#bb8cff" },
-  JavaScript: { Icon: SiJavascript, color: "#f7df1e" },
-  TypeScript: { Icon: SiTypescript, color: "#3178c6" },
-  React: { Icon: SiReact, color: "#61dafb" },
-  Tailwind: { Icon: SiTailwindcss, color: "#06b6d4" },
-  "Node.js": { Icon: SiNodedotjs, color: "#5fa04e" },
-  "Express.js": { Icon: SiExpress, color: "#f2f2f2" },
-  PostgreSQL: { Icon: SiPostgresql, color: "#4169e1" },
-  Supabase: { Icon: SiSupabase, color: "#3ecf8e" },
-  Git: { Icon: SiGit, color: "#f05032" },
-  Github: { Icon: SiGithub, color: "black" },
-  Figma: { Icon: SiFigma, color: "#bb8cff" },
-};
 
 export const SOCIALS = [
-  { label: "Instagram", value: "@muuhamedhany", href: "https://www.instagram.com/muuhamedhany/", icon: Instagram },
-  { label: "LinkedIn", value: "in/muuhammed-hany", href: "https://www.linkedin.com/in/muuhammed-hany", icon: Linkedin },
   { label: "GitHub", value: "muuhamedhany", href: "https://github.com/muuhamedhany", icon: Github },
+  { label: "LinkedIn", value: "in/muuhammed-hany", href: "https://www.linkedin.com/in/muuhammed-hany", icon: Linkedin },
+  { label: "Instagram", value: "@muuhamedhany", href: "https://www.instagram.com/muuhamedhany/", icon: Instagram },
 ];
-
-export const HERO_ROLES = ["Frontend developer", "UI/UX designer"];

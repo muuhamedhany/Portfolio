@@ -1,6 +1,7 @@
 import type { IncomingMessage, ServerResponse } from 'http';
 import { sql, DbProject } from './db';
 import { verifyGoogleToken, signAdminJwt, verifyAdminSession, setAuthCookie, clearAuthCookie } from './auth';
+import { getGitHubContributions } from './github';
 
 /**
  * Helper to parse JSON body from incoming request
@@ -134,6 +135,15 @@ export async function handleApiRequest(req: IncomingMessage, res: ServerResponse
     if (pathname === '/api/auth/logout' && method === 'POST') {
       clearAuthCookie(res);
       sendJson(res, 200, { success: true });
+      return true;
+    }
+
+    // ─── GITHUB: GET CONTRIBUTIONS (PUBLIC) ───
+    if (pathname === '/api/github/contributions' && method === 'GET') {
+      const username = parsedUrl.searchParams.get('username') || 'muuhamedhany';
+      const year = parseInt(parsedUrl.searchParams.get('year') || '2026', 10) || 2026;
+      const data = await getGitHubContributions(username, year);
+      sendJson(res, 200, data);
       return true;
     }
 
