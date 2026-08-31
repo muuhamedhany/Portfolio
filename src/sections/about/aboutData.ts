@@ -11,10 +11,9 @@ import {
 
 export interface CoreTech {
   id: string;
+  index: string;
   name: string;
-  category: "FRAMEWORK" | "LANGUAGE" | "STYLING" | "DESIGN";
-  description: string;
-  level: string;
+  shortName: string;
   color: string;
   Icon: IconType;
 }
@@ -22,55 +21,49 @@ export interface CoreTech {
 export const CORE_TECH_STACK: CoreTech[] = [
   {
     id: "react",
+    index: "01",
     name: "React",
-    category: "FRAMEWORK",
-    description: "Component-driven architecture, custom hooks, and reactive state systems.",
-    level: "Core Expert",
+    shortName: "RC",
     color: "#61dafb",
     Icon: SiReact,
   },
   {
     id: "nextjs",
+    index: "02",
     name: "Next.js",
-    category: "FRAMEWORK",
-    description: "Server components, App Router, SSR/SSG, and fullstack API performance.",
-    level: "Production Ready",
+    shortName: "NX",
     color: "#ededed",
     Icon: SiNextdotjs,
   },
   {
     id: "typescript",
+    index: "03",
     name: "TypeScript",
-    category: "LANGUAGE",
-    description: "Strict static typing, complex generic architectures, and rock-solid codebases.",
-    level: "Type-Safe Daily",
+    shortName: "TS",
     color: "#3178c6",
     Icon: SiTypescript,
   },
   {
     id: "javascript",
+    index: "04",
     name: "JavaScript",
-    category: "LANGUAGE",
-    description: "Modern ESNext, asynchronous runtime, DOM performance, and web standards.",
-    level: "Foundation Deep",
+    shortName: "JS",
     color: "#f7df1e",
     Icon: SiJavascript,
   },
   {
     id: "tailwind",
-    name: "Tailwind CSS",
-    category: "STYLING",
-    description: "Utility-first design systems, v4 architecture, fluid responsive layouts.",
-    level: "Design System",
+    index: "05",
+    name: "Tailwind",
+    shortName: "TW",
     color: "#38bdf8",
     Icon: SiTailwindcss,
   },
   {
     id: "figma",
+    index: "06",
     name: "Figma",
-    category: "DESIGN",
-    description: "UI/UX design, interactive prototyping, design tokens, and pixel craft.",
-    level: "Pixel Craft",
+    shortName: "FG",
     color: "#a259ff",
     Icon: SiFigma,
   },
