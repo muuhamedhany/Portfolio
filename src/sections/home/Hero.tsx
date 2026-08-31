@@ -7,6 +7,7 @@ import { GlitchTicker } from "@/sections/home/GlitchTicker";
 import { HeroParticleCanvas } from "@/sections/home/HeroParticleCanvas";
 import { EditorialMonogram } from "@/sections/home/EditorialMonogram";
 import { HeroStatusCapsule } from "@/sections/home/HeroStatusCapsule";
+import { MEDIA_URLS } from "@/lib/utils/media";
 
 /* ─── Motion variants ─── */
 const nameContainer = {
@@ -259,8 +260,10 @@ export function Hero({ onNavigate, theme: _theme }: HeroProps) {
 
               <div className="flex items-center justify-center gap-3">
                 <a
-                  href="/cv.pdf"
-                  download
+                  href={MEDIA_URLS.cv}
+                  download="Muhammed_Hany_CV.pdf"
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 border-2 border-border bg-card px-4 sm:px-5 py-2.5 sm:py-3 text-xs sm:text-sm font-medium text-foreground pixel-btn hover:border-foreground/30 transition-colors duration-200"
                 >
                   <Download className="h-3.5 w-3.5" aria-hidden="true" />

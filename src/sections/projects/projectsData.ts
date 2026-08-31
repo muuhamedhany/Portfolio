@@ -36,6 +36,7 @@ import {
   SiReactrouter,
   SiGsap,
 } from "react-icons/si";
+import { getMediaUrl } from "@/lib/utils/media";
 
 /* ─── Types ─── */
 export interface ProjectLink {
@@ -154,16 +155,16 @@ export const PROJECTS: Project[] = [
       { label: "Driver", href: "https://github.com/muuhamedhany/CarKit-Driver-Web", icon: "github" }
     ],
     previewVideo: {
-      src: "/projects/CarKitVid-optimized.mp4",
+      src: getMediaUrl("/projects/CarKitVid-optimized.mp4"),
       title: "CarKit project demo",
       type: "video/mp4",
     },
     previewImage: {
-      src: "/projects/CarKitIPhone.png",
+      src: getMediaUrl("/projects/CarKitIPhone.png"),
       alt: "CarKit Preview"
     },
     galleryImages: Array.from({ length: 47 }, (_, i) => ({
-      src: `/projects/CarKit-Manual-${i + 2}.png`,
+      src: getMediaUrl(`/projects/CarKit-Manual-${i + 2}.png`),
       alt: `CarKit Manual Page ${i + 2}`,
       title: `Page ${i + 1}`
     })),
@@ -219,15 +220,15 @@ export const PROJECTS: Project[] = [
       { label: "GitHub", href: "https://github.com/muuhamedhany/nokhba-v2", icon: "github" },
     ],
     previewImage: {
-      src: "/projects/Nokhba-Hero.png",
+      src: getMediaUrl("/projects/Nokhba-Hero.png"),
       alt: "Nokhba Educational Platform Preview",
     },
     galleryImages: [
-      { src: "/projects/Nokhba-Hero.png", alt: "Nokhba Landing Page & Trust Metrics", title: "Landing Page & Live Trust Metrics" },
-      { src: "/projects/Nokhba-Library.png", alt: "Nokhba Curriculum Library & Filters", title: "Curriculum Library & Smart Filters" },
-      { src: "/projects/Nokhba-Teacher-Dashboard.png", alt: "Nokhba Teacher Management Studio", title: "Teacher Management Studio" },
-      { src: "/projects/Nokhba-Course-Builder.png", alt: "Nokhba Course Builder & Syllabus Editor", title: "Course Builder & Syllabus Editor" },
-      { src: "/projects/Nokhba-Registration.png", alt: "Nokhba Role-Based Onboarding", title: "Role-Based Registration & Onboarding" },
+      { src: getMediaUrl("/projects/Nokhba-Hero.png"), alt: "Nokhba Landing Page & Trust Metrics", title: "Landing Page & Live Trust Metrics" },
+      { src: getMediaUrl("/projects/Nokhba-Library.png"), alt: "Nokhba Curriculum Library & Filters", title: "Curriculum Library & Smart Filters" },
+      { src: getMediaUrl("/projects/Nokhba-Teacher-Dashboard.png"), alt: "Nokhba Teacher Management Studio", title: "Teacher Management Studio" },
+      { src: getMediaUrl("/projects/Nokhba-Course-Builder.png"), alt: "Nokhba Course Builder & Syllabus Editor", title: "Course Builder & Syllabus Editor" },
+      { src: getMediaUrl("/projects/Nokhba-Registration.png"), alt: "Nokhba Role-Based Onboarding", title: "Role-Based Registration & Onboarding" },
     ],
   },
   {
@@ -270,13 +271,13 @@ export const PROJECTS: Project[] = [
       { label: "GitHub", href: "https://github.com/muuhamedhany/Car-Renral-REACT", icon: "github" }
     ],
     previewImage: {
-      src: "/projects/CarRental.png",
+      src: getMediaUrl("/projects/CarRental.png"),
       alt: "Car Rental Preview"
     },
     galleryImages: [
-      { src: "/projects/CarRental.png", alt: "Car Rental Landing Page", title: "Hero & Reservation" },
-      { src: "/projects/CarRentalModels.png", alt: "Car Rental Vehicle Models", title: "Fleet & Rates" },
-      { src: "/projects/CarRentalTeam.png", alt: "Car Rental Team Page", title: "Team Showcase" },
+      { src: getMediaUrl("/projects/CarRental.png"), alt: "Car Rental Landing Page", title: "Hero & Reservation" },
+      { src: getMediaUrl("/projects/CarRentalModels.png"), alt: "Car Rental Vehicle Models", title: "Fleet & Rates" },
+      { src: getMediaUrl("/projects/CarRentalTeam.png"), alt: "Car Rental Team Page", title: "Team Showcase" },
     ]
   },
   {
@@ -328,13 +329,13 @@ export const PROJECTS: Project[] = [
       { label: "GitHub", href: "https://github.com/muuhamedhany/E-Commerce-REACT", icon: "github" },
     ],
     previewImage: {
-      src: "/projects/PureStore.png",
+      src: getMediaUrl("/projects/PureStore.png"),
       alt: "PureStore Preview"
     },
     galleryImages: [
-      { src: "/projects/PureStoreShop.png", alt: "Pure Store Shop Page", title: "Product Catalog & Filtering" },
-      { src: "/projects/PureStoreDetails.png", alt: "Pure Store Product Details", title: "Product Details & Specs" },
-      { src: "/projects/PureStoreCart.png", alt: "Pure Store Shopping Cart", title: "Shopping Cart & Checkout" },
+      { src: getMediaUrl("/projects/PureStoreShop.png"), alt: "Pure Store Shop Page", title: "Product Catalog & Filtering" },
+      { src: getMediaUrl("/projects/PureStoreDetails.png"), alt: "Pure Store Product Details", title: "Product Details & Specs" },
+      { src: getMediaUrl("/projects/PureStoreCart.png"), alt: "Pure Store Shopping Cart", title: "Shopping Cart & Checkout" },
     ]
   },
   {
@@ -365,7 +366,7 @@ export const PROJECTS: Project[] = [
     ],
     links: [{ label: "Behance", href: "https://www.behance.net/gallery/234873613/UIUX-Workout-Diet-App", icon: "behance" }],
     previewImage: {
-      src: "/projects/ShapeUp.png",
+      src: getMediaUrl("/projects/ShapeUp.png"),
       alt: "ShapeUp Preview"
     }
   },
@@ -389,7 +390,7 @@ export const PROJECTS: Project[] = [
     ],
     links: [{ label: "Live", href: "https://ai-wellness-tracker-mocha.vercel.app/", icon: "live" }],
     previewImage: {
-      src: "/projects/VitalityAI.png",
+      src: getMediaUrl("/projects/VitalityAI.png"),
       alt: "VitalityAI landing page preview"
     }
   },
