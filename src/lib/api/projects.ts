@@ -64,11 +64,11 @@ export async function deleteProjectApi(id: string): Promise<void> {
   }
 }
 
-export async function loginWithGoogleApi(credential: string): Promise<AuthUser> {
+export async function loginWithGoogleApi(token: string, isAccessToken: boolean = false): Promise<AuthUser> {
   const res = await fetch('/api/auth/google', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ credential }),
+    body: JSON.stringify(isAccessToken ? { accessToken: token } : { credential: token }),
   });
 
   const data = await res.json();

@@ -40,8 +40,8 @@ export function AdminActionBar() {
             <span>ADMIN MODE</span>
             <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
           </div>
-          <span className="font-mono text-[9px] text-muted-foreground truncate max-w-[150px]">
-            {user.email}
+          <span className="font-mono text-[9px] text-emerald-400/90 truncate">
+            OWNER VERIFIED
           </span>
         </div>
       </div>

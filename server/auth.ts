@@ -39,19 +39,27 @@ export interface AdminUser {
 }
 
 /**
- * Verify a Google ID Token using Google's public endpoint
+ * Verify a Google ID Token or Access Token using Google's public endpoints
  */
-export async function verifyGoogleToken(idToken: string): Promise<AdminUser | null> {
+export async function verifyGoogleToken(
+  token: string,
+  type: 'id_token' | 'access_token' = 'id_token'
+): Promise<AdminUser | null> {
   try {
-    const res = await fetch(`https://oauth2.googleapis.com/tokeninfo?id_token=${encodeURIComponent(idToken)}`);
+    const url =
+      type === 'access_token'
+        ? `https://www.googleapis.com/oauth2/v3/userinfo?access_token=${encodeURIComponent(token)}`
+        : `https://oauth2.googleapis.com/tokeninfo?id_token=${encodeURIComponent(token)}`;
+
+    const res = await fetch(url);
     if (!res.ok) {
-      console.error('Google tokeninfo failed:', await res.text());
+      console.error('Google token verification failed:', await res.text());
       return null;
     }
     const data = await res.json();
 
-    // Verify audience matches our Client ID if provided
-    if (GOOGLE_CLIENT_ID && data.aud !== GOOGLE_CLIENT_ID) {
+    // Verify audience matches our Client ID if provided (for id_token)
+    if (type === 'id_token' && GOOGLE_CLIENT_ID && data.aud && data.aud !== GOOGLE_CLIENT_ID) {
       console.error('Token audience mismatch:', data.aud, 'expected:', GOOGLE_CLIENT_ID);
       return null;
     }

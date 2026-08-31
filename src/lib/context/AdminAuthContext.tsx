@@ -7,7 +7,7 @@ interface AdminAuthContextType {
   isLoading: boolean;
   isLoginModalOpen: boolean;
   setIsLoginModalOpen: (open: boolean) => void;
-  login: (credential: string) => Promise<void>;
+  login: (token: string, isAccessToken?: boolean) => Promise<void>;
   logout: () => Promise<void>;
 }
 
@@ -33,10 +33,10 @@ export function AdminAuthProvider({ children }: { children: React.ReactNode }) {
     checkStatus();
   }, [checkStatus]);
 
-  const login = async (credential: string) => {
+  const login = async (token: string, isAccessToken: boolean = false) => {
     setIsLoading(true);
     try {
-      const authUser = await loginWithGoogleApi(credential);
+      const authUser = await loginWithGoogleApi(token, isAccessToken);
       setUser(authUser);
       setIsLoginModalOpen(false);
     } finally {

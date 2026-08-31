@@ -71,28 +71,29 @@ export async function handleApiRequest(req: IncomingMessage, res: ServerResponse
     // ─── AUTH: GOOGLE LOGIN ───
     if (pathname === '/api/auth/google' && method === 'POST') {
       const body = await parseBody(req);
-      const idToken = body.idToken || body.credential;
+      const token = body.accessToken || body.access_token || body.idToken || body.credential;
+      const type = (body.accessToken || body.access_token) ? 'access_token' : 'id_token';
 
-      if (!idToken) {
-        sendJson(res, 400, { error: 'Missing Google ID Token / credential' });
+      if (!token) {
+        sendJson(res, 400, { error: 'Missing Google authentication token' });
         return true;
       }
 
-      const user = await verifyGoogleToken(idToken);
+      const user = await verifyGoogleToken(token, type);
       if (!user) {
-        sendJson(res, 401, { error: 'Failed to verify Google token' });
+        sendJson(res, 401, { error: 'Failed to verify Google account credentials.' });
         return true;
       }
 
       if (!user.isAdmin) {
         sendJson(res, 403, {
-          error: `Access restricted. ${user.email} is not authorized as portfolio administrator.`,
+          error: 'Access restricted: this account is not authorized as portfolio administrator.',
         });
         return true;
       }
 
-      const token = signAdminJwt(user);
-      setAuthCookie(res, token);
+      const jwtToken = signAdminJwt(user);
+      setAuthCookie(res, jwtToken);
 
       sendJson(res, 200, {
         success: true,
@@ -102,7 +103,7 @@ export async function handleApiRequest(req: IncomingMessage, res: ServerResponse
           picture: user.picture,
           isAdmin: true,
         },
-        token,
+        token: jwtToken,
       });
       return true;
     }
