@@ -8,6 +8,7 @@ interface PixelRevealProps {
   className?: string;
   gridCols?: number;
   gridRows?: number;
+  immediate?: boolean;
 }
 
 export function PixelReveal({
@@ -17,6 +18,7 @@ export function PixelReveal({
   className = "",
   gridCols = 8,
   gridRows = 5,
+  immediate = false,
 }: PixelRevealProps) {
   const reducedMotion = useReducedMotion() ?? false;
 
@@ -33,7 +35,7 @@ export function PixelReveal({
     return delays;
   }, [gridCols, gridRows]);
 
-  const baseDelay = 0.35 + delay;
+  const baseDelay = immediate ? delay : 0.35 + delay;
 
   if (reducedMotion) {
     return (

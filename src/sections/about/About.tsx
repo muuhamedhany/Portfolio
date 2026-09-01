@@ -55,8 +55,7 @@ export function About() {
                         "polygon(0 3px, 3px 3px, 3px 0, calc(100% - 3px) 0, calc(100% - 3px) 3px, 100% 3px, 100% calc(100% - 3px), calc(100% - 3px) calc(100% - 3px), calc(100% - 3px) 100%, 3px 100%, 3px calc(100% - 3px), 0 calc(100% - 3px))",
                     }}
                   >
-                    <Icon className="h-3.5 w-3.5" aria-hidden="true" />
-                    <span>{social.label}</span>
+                    <Icon className="h-5 w-5" aria-hidden="true" />
                   </a>
                 );
               })}
