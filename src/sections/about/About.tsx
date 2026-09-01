@@ -37,36 +37,29 @@ export function About() {
             <TechCards />
           </Reveal>
 
-          {/* ── Compact Social Links Footer Strip ── */}
+          {/* ── Compact Centered Social Links Footer Strip ── */}
           <Reveal variant="pixel" delay={0.22}>
-            <div className="flex flex-wrap items-center justify-between gap-3 pt-2 border-t border-border/60">
-              <div className="font-mono text-[10px] sm:text-xs text-muted-foreground uppercase tracking-widest flex items-center gap-2">
-                <span className="inline-block w-2 h-2 bg-emerald-500 rounded-none animate-pulse" />
-                <span>Open for collaborations & frontend engineering</span>
-              </div>
-
-              <div className="flex items-center gap-2">
-                {SOCIALS.map((social) => {
-                  const Icon = social.icon;
-                  return (
-                    <a
-                      key={social.label}
-                      href={social.href}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1.5 border border-border bg-card px-3 py-1.5 font-mono text-[10px] sm:text-[11px] font-medium text-foreground pixel-btn hover:border-foreground/40 hover:text-[var(--accent-to)] transition-colors duration-150 shadow-[2px_2px_0_var(--pixel-shadow)]"
-                      aria-label={social.label}
-                      style={{
-                        clipPath:
-                          "polygon(0 3px, 3px 3px, 3px 0, calc(100% - 3px) 0, calc(100% - 3px) 3px, 100% 3px, 100% calc(100% - 3px), calc(100% - 3px) calc(100% - 3px), calc(100% - 3px) 100%, 3px 100%, 3px calc(100% - 3px), 0 calc(100% - 3px))",
-                      }}
-                    >
-                      <Icon className="h-3 w-3 sm:h-3.5 sm:w-3.5" aria-hidden="true" />
-                      <span>{social.label}</span>
-                    </a>
-                  );
-                })}
-              </div>
+            <div className="flex items-center justify-center gap-3 pt-3 border-t border-border/60">
+              {SOCIALS.map((social) => {
+                const Icon = social.icon;
+                return (
+                  <a
+                    key={social.label}
+                    href={social.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 border border-border bg-card px-3.5 py-1.5 font-mono text-[10px] sm:text-[11px] font-medium text-foreground pixel-btn hover:border-foreground/40 hover:text-[var(--accent-to)] transition-colors duration-150 shadow-[2px_2px_0_var(--pixel-shadow)]"
+                    aria-label={social.label}
+                    style={{
+                      clipPath:
+                        "polygon(0 3px, 3px 3px, 3px 0, calc(100% - 3px) 0, calc(100% - 3px) 3px, 100% 3px, 100% calc(100% - 3px), calc(100% - 3px) calc(100% - 3px), calc(100% - 3px) 100%, 3px 100%, 3px calc(100% - 3px), 0 calc(100% - 3px))",
+                    }}
+                  >
+                    <Icon className="h-3.5 w-3.5" aria-hidden="true" />
+                    <span>{social.label}</span>
+                  </a>
+                );
+              })}
             </div>
           </Reveal>
 

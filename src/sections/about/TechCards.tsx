@@ -84,14 +84,14 @@ export function TechCards() {
 
               {/* Top Right: Pixel Corner Accent Marker */}
               <div className="absolute top-2.5 right-2.5 z-10">
-                <span className="block w-1.5 h-1.5 bg-muted-foreground/30 group-hover:bg-[var(--skill-color)] group-hover:shadow-[0_0_8px_var(--skill-color)] transition-all" />
+                <span className="block w-1.5 h-1.5 bg-muted-foreground/30 group-hover:bg-[var(--skill-color)] transition-all" />
               </div>
 
               {/* Center: Large Official Brand Icon (Only Icons, No Static Text) */}
               <div className="relative z-10 flex items-center justify-center">
                 <div className="relative flex h-14 w-14 sm:h-16 sm:w-16 items-center justify-center border border-border/70 bg-background/60 p-3 shadow-[2px_2px_0_var(--pixel-shadow)] transition-all duration-200 group-hover:scale-110 group-hover:border-[var(--skill-color)] group-hover:bg-[var(--pixel-field)]">
                   <Icon
-                    className="h-8 w-8 sm:h-9 sm:w-9 text-foreground/80 transition-all duration-200 group-hover:text-[var(--skill-color)] group-hover:drop-shadow-[0_0_14px_var(--skill-color)]"
+                    className="h-8 w-8 sm:h-9 sm:w-9 text-foreground/80 transition-all duration-200 group-hover:text-[var(--skill-color)]"
                     aria-hidden="true"
                   />
                 </div>
@@ -125,13 +125,18 @@ export function TechCards() {
               }}
             >
               <span
-                className="w-2 h-2 rounded-none shadow-[0_0_6px_currentColor]"
-                style={{ backgroundColor: hoveredTech.color }}
+                className="w-2 h-2 rounded-none"
+                style={{
+                  backgroundColor:
+                    hoveredTech.id === "nextjs"
+                      ? "var(--background)"
+                      : hoveredTech.color,
+                }}
               />
               <span
                 style={{
                   color:
-                    hoveredTech.color === "#ededed"
+                    hoveredTech.id === "nextjs"
                       ? "var(--background)"
                       : hoveredTech.color,
                 }}

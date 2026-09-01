@@ -32,7 +32,7 @@ export const CORE_TECH_STACK: CoreTech[] = [
     index: "02",
     name: "Next.js",
     shortName: "NX",
-    color: "#ededed",
+    color: "var(--foreground)",
     Icon: SiNextdotjs,
   },
   {
