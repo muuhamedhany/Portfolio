@@ -1,29 +1,54 @@
-import { useState, type CSSProperties } from "react";
-import { motion } from "motion/react";
+import { useState, useRef, type CSSProperties } from "react";
+import { motion, AnimatePresence, useMotionValue, useSpring } from "motion/react";
 import { Layers } from "lucide-react";
 import { CORE_TECH_STACK, type CoreTech } from "@/sections/about/aboutData";
 
 export function TechCards() {
-  const [hoveredId, setHoveredId] = useState<string | null>(null);
+  const [hoveredTech, setHoveredTech] = useState<CoreTech | null>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  // Mouse coordinates relative to the TechCards container
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+
+  // Smooth spring physics for fluid 60fps cursor following
+  const smoothX = useSpring(mouseX, { stiffness: 450, damping: 28 });
+  const smoothY = useSpring(mouseY, { stiffness: 450, damping: 28 });
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!containerRef.current) return;
+    const rect = containerRef.current.getBoundingClientRect();
+    mouseX.set(e.clientX - rect.left);
+    mouseY.set(e.clientY - rect.top);
+  };
+
+  const handleMouseLeave = () => {
+    setHoveredTech(null);
+  };
 
   return (
-    <div className="w-full select-none">
+    <div
+      ref={containerRef}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      className="relative w-full select-none"
+    >
       {/* ── Subheader Bar ── */}
       <div className="mb-4 flex items-center justify-between pb-2 border-b border-border/70 text-muted-foreground">
         <div className="flex items-center gap-2 font-mono text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.24em] text-foreground">
           <Layers className="h-3.5 w-3.5 text-[var(--accent-to)]" />
-          <span>CORE TECHNICAL ARSENAL</span>
+          <span>CORE STACK</span>
         </div>
         <div className="font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground/80">
           [ 06 PRIMARY DISCIPLINES ]
         </div>
       </div>
 
-      {/* ── 6-Column Minimalist Editorial Monogram Grid ── */}
+      {/* ── 6-Column Minimalist Icon Grid ── */}
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-3.5">
         {CORE_TECH_STACK.map((tech: CoreTech, idx: number) => {
           const Icon = tech.Icon;
-          const isHovered = hoveredId === tech.id;
+          const isHovered = hoveredTech?.id === tech.id;
 
           return (
             <motion.div
@@ -35,9 +60,9 @@ export function TechCards() {
                 delay: 0.04 * idx,
                 ease: [0.16, 1, 0.3, 1],
               }}
-              onMouseEnter={() => setHoveredId(tech.id)}
-              onMouseLeave={() => setHoveredId(null)}
-              className="group relative flex flex-col justify-between overflow-hidden border-2 border-border bg-card p-4 sm:p-5 text-card-foreground shadow-[3px_3px_0_var(--pixel-shadow)] transition-all duration-150 cursor-pointer hover:-translate-x-1 hover:-translate-y-1 hover:shadow-[5px_5px_0_var(--pixel-shadow)] hover:border-[var(--skill-color)]"
+              onMouseEnter={() => setHoveredTech(tech)}
+              onMouseLeave={() => setHoveredTech(null)}
+              className="group relative flex h-28 sm:h-32 lg:h-36 flex-col items-center justify-center overflow-hidden border-2 border-border bg-card p-3 sm:p-4 text-card-foreground shadow-[3px_3px_0_var(--pixel-shadow)] transition-all duration-150 cursor-pointer hover:-translate-x-1 hover:-translate-y-1 hover:shadow-[5px_5px_0_var(--pixel-shadow)] hover:border-[var(--skill-color)]"
               style={
                 {
                   "--skill-color": tech.color,
@@ -49,39 +74,77 @@ export function TechCards() {
               {/* Inner bevel overlay */}
               <div className="pointer-events-none absolute inset-0 shadow-[inset_1px_1px_0_var(--pixel-edge-light),inset_-1px_-1px_0_var(--pixel-edge-dark)] z-20" />
 
-              {/* Background ambient watermark glyph on hover */}
+              {/* Ambient background watermark glyph on hover */}
               <div
                 aria-hidden="true"
-                className="pointer-events-none absolute -right-4 -bottom-4 opacity-0 scale-75 transition-all duration-300 ease-out group-hover:opacity-[0.08] group-hover:scale-125 z-0"
+                className="pointer-events-none absolute -right-3 -bottom-3 opacity-0 scale-75 transition-all duration-300 ease-out group-hover:opacity-[0.08] group-hover:scale-125 z-0"
               >
-                <Icon className="h-32 w-32 text-foreground" />
+                <Icon className="h-28 w-28 text-foreground" />
               </div>
 
-              {/* Top Row: Corner Accent Tile */}
-              <div className="flex items-center justify-end relative z-10">
-                <span className="w-1.5 h-1.5 bg-muted-foreground/30 group-hover:bg-[var(--skill-color)] group-hover:shadow-[0_0_8px_var(--skill-color)] transition-all" />
+              {/* Top Right: Pixel Corner Accent Marker */}
+              <div className="absolute top-2.5 right-2.5 z-10">
+                <span className="block w-1.5 h-1.5 bg-muted-foreground/30 group-hover:bg-[var(--skill-color)] group-hover:shadow-[0_0_8px_var(--skill-color)] transition-all" />
               </div>
 
-              {/* Center: Hero Monogram Brand Glyph */}
-              <div className="my-6 sm:my-8 flex items-center justify-center relative z-10">
+              {/* Center: Large Official Brand Icon (Only Icons, No Static Text) */}
+              <div className="relative z-10 flex items-center justify-center">
                 <div className="relative flex h-14 w-14 sm:h-16 sm:w-16 items-center justify-center border border-border/70 bg-background/60 p-3 shadow-[2px_2px_0_var(--pixel-shadow)] transition-all duration-200 group-hover:scale-110 group-hover:border-[var(--skill-color)] group-hover:bg-[var(--pixel-field)]">
                   <Icon
-                    className="h-8 w-8 sm:h-9 sm:w-9 text-foreground/80 transition-all duration-200 group-hover:text-[var(--skill-color)] group-hover:drop-shadow-[0_0_12px_var(--skill-color)]"
+                    className="h-8 w-8 sm:h-9 sm:w-9 text-foreground/80 transition-all duration-200 group-hover:text-[var(--skill-color)] group-hover:drop-shadow-[0_0_14px_var(--skill-color)]"
                     aria-hidden="true"
                   />
                 </div>
-              </div>
-
-              {/* Bottom Row: High-Fashion Display Name */}
-              <div className="relative z-10 text-center border-t border-border/50 pt-2.5">
-                <h3 className="font-display text-xl sm:text-2xl tracking-normal text-foreground group-hover:text-[var(--accent-to)] transition-colors">
-                  {tech.name}
-                </h3>
               </div>
             </motion.div>
           );
         })}
       </div>
+
+      {/* ── Unclipped Global Sticky Cursor Tooltip (Floats smoothly above mouse outside cards) ── */}
+      <AnimatePresence>
+        {hoveredTech && (
+          <motion.div
+            key="cursor-tooltip"
+            initial={{ opacity: 0, scale: 0.85 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.85 }}
+            transition={{ duration: 0.08, ease: "easeOut" }}
+            style={{
+              left: smoothX,
+              top: smoothY,
+            }}
+            className="pointer-events-none absolute z-50 -translate-x-1/2 -translate-y-full -mt-2.5 select-none whitespace-nowrap"
+          >
+            {/* Tooltip Content Box */}
+            <div
+              className="border-2 border-[var(--pixel-frame)] bg-[var(--foreground)] px-3 py-1.5 text-[var(--background)] shadow-[4px_4px_0_var(--pixel-shadow)] font-display text-base sm:text-lg tracking-wider uppercase font-bold flex items-center gap-2"
+              style={{
+                clipPath:
+                  "polygon(0 3px, 3px 3px, 3px 0, calc(100% - 3px) 0, calc(100% - 3px) 3px, 100% 3px, 100% calc(100% - 3px), calc(100% - 3px) calc(100% - 3px), calc(100% - 3px) 100%, 3px 100%, 3px calc(100% - 3px), 0 calc(100% - 3px))",
+              }}
+            >
+              <span
+                className="w-2 h-2 rounded-none shadow-[0_0_6px_currentColor]"
+                style={{ backgroundColor: hoveredTech.color }}
+              />
+              <span
+                style={{
+                  color:
+                    hoveredTech.color === "#ededed"
+                      ? "var(--background)"
+                      : hoveredTech.color,
+                }}
+              >
+                {hoveredTech.name}
+              </span>
+            </div>
+
+            {/* Downward notch pointer pointing directly at mouse tip */}
+            <div className="mx-auto w-2 h-2 bg-[var(--foreground)] rotate-45 -mt-1 shadow-[1px_1px_0_var(--pixel-shadow)]" />
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
