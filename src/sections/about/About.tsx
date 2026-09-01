@@ -4,7 +4,7 @@ import { GithubContributions } from "@/sections/about/GithubContributions";
 import { TechCards } from "@/sections/about/TechCards";
 import { SOCIALS } from "@/sections/about/aboutData";
 
-export function About() {
+export function Stack() {
   return (
     <section className="relative min-h-svh w-full flex flex-col justify-center overflow-x-hidden">
       <div className="mx-auto flex min-h-svh w-full max-w-7xl flex-col justify-center px-4 py-16 sm:px-8 sm:py-20 lg:py-24">
@@ -18,7 +18,7 @@ export function About() {
                 className="font-display tracking-normal text-foreground leading-none"
                 style={{ fontSize: "clamp(2rem, 5.5vw, 3.2rem)" }}
               >
-                ABOUT
+                STACK
               </h2>
             </div>
           </div>
@@ -67,3 +67,5 @@ export function About() {
     </section>
   );
 }
+
+export const About = Stack;

@@ -1,10 +1,10 @@
 import { useRef, useState, useEffect } from "react";
 import { motion, AnimatePresence, useMotionValue, useSpring } from "motion/react";
 import { Icon } from "@iconify/react";
+import codeIcon from "@iconify-icons/pixelarticons/code";
 import folderIcon from "@iconify-icons/pixelarticons/folder";
 import homeIcon from "@iconify-icons/pixelarticons/home";
 import mailIcon from "@iconify-icons/pixelarticons/mail";
-import userIcon from "@iconify-icons/pixelarticons/user";
 import { ThemeToggle } from "@/components/shared/ThemeToggle";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { SECTIONS } from "@/lib/constants/sections";
@@ -24,7 +24,7 @@ type PixelNavIcon = typeof homeIcon;
 const SECTION_ICONS: Record<SectionId, PixelNavIcon> = {
   home: homeIcon,
   projects: folderIcon,
-  about: userIcon,
+  stack: codeIcon,
   contact: mailIcon,
 };
 

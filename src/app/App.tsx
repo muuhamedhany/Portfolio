@@ -8,7 +8,7 @@ import { AdminLoginModal } from "@/components/admin/AdminLoginModal";
 import { AdminProjectDrawer } from "@/components/admin/AdminProjectDrawer";
 import { Nav } from "@/components/layout/Nav";
 import { Hero } from "@/sections/home/Hero";
-import { About } from "@/sections/about/About";
+import { Stack } from "@/sections/about/About";
 import { Projects } from "@/sections/projects/Projects";
 import { Contact } from "@/sections/contact/Contact";
 import { Transition } from "@/components/layout/Transition";
@@ -150,8 +150,8 @@ function PortfolioApp() {
         return <Hero onNavigate={navigate} theme={theme} />;
       case "projects":
         return <Projects onProjectDialogOpenChange={setIsProjectDialogOpen} />;
-      case "about":
-        return <About />;
+      case "stack":
+        return <Stack />;
       case "contact":
         return <Contact />;
     }

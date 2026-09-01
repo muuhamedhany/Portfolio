@@ -408,7 +408,7 @@ App (pixel-canvas root)
 |---|---|---|
 | `00` | `home` | HOME |
 | `01` | `projects` | PROJECTS |
-| `02` | `about` | ABOUT |
+| `02` | `stack` | STACK |
 | `03` | `contact` | CONTACT |
 
 ### Hero Section Layout
