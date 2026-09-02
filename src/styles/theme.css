@@ -1611,6 +1611,29 @@
         6px 100%, 6px calc(100% - 6px), 0 calc(100% - 6px));
   }
 
+  .pixel-control-btn {
+    clip-path: polygon(0 3px, 3px 3px, 3px 0,
+        calc(100% - 3px) 0, calc(100% - 3px) 3px, 100% 3px,
+        100% calc(100% - 3px), calc(100% - 3px) calc(100% - 3px), calc(100% - 3px) 100%,
+        3px 100%, 3px calc(100% - 3px), 0 calc(100% - 3px));
+    box-shadow:
+      inset 1px 1px 0 var(--pixel-edge-light),
+      inset -1px -1px 0 var(--pixel-edge-dark),
+      2px 2px 0 var(--pixel-shadow);
+  }
+
+  .pixel-control-btn:active {
+    box-shadow: inset 1px 1px 0 var(--pixel-edge-dark);
+  }
+
+  .pixel-video-player {
+    image-rendering: auto;
+  }
+
+  .pixel-video-player svg {
+    image-rendering: pixelated;
+  }
+
   .project-detail-link:focus-visible {
     outline: 2px solid var(--ring);
     outline-offset: 2px;

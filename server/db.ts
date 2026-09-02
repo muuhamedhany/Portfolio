@@ -1,16 +1,39 @@
 import { neon } from '@neondatabase/serverless';
-import dotenv from 'dotenv';
-import path from 'path';
 
-dotenv.config();
-
-const databaseUrl = process.env.DATABASE_URL;
-
-if (!databaseUrl) {
-  console.warn('⚠️ DATABASE_URL is not set in environment.');
+// Safely load dotenv in local development if environment variables are not already present
+if (!process.env.DATABASE_URL) {
+  try {
+    const dotenv = await import('dotenv');
+    dotenv.default.config();
+  } catch {
+    // Environment variables already provided by hosting platform (Vercel)
+  }
 }
 
-export const sql = neon(databaseUrl || '');
+let _sqlInstance: ReturnType<typeof neon> | null = null;
+
+export function getDb(): ReturnType<typeof neon> {
+  if (!_sqlInstance) {
+    const databaseUrl = process.env.DATABASE_URL;
+    if (!databaseUrl) {
+      throw new Error('DATABASE_URL is not set in environment.');
+    }
+    _sqlInstance = neon(databaseUrl);
+  }
+  return _sqlInstance;
+}
+
+export const sql: ReturnType<typeof neon> = new Proxy((() => {}) as any, {
+  apply(_target, _thisArg, args: [TemplateStringsArray, ...any[]]) {
+    const db = getDb();
+    return (db as any)(...args);
+  },
+  get(_target, prop) {
+    const db = getDb();
+    const val = (db as any)[prop];
+    return typeof val === 'function' ? val.bind(db) : val;
+  },
+});
 
 export interface DbProject {
   id: string;

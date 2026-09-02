@@ -1,7 +1,7 @@
 import type { IncomingMessage, ServerResponse } from 'http';
-import { sql, DbProject } from './db';
-import { verifyGoogleToken, signAdminJwt, verifyAdminSession, setAuthCookie, clearAuthCookie } from './auth';
-import { getGitHubContributions } from './github';
+import { sql, DbProject } from './db.ts';
+import { verifyGoogleToken, signAdminJwt, verifyAdminSession, setAuthCookie, clearAuthCookie } from './auth.ts';
+import { getGitHubContributions } from './github.ts';
 
 /**
  * Helper to parse JSON body from incoming request
@@ -32,10 +32,38 @@ function sendJson(res: ServerResponse, status: number, data: any) {
   res.end(JSON.stringify(data));
 }
 
+function resolveMediaUrl(path: string | undefined): string | undefined {
+  if (!path) return undefined;
+  if (/^(?:https?:|\/\/|data:)/i.test(path)) return path;
+  const normalized = path.startsWith('/') ? path : `/${path}`;
+  const baseUrl = (
+    process.env.VITE_CLOUDFLARE_R2_PUBLIC_URL ||
+    process.env.VITE_MEDIA_BASE_URL ||
+    ''
+  ).replace(/\/+$/, '');
+  return baseUrl ? `${baseUrl}${normalized}` : normalized;
+}
+
 /**
  * Format DB row to Project object matching frontend types
  */
 function formatProject(row: any) {
+  const previewImage = row.preview_image
+    ? typeof row.preview_image === 'string'
+      ? JSON.parse(row.preview_image)
+      : row.preview_image
+    : undefined;
+  const previewVideo = row.preview_video
+    ? typeof row.preview_video === 'string'
+      ? JSON.parse(row.preview_video)
+      : row.preview_video
+    : undefined;
+  const galleryImages = row.gallery_images
+    ? Array.isArray(row.gallery_images)
+      ? row.gallery_images
+      : JSON.parse(row.gallery_images)
+    : [];
+
   return {
     id: row.id,
     index: row.index,
@@ -46,9 +74,23 @@ function formatProject(row: any) {
     tags: Array.isArray(row.tags) ? row.tags : JSON.parse(row.tags || '[]'),
     stackGroups: Array.isArray(row.stack_groups) ? row.stack_groups : JSON.parse(row.stack_groups || '[]'),
     links: Array.isArray(row.links) ? row.links : JSON.parse(row.links || '[]'),
-    previewImage: row.preview_image ? (typeof row.preview_image === 'string' ? JSON.parse(row.preview_image) : row.preview_image) : undefined,
-    previewVideo: row.preview_video ? (typeof row.preview_video === 'string' ? JSON.parse(row.preview_video) : row.preview_video) : undefined,
-    galleryImages: row.gallery_images ? (Array.isArray(row.gallery_images) ? row.gallery_images : JSON.parse(row.gallery_images)) : [],
+    previewImage: previewImage
+      ? {
+          ...previewImage,
+          src: resolveMediaUrl(previewImage.src) || previewImage.src,
+        }
+      : undefined,
+    previewVideo: previewVideo
+      ? {
+          ...previewVideo,
+          src: resolveMediaUrl(previewVideo.src) || previewVideo.src,
+          poster: resolveMediaUrl(previewVideo.poster),
+        }
+      : undefined,
+    galleryImages: galleryImages.map((img: any) => ({
+      ...img,
+      src: resolveMediaUrl(img.src) || img.src,
+    })),
     featured: Boolean(row.featured),
     note: row.note || undefined,
     sortOrder: Number(row.sort_order || 0),
@@ -62,10 +104,11 @@ function formatProject(row: any) {
  */
 export async function handleApiRequest(req: IncomingMessage, res: ServerResponse): Promise<boolean> {
   const url = req.url || '';
-  if (!url.startsWith('/api/')) return false;
-
   const parsedUrl = new URL(url, `http://${req.headers.host || 'localhost'}`);
-  const pathname = parsedUrl.pathname;
+  let pathname = parsedUrl.pathname;
+  if (!pathname.startsWith('/api/') && pathname !== '/api') {
+    pathname = `/api${pathname.startsWith('/') ? pathname : `/${pathname}`}`;
+  }
   const method = (req.method || 'GET').toUpperCase();
 
   try {

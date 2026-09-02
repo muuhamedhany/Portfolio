@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "motion/react";
 import type { Project } from "@/sections/projects/projectsData";
 import { LINK_ICON, STACK_ITEM_ICON } from "@/sections/projects/projectsData";
 import { ProjectPreview } from "@/sections/projects/ProjectCard";
+import { PixelVideoPlayer } from "@/components/ui/PixelVideoPlayer";
 
 /* ─── Spring config ─── */
 const SPRING = { type: "spring" as const, stiffness: 360, damping: 28, mass: 0.9 };
@@ -592,23 +593,19 @@ export function ProjectDetailDialog({ project }: { project: Project }) {
                 {activeMediaTab === "video" && project.previewVideo ? (
                   <motion.div
                     key="video"
-                    className="relative aspect-video w-full overflow-hidden bg-black"
+                    className="relative w-full overflow-hidden bg-black"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
                     transition={{ duration: 0.18 }}
                   >
-                    <video
-                      className="h-full w-full object-cover"
-                      controls
-                      muted
+                    <PixelVideoPlayer
+                      src={project.previewVideo.src}
+                      title={project.previewVideo.title || `${project.name} DEMO`}
+                      poster={project.previewVideo.poster || project.previewImage?.src}
                       loop
-                      poster={project.previewVideo.poster}
-                      aria-label={project.previewVideo.title}
-                    >
-                      <source src={project.previewVideo.src} type={project.previewVideo.type ?? "video/mp4"} />
-                      Your browser does not support the video player.
-                    </video>
+                      embedded
+                    />
                   </motion.div>
                 ) : project.galleryImages && project.galleryImages.length > 0 ? (
                   <motion.div

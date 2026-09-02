@@ -1,11 +1,36 @@
 import type { Project } from '@/sections/projects/projectsData';
 import { PROJECTS as STATIC_PROJECTS } from '@/sections/projects/projectsData';
+import { getMediaUrl } from '@/lib/utils/media';
 
 export interface AuthUser {
   email: string;
   name?: string;
   picture?: string;
   isAdmin: boolean;
+}
+
+export function normalizeProjectMedia(project: Project): Project {
+  if (!project) return project;
+  return {
+    ...project,
+    previewImage: project.previewImage
+      ? {
+          ...project.previewImage,
+          src: getMediaUrl(project.previewImage.src),
+        }
+      : undefined,
+    previewVideo: project.previewVideo
+      ? {
+          ...project.previewVideo,
+          src: getMediaUrl(project.previewVideo.src),
+          poster: project.previewVideo.poster ? getMediaUrl(project.previewVideo.poster) : undefined,
+        }
+      : undefined,
+    galleryImages: project.galleryImages?.map((img) => ({
+      ...img,
+      src: getMediaUrl(img.src),
+    })),
+  };
 }
 
 export async function fetchProjectsApi(): Promise<Project[]> {
@@ -16,7 +41,7 @@ export async function fetchProjectsApi(): Promise<Project[]> {
     }
     const data = await res.json();
     if (data && Array.isArray(data.projects) && data.projects.length > 0) {
-      return data.projects;
+      return data.projects.map(normalizeProjectMedia);
     }
     return STATIC_PROJECTS;
   } catch (err) {
@@ -36,7 +61,7 @@ export async function createProjectApi(project: Partial<Project>): Promise<Proje
   if (!res.ok) {
     throw new Error(data.error || 'Failed to create project');
   }
-  return data.project;
+  return normalizeProjectMedia(data.project);
 }
 
 export async function updateProjectApi(id: string, project: Partial<Project>): Promise<Project> {
@@ -50,7 +75,7 @@ export async function updateProjectApi(id: string, project: Partial<Project>): P
   if (!res.ok) {
     throw new Error(data.error || 'Failed to update project');
   }
-  return data.project;
+  return normalizeProjectMedia(data.project);
 }
 
 export async function deleteProjectApi(id: string): Promise<void> {

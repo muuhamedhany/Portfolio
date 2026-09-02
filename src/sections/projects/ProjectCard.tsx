@@ -7,6 +7,7 @@ import { LINK_ICON, TAG_ICON } from "@/sections/projects/projectsData";
 import { ProjectDetailDialog } from "@/sections/projects/ProjectDialog";
 import { useAdminAuth } from "@/lib/context/AdminAuthContext";
 import { useProjects } from "@/lib/context/ProjectsContext";
+import { getMediaUrl } from "@/lib/utils/media";
 
 /* ─── Project Preview (image/tech-tile fallback) ─── */
 export function ProjectPreview({
@@ -21,11 +22,17 @@ export function ProjectPreview({
 
   // Gallery cycling state — only active when there are multiple images
   const allImages: { src: string; alt: string }[] = [];
-  if (project.previewImage) allImages.push(project.previewImage);
+  if (project.previewImage) {
+    allImages.push({
+      src: getMediaUrl(project.previewImage.src),
+      alt: project.previewImage.alt,
+    });
+  }
   if (project.galleryImages) {
     project.galleryImages.slice(0, 5).forEach((gi) => {
-      if (!allImages.some((img) => img.src === gi.src)) {
-        allImages.push({ src: gi.src, alt: gi.alt });
+      const resolvedSrc = getMediaUrl(gi.src);
+      if (!allImages.some((img) => img.src === resolvedSrc)) {
+        allImages.push({ src: resolvedSrc, alt: gi.alt });
       }
     });
   }
@@ -86,7 +93,7 @@ export function ProjectPreview({
           <>
             <img
               key={activeImage.src}
-              src={activeImage.src}
+              src={getMediaUrl(activeImage.src)}
               alt={activeImage.alt}
               className={`h-full w-full ${imageFitClass} transition-opacity duration-200 ${
                 imageLoaded && fadingIn ? "opacity-100" : "opacity-0"
