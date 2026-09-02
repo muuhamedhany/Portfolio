@@ -1,481 +1,256 @@
-# Portfolio — Design Concept & System
+# 🏛️ Portfolio Design System Specification (DESIGN.md)
 
-> A living reference for every visual and interaction decision made in this project.
-> Keep this in sync whenever you change a token, add a new pattern, or introduce a new component.
-
----
-
-## Table of Contents
-
-1. [Design Concept](#1-design-concept)
-2. [Color System](#2-color-system)
-3. [Typography](#3-typography)
-4. [Spacing & Grid](#4-spacing--grid)
-5. [The Pixel Language](#5-the-pixel-language)
-6. [Animation & Motion](#6-animation--motion)
-7. [Component Catalog](#7-component-catalog)
-8. [Page Architecture](#8-page-architecture)
-9. [Accessibility](#9-accessibility)
-10. [Tech Stack](#10-tech-stack)
+> **Aesthetic Family:** Cyber-Editorial & High-End Tech (Awwwards-Tier)  
+> **Target Audience:** Design-conscious tech recruiters, engineering leaders, founders, and high-ticket clients.  
+> **Design Read:** Solo senior engineer & creative developer portfolio, fusing precision cyber-craft (OLED black, subtle ambient glow, retro-pixel accents, glitch typography) with high-end editorial clarity (double-bezel hardware enclosures, generous macro-whitespace, and fluid spring physics).
 
 ---
 
-## 1. Design Concept
+## 1. Executive Summary & Design Read
 
-### Core Idea — "Digital Craftsperson"
+### 1.1 Core Aesthetic Read
+* **Identity:** Cyber-Editorial & High-End Tech.
+* **Tone:** Sophisticated, tactile, authoritative, futuristic yet disciplined.
+* **Anti-Default Discipline:**
+  - **No AI-Slop Defaults:** Banned are generic purple-wash radial blobs, Inter on slate-900, 3-column equal card grids, harsh drop-shadows, and floating badge stamps.
+  - **Single Accent Discipline:** Strict single-hue violet-cyan spectrum with sub-80% saturation on deep OLED black (`#040405`).
+  - **Zero Emojis in UI:** All UI feedback and labels utilize 1.5px/1.25px precision vector glyphs, never consumer emojis.
 
-The portfolio sits at the intersection of **two worlds**:
+### 1.2 The Three Dials Calibration
+Based on `design-taste-frontend` specification:
 
-| World | Symbol | Meaning |
-|---|---|---|
-| Design | ✎ Pencil | Craft, precision, tactile feel |
-| Development | `>` Chevron | Logic, code, forward motion |
-
-Both symbols appear together in the 3-D hero emblem and as the caption beneath it (`✎ design / > code`), and they inform every micro-decision in the interface.
-
-### Aesthetic Direction — Pixel-Art Meets Premium Dark UI
-
-The interface deliberately uses a **pixel/voxel aesthetic** — hard corners, 0 border-radius, notched clip-paths, step-function transitions, and blocky drop-shadows — while still feeling *premium*, not retro-gimmicky. The tension between the pixel language and smooth modern typography creates a distinctive, memorable character.
-
-Key reference points:
-- **Minecraft UI / JRPG HUD** → structural motifs (notched corners, inset bevels, pixel-step shadows)
-- **Figma / Linear** → calm, data-dense layouts with strong typographic hierarchy
-- **Terminal/IDE aesthetics** → monospaced labels, `UPPERCASE TRACKING`, index numbers
-
-### Dark-first, Light-polished
-
-`dark` is the **primary experience**. The app defaults to dark mode and the dark palette is the most fully designed. Light mode is a thoughtful, clean alternative — the accent purple simply shifts to a richer, deeper value and backgrounds go to warm off-white.
-
----
-
-## 2. Color System
-
-All tokens live in `src/styles/theme.css` as CSS custom properties on `:root` (light) and `.dark`.
-
-### Core Semantic Tokens
-
-| Token | Light | Dark | Role |
-|---|---|---|---|
-| `--background` | `#f7f6f9` | `#09080d` | Page background |
-| `--foreground` | `#15131c` | `#ededf2` | Primary text |
-| `--card` | `#ffffff` | `#100e16` | Elevated surfaces |
-| `--muted` | `#efecf4` | `#16131d` | Subtle fills |
-| `--muted-foreground` | `#6a6479` | `#9b94a8` | Secondary text |
-| `--border` | `rgba(20,18,30,.10)` | `rgba(255,255,255,.09)` | Dividers & outlines |
-| `--primary` | `#6558c7` | `#8b80df` | Interactive primary |
-| `--ring` | `#6558c7` | `#8b80df` | Focus outline |
-| `--destructive` | `#d4183d` | `#7f1d1d` | Error states |
-
-### Accent / Brand Scale
-
-A single-hue purple gradient that runs from deep indigo to a lighter violet. Used for gradient text, CTA buttons, active states, and the ambient glow orbs.
-
-```
---accent-from:  #5146a8  (dark: #7064cb)   <- deep anchor
---accent-mid:   #5d52b4  (dark: #8276d9)   <- midpoint
---accent-to:    #695ebf  (dark: #978ce5)   <- highlight
-```
-
-Gradient direction: `115deg` — slightly diagonal for energy.
-
-```css
---accent-gradient: linear-gradient(115deg, var(--accent-from) 0%, var(--accent-mid) 52%, var(--accent-to) 100%);
-```
-
-### Pixel-Specific Tokens
-
-These tokens exist solely to support the pixel/bevel language:
-
-| Token | Purpose |
-|---|---|
-| `--pixel-frame` | Border color for outer pixel frames (dark chrome) |
-| `--pixel-edge-light` | Top/left inset highlight for bevel |
-| `--pixel-edge-dark` | Bottom/right inset shadow for bevel |
-| `--pixel-active` | Fill for active/selected pixel controls |
-| `--pixel-active-foreground` | Text on active pixel controls |
-| `--pixel-shadow` | Offset hard-shadow color (not box-shadow blur) |
-| `--pixel-field` | Background of the emblem/canvas panels |
-| `--pixel-field-strong` | Stronger variant for corner accent tiles |
-| `--grid-line` | Subtle grid overlay lines |
-
-### Transition-Specific Tokens
-
-Used *only* during the page transition animation:
-
-| Token | Role |
-|---|---|
-| `--transition-base` | Strip fill during the wipe |
-| `--transition-panel` | Progress-bar block fill |
-| `--transition-accent` | Highlighted center block |
-| `--transition-line` | Subtle grid overlay on the wipe screen |
-
-### Selection Color
-
-```css
-::selection {
-  background: var(--accent-to);
-  color: #fff;
-}
+```ts
+export const DESIGN_DIALS = {
+  DESIGN_VARIANCE: 8,  // 1 = Symmetry, 10 = Artsy Chaos (Asymmetrical bento, dynamic hero, organic particle dispersion)
+  MOTION_INTENSITY: 8, // 1 = Static, 10 = Cinematic Physics (GSAP ScrollTrigger, spring physics, magnetic pull, text scramble)
+  VISUAL_DENSITY: 4,   // 1 = Gallery/Airy, 10 = Packed Cockpit (Generous py-24 to py-36 spacing with rich telemetry in cards)
+} as const;
 ```
 
 ---
 
-## 3. Typography
+## 2. Color System & Theming Tokens
 
-Three typefaces — each assigned to a distinct semantic role:
+The interface implements a **Dual-State Cyber-OLED & Editorial Light** engine powered by CSS custom properties, transitioning via a canvas-based pixel dissolve.
 
-| Variable | Typeface | Role |
-|---|---|---|
-| `--font-display` | **Jersey 15** | Hero names, section titles, transition headings — the "character" voice |
-| `--font-sans` | **Manrope** | Body copy, paragraphs, UI labels — readable, modern |
-| `--font-mono` | **JetBrains Mono** | Tags, badges, kickers, tooltips, captions — technical/terminal voice |
+### 2.1 Dark Palette (Primary Experience)
+Deepest OLED black foundation with graphite structural tiers and controlled cyber luminescence:
 
-### Usage Rules
+| Token Name | Hex / Value | Semantic Role |
+| :--- | :--- | :--- |
+| `--background` | `#040405` | Absolute OLED black canvas |
+| `--surface-base` | `#09080d` | Secondary layer & full-width section grounding |
+| `--surface-raised` | `#100e16` | Card outer shell (Double-Bezel outer tray) |
+| `--surface-overlay` | `#16131d` | Card inner core & active interactive states |
+| `--foreground` | `#ededf2` | Primary typography (crisp off-white) |
+| `--muted-foreground`| `#9b94a8` | Secondary typography, timestamps, specs |
+| `--border` | `rgba(255, 255, 255, 0.08)` | Hairline structural dividers & bezels |
+| `--border-subtle` | `rgba(255, 255, 255, 0.04)` | Ambient card rims & grid lines |
+| `--accent` | `#8b80df` | Core interactive violet (links, active pills) |
+| `--accent-cyan` | `#06b6d4` | Secondary telemetry accent (live status, indicators) |
+| `--accent-gradient` | `linear-gradient(115deg, #7064cb 0%, #8276d9 52%, #978ce5 100%)` | Headline text-shimmer & hero glow |
+| `--glow-primary` | `rgba(139, 128, 223, 0.12)` | Hero ambient orb & focused card backlights |
 
-- **Jersey 15** only for large display text (>= 2rem). Never use it at small sizes.
-- **Manrope** everywhere `font-sans` is the default. Use `font-weight: 400` for body, `500` for labels and buttons.
-- **JetBrains Mono** for anything that reads like metadata: section indices (`00`, `01`...), tech stack tags, status labels, monospaced captions. Pair it with `uppercase` + wide `letter-spacing` (0.16–0.28em).
+### 2.2 Light Palette (Editorial Chalk & Ink)
+Clean, high-contrast titanium/chalk surface for daylight readability:
 
-### Scale
+| Token Name | Hex / Value | Semantic Role |
+| :--- | :--- | :--- |
+| `--background` | `#f7f6f9` | Warm chalk base |
+| `--surface-base` | `#efecf4` | Structural backdrop & card trays |
+| `--surface-raised` | `#ffffff` | Pure white card cores with crisp hairline borders |
+| `--foreground` | `#15131c` | Deep charcoal primary copy |
+| `--muted-foreground`| `#6a6479` | Medium muted slate for metadata |
+| `--border` | `rgba(20, 18, 30, 0.10)` | Tactile border dividers |
+| `--accent` | `#6558c7` | Deep electric purple for high light-mode contrast |
 
-No rigid scale — sizing is done with `clamp()` for fluid responsiveness:
-
-```css
-/* Hero name */
-font-size: clamp(3rem, 9vw, 7rem);
-
-/* Section title (About) */
-font-size: clamp(1.95rem, 8.9vw, 2.45rem);
-
-/* Transition heading */
-font-size: clamp(2rem, 7vw, 4.5rem);
-```
-
-Base: `16px` (`--font-size`).
-
----
-
-## 4. Spacing & Grid
-
-### Base Unit: **44px**
-
-Everything aligns to a 44 px grid — the same unit used for:
-- The repeating background grid (`background-size: 44px 44px`)
-- The pixel-canvas corner accent tiles (`176px = 4x44`, `88px = 2x44`)
-- Navigation button size (`h-11 w-11 = 44px`)
-
-### Layout
-
-The app is a **single-viewport, full-screen paged layout**. Each section fills `h-svh` and the user navigates between them via:
-- Mouse wheel (edge detection)
-- Touch swipe (>= 60px delta)
-- Keyboard (`Up` / `Down`, `PageUp` / `PageDown`)
-- Bottom nav bar
-
-### Nav Bar
-
-Fixed at the bottom center (`bottom: 1rem + env(safe-area-inset-bottom)`). A floating pixel dock with icon buttons.
-
-### Hero Section
-
-Two-column grid at `lg` breakpoint (`1.6fr / 1fr`). Stack vertically on smaller screens.
-
-Max content width: `max-w-6xl` with `px-5 sm:px-8` gutters.
+### 2.3 Contrast & Accessibility Guarantees
+- **WCAG AA Compliance:** All primary button labels and text on `--background` or `--surface-raised` guarantee a contrast ratio of $\ge 4.5:1$ (body) and $\ge 3:1$ (large display).
+- **No Ghost Button Traps:** Buttons never float transparently over photography or particles without a high-contrast backdrop scrim or 1px hairline stroke.
 
 ---
 
-## 5. The Pixel Language
+## 3. Typographic Hierarchy & Font System
 
-This is the core visual identity of the UI. Every "container" element speaks this language.
+A refined **Cyber-Editorial Hybrid Trio** that marries 8-bit retro gaming nostalgia with ultra-modern sans readability and monospace terminal telemetry.
 
-### Notched Corners (clip-path)
+### 3.1 Font Stack
+1. **Display Font:** `'Jersey 15', cursive, sans-serif`
+   - *Role:* Hero H1 signature name ("Muuhamed Hany"), section index numbers (`00`, `01`, `02`), and large monogram watermarks.
+   - *Discipline:* Rendered with tracking-normal to tight, never exceeding 2 to 3 lines on desktop.
+2. **Primary Sans:** `'Manrope', 'Geist Sans', -apple-system, sans-serif`
+   - *Role:* Section titles, sub-headlines, card titles, and body paragraphs.
+   - *Discipline:* High legibility, neutral geometric proportions, `leading-relaxed`, line length capped at `max-w-[65ch]`.
+3. **Monospace Font:** `'JetBrains Mono', ui-monospace, monospace`
+   - *Role:* Status badges, code snippets, git contribution telemetry, category filter pills, tech stack tags.
+   - *Discipline:* `uppercase tracking-[0.18em]` to `tracking-[0.25em]`, size range `10px` to `12px`.
 
-Instead of `border-radius`, elements use a 12-point polygon clip to create chamfered/notched corners — giving the appearance of a retro game UI panel.
+### 3.2 Typographic Scale
 
-**Standard notch formula** (parametric, based on notch depth `N`):
-
-```css
-clip-path: polygon(
-  0 Npx, Npx Npx, Npx 0,
-  calc(100% - Npx) 0, calc(100% - Npx) Npx, 100% Npx,
-  100% calc(100% - Npx), calc(100% - Npx) calc(100% - Npx), calc(100% - Npx) 100%,
-  Npx 100%, Npx calc(100% - Npx), 0 calc(100% - Npx)
-);
-```
-
-| Component | Notch depth |
-|---|---|
-| Nav dock (outer) | 7px |
-| Nav dock (surface) | 5px |
-| Hero emblem outer | 8px |
-| Hero emblem inner | 6px |
-| Pixel button | 5px |
-| Stat chip, tech chip | 4px |
-| Tooltip | 4px |
-| Status chip | 5px |
-| Side rail | 6px |
-| Project detail modal | 7px |
-
-### Bevel Inset Shadow
-
-All pixel panels use **inset box-shadows** to simulate a raised bevel — light top-left, dark bottom-right:
-
-```css
-box-shadow:
-  inset 2px 2px 0 var(--pixel-edge-light),
-  inset -2px -2px 0 var(--pixel-edge-dark);
-```
-
-This is the single most important rule for the pixel aesthetic.
-
-### Hard Offset Shadow
-
-Floating elements use a **hard, zero-blur drop shadow** offset diagonally — mimicking an isometric pixel shadow:
-
-```css
-/* box-shadow version (won't work with clip-path) */
-box-shadow: 4px 4px 0 0 var(--pixel-shadow);
-
-/* drop-shadow version (survives clip-path) */
-filter: drop-shadow(4px 4px 0 var(--pixel-shadow));
-```
-
-> **Rule:** Always use `filter: drop-shadow(...)` on elements that have a `clip-path`, because `box-shadow` is clipped away.
-
-### Press / Active Physics
-
-All interactive pixel elements translate themselves *into* their shadow on press — simulating a physical button:
-
-```css
-/* Hover: shift 1-2px right+down */
-transform: translate(1px, 1px);
-filter: drop-shadow(2px 2px 0 var(--pixel-shadow));
-
-/* Active/pressed: fully "bottoms out" — shadow collapses to 0 */
-transform: translate(3px, 3px);
-filter: drop-shadow(0 0 0 var(--pixel-shadow));
-```
-
-### Step-function Transitions
-
-Motion within the pixel system uses `steps()` timing functions to make movement feel "quantized" and digital rather than smooth and organic:
-
-```css
-transition: transform 80ms steps(2, end);
-transition: transform 150ms steps(3, end);
-transition: transform 160ms steps(4, end);
-```
-
-Smooth easing (`linear`, `cubic-bezier`) is reserved for **color and opacity** changes only.
-
-### Scanlines Overlay
-
-The hero section has a subtle CRT scanline texture via a `::before` pseudo-element:
-
-```css
-background: repeating-linear-gradient(
-  to bottom,
-  rgba(255, 255, 255, 0.025) 0px 1px,
-  transparent 1px 3px
-);
-```
-
-### Background Grid
-
-Applied to the root canvas (`pixel-canvas`). A 44px repeating grid for depth, plus decorative corner tile accents (stronger fills at the page corners to frame the content).
+| Level | Font Family | Size (Fluid Clamp) | Tracking / Leading | Description |
+| :--- | :--- | :--- | :--- | :--- |
+| **Hero Display** | Jersey 15 | `clamp(4.25rem, 15vw, 9.6rem)` | `leading-[0.82] tracking-tight` | Interlocking 2-line name composition |
+| **Section H2** | Jersey 15 / Sans | `clamp(2.25rem, 6vw, 4.5rem)` | `leading-[0.95] tracking-tight` | Section entrance headlines |
+| **Card H3** | Manrope / Sans | `clamp(1.25rem, 2.5vw, 1.75rem)`| `font-semibold leading-tight` | Project & feature titles |
+| **Body Large** | Manrope / Sans | `clamp(1.05rem, 1.5vw, 1.25rem)`| `leading-relaxed text-pretty` | Hero subtext & lead paragraphs ($\le 25$ words) |
+| **Body Normal** | Manrope / Sans | `0.95rem – 1.0rem` | `leading-relaxed max-w-[60ch]`| Case study descriptions & about prose |
+| **Micro / Tag** | JetBrains Mono | `0.6875rem – 0.75rem` (`11-12px`)| `uppercase tracking-[0.2em]` | Category pills, telemetry, status badges |
 
 ---
 
-## 6. Animation & Motion
+## 4. Page Architecture & Continuous Flow (AIDA)
 
-### Philosophy
+Replacing full-viewport wheel interception with a **Natural Continuous Smooth Scroll** powered by GSAP ScrollTrigger and Framer Motion (`motion/react`).
 
-> **Purposeful, quantized, never gratuitous.**
-
-Animation in this project falls into three tiers:
-
-| Tier | Purpose | Easing |
-|---|---|---|
-| **Entry/reveal** | Introduce content on page load | Spring `[0.16, 1, 0.3, 1]` |
-| **Interactive** | Respond to hover, click, drag | `steps()` or `linear` |
-| **Ambient** | Create life without demanding attention | `ease-in-out`, `infinite` |
-
-### Entry Animations (Framer Motion)
-
-The hero section orchestrates a staggered reveal:
-
-1. Status chip fades up — delay: 0.3s
-2. Name lines slide up from clipped overflow (stagger 0.09s, start 0.5s) — uses `overflow: hidden` on the parent to create a "curtain" reveal
-3. Role ticker fades in — delay: 0.95s
-4. Bio fades up — delay: 1.05s
-5. CTA buttons fade up — delay: 1.2s
-6. Stat badges stagger in — start 1.35s, stagger 0.08s
-7. 3D emblem slides in from right — delay: 1.3s
-8. Scroll hint appears + begins bobbing — delay: 1.6s
-
-Spring used: `ease: [0.16, 1, 0.3, 1]` — aggressive initial deceleration, overshoot-free.
-
-### Page Transition — Pixel Shutters
-
-When navigating between sections, 14 vertical strips animate in/out to cover and reveal the new page. Alternating strips animate from the top and bottom (`transformOrigin: top | bottom` based on odd/even index). Each strip is offset by `0.016s` for a cascading wipe effect.
-
-While covered, the destination section name (in Jersey 15 display font) + a progress-track indicator are revealed.
-
-### Ambient Animations
-
-| Effect | Location | Duration |
-|---|---|---|
-| Orb drift (primary) | Hero background | 22s alternate |
-| Orb drift (secondary) | Hero background | 28s alternate |
-| Status pulse ring | Hero status chip | 2.4s infinite |
-| Typewriter cursor blink | Role ticker, About | 760ms steps(2) |
-| Tech marquee scroll | About section | 28s linear |
-| Scroll hint bob | Hero bottom | 2s ease-in-out |
-| 3D emblem float | Hero right column | sine wave per-frame |
-
-### Reduced Motion
-
-All ambient and entry animations are disabled/simplified for `prefers-reduced-motion: reduce`. The typewriter shows all role titles as a static list. Page transitions collapse to near-instant. Tech chip hover/transform states are stripped.
-
----
-
-## 7. Component Catalog
-
-### `pixel-dock` + `pixel-dock-surface`
-
-The floating bottom navigation bar. Outer frame uses `--pixel-frame` color with a 7px notch clip and a hard drop-shadow. Inner surface has a bevel.
-
-### `pixel-nav-control`
-
-Individual navigation icon button (44x44px). States:
-- **Default:** background + bevel shadow
-- **Hover:** shifts 1px diagonally (steps), darkens border
-- **Active/pressed:** shifts 2px, shadow inverts
-- **data-active="true":** fills with `--pixel-active` purple, white dot indicator at bottom-right, inverted bevel
-
-### `pixel-tooltip`
-
-Notched 4px clip-path tooltip in inverted colors (foreground bg, background text). Hard drop-shadow.
-
-### `pixel-status-chip`
-
-Two-part inline component: a dim "Status" label segment, and a live segment with a pulsing pixel dot and "Available for work" text.
-
-### `hero-stat-chip`
-
-Small mono-spaced info pill with an icon, a dim label, and a bright value. Has a 4px notch clip and small bevel shadow.
-
-### `hero-emblem-outer` + `hero-emblem-inner`
-
-Double-bezel frame for the 3D scene. Outer uses 8px notch, inner uses 6px. Includes an ambient `drop-shadow` glow in the accent color, plus 4 `hero-emblem-corner` accent marks (L-shaped brackets in `--accent-to`).
-
-### `pixel-btn`
-
-Standard CTA button. 5px notch clip, `filter: drop-shadow` hard shadow (not box-shadow). Translates into shadow on hover, collapses on active.
-
-Primary variant uses `bg-gradient-accent` fill with `hero-cta-arrow-wrap` (a smaller notched arrow badge nested inside).
-
-### `about-tech-chip` + `about-social-link`
-
-68x68px square icon tiles with bevel + hard shadow + 5px notch. On hover: translate (-2,-2)px, border goes to the item's `--skill-color`, glyph desaturates out, a pixel tooltip label slides in from the side.
-
-### `project-card`
-
-Full-width card with 14px padding, bevel shadow. On hover (desktop only): lifts -3px/-3px, shadow expands to 6px, media border tints to `--accent-to`, cue arrow shifts right.
-
-### `project-detail-content`
-
-Fixed modal (z-51) with 7px notch clip, thick bevel, and 6px hard shadow. Entry: slides up 10px from slightly transparent. Exit: reverses. Backdrop uses a scanline overlay.
-
----
-
-## 8. Page Architecture
-
-```
-App (pixel-canvas root)
-  Nav (fixed bottom center)
-  PageDots (fixed right side)
-  AnimatePresence
-    motion.main  [key = current section]
-      Hero | Projects | About | Contact
-  AnimatePresence
-    Transition (pixel-shutter wipe, shown when navigation is pending)
+```mermaid
+graph TD
+  A[Floating Island Nav + Status Capsule] --> B[Section 00: Hero Attention]
+  B --> C[Section 01: Selected Works / Projects Interest - Sticky Stack]
+  C --> D[Section 02: Tech Stack & Arsenal Desire - Bento + GitHub Heatmap]
+  D --> E[Section 03: Contact & Colophon Action - Double-Bezel Form & Socials]
+  E --> F[System Colophon & Footer]
 ```
 
-### Section IDs & Indices
+### 4.1 Layout Rhythm & Spacing Rules
+- **Macro-Whitespace:** Vertical padding between major sections is strictly standardized at `py-24 sm:py-32 lg:py-40` (`100px` to `160px`).
+- **Initial Viewport Guarantee:** The Hero section fits entirely inside `min-h-[100dvh]` without forcing a scrollbar to discover the primary CTAs. Top padding capped at `pt-20 lg:pt-24`.
+- **Max Width Container:** Centered wrapper constrained to `max-w-7xl mx-auto px-4 sm:px-8 lg:px-12`.
+- **Horizontal Overflow Shield:** Root wrapper enforces `overflow-x-hidden w-full max-w-full` to eliminate horizontal scrollbars caused by off-screen spring reveals.
 
-| Index | ID | Label |
-|---|---|---|
-| `00` | `home` | HOME |
-| `01` | `projects` | PROJECTS |
-| `02` | `stack` | STACK |
-| `03` | `contact` | CONTACT |
+---
 
-### Hero Section Layout
+## 5. Component Specifications & Craft Details
+
+### 5.1 The "Double-Bezel" (Doppelrand) Card Architecture
+Never place a card flatly on the background. Major containers (project showcases, tech cards, drawer dialogs) must simulate machined physical hardware:
 
 ```
-section.scanlines
-  AmbientGlow              (absolute, z-0, two drifting orbs)
-  div.max-w-6xl.grid
-    div  (left column)
-      status chip
-      h1 name — staggered line reveal
-      role ticker — typewriter
-      bio paragraph
-      CTA buttons (View Projects + Download CV)
-      stat badges (Since / Based in)
-    motion.div  (right column, hidden below lg)
-      EmblemFrame (double-bezel)
-        Hero3D (lazy Three.js canvas)
-      caption ("design / code")
-  scroll-hint button  (absolute bottom center)
+┌─────────────────────────────────────────────────────────────┐
+│ Outer Shell: bg-white/[0.03], ring-1 ring-white/10, p-2    │
+│ rounded-[1.5rem]                                           │
+│  ┌───────────────────────────────────────────────────────┐  │
+│  │ Inner Core: bg-[#100e16], rounded-[calc(1.5rem-0.5rem)]│  │
+│  │ shadow-[inset_0_1px_1px_rgba(255,255,255,0.12)]       │  │
+│  │                                                       │  │
+│  │ Content: High-res video preview, title, tags, CTA      │  │
+│  └───────────────────────────────────────────────────────┘  │
+└─────────────────────────────────────────────────────────────┘
 ```
 
-### 3D Emblem (Hero3D)
+- **Outer Shell:** Wrapper element with `bg-white/[0.03]` (dark) or `bg-black/[0.03]` (light), hairline ring `border border-border/80`, `p-1.5` or `p-2`, and `rounded-[1.5rem]`.
+- **Inner Core:** Content enclosure with `bg-card` (`#100e16`), inner reflection `shadow-[inset_0_1px_1px_rgba(255,255,255,0.1)]`, and calculated concentric curve `rounded-[calc(1.5rem-0.375rem)]`.
 
-Built with vanilla Three.js (not react-three-fiber) for total control. Pixel ratio locked to `1` and `antialias: false` to preserve the pixelated look. `imageRendering: pixelated` on the canvas.
+### 5.2 Island Buttons with Nested Icon Chambers (Button-in-Button)
+Primary interactive buttons follow a nested pill structure:
+- **Geometry:** `rounded-full` or pixel-chamfered pill with `px-6 py-3.5`.
+- **Trailing Icon Chamber:** The arrow (`↗` or `Download`) NEVER sits naked beside the text. It lives in its own circular chamber (`w-8 h-8 rounded-full bg-white/10 flex items-center justify-center`).
+- **Kinetic Hover:** On button hover, the entire button scales slightly (`scale-[1.02]`), while the inner icon chamber translates diagonally (`translate-x-1 -translate-y-0.5 scale-110`).
+- **Single Line Rule:** Button text MUST fit on a single line at all viewports (2-3 words max: *"Explore Work"*, *"Get In Touch"*).
 
-Scene contains:
-- **Chevron `>`** — a 7x5 pixel matrix of `BoxGeometry` cubes (0.26 unit each, slight gap for pixel readability)
-- **Pencil** — a set of stacked boxes making a stylized pixel pencil (barrel, band, nib steps, ferrule, eraser, clip)
+### 5.3 Floating Island Navigation (Nav & Section Spy)
+- **Geometry:** Detached floating glass pill (`mt-5 mx-auto w-max rounded-full px-4 py-2 border border-white/10 bg-black/60 backdrop-blur-2xl`).
+- **Indicator:** Layout-animated active pill indicator (`layoutId="activeNavPill"`) gliding behind the active section label as the user scrolls.
+- **Micro-Controls:** Integrated theme toggle (triggering the pixel dissolve) and status ping ("Available for hire").
 
-Both objects sit inside an `emblem` group. The group rotates continuously on Y, floats on a sine wave, and responds to pointer drag with inertial momentum.
+### 5.4 Sticky-Stack Project Showcase
+- **Mechanism:** As the user scrolls vertically through Section 01, each project card pins at `top: 12vh` using GSAP ScrollTrigger.
+- **Card Scrub:** When the subsequent card arrives, the previous card scales down smoothly to `scale: 0.92`, dims to `opacity: 0.45`, and blurs slightly (`blur-[2px]`), building a physical stack.
+- **Media Presentation:** Each card features an auto-playing muted loop preview (Cloudflare R2 hosted WebP/MP4) with custom double-bezel framing and tag chips.
 
----
-
-## 9. Accessibility
-
-| Concern | Implementation |
-|---|---|
-| Keyboard navigation | Arrow keys / PageUp/Down navigate between sections |
-| Focus management | `focus-visible` outlines using `--ring` on all interactive elements |
-| Screen reader labels | `aria-label` on nav buttons, `aria-current="page"` on active item, `sr-only` spans for role ticker |
-| Reduced motion | Full `prefers-reduced-motion` block in theme.css; `useReducedMotion()` hook in Transition |
-| Touch paging | 60px swipe threshold to avoid accidental triggers |
-| Color contrast | Muted foreground values chosen to meet WCAG AA at common sizes |
-| Scrollbar | Hidden until hover to reduce visual noise, but still accessible |
-
----
-
-## 10. Tech Stack
-
-| Layer | Technology | Why |
-|---|---|---|
-| Framework | React 18 + TypeScript | Component model, type safety |
-| Build | Vite 6 | Fast HMR, ESM-native |
-| Styling | Tailwind CSS v4 + custom utilities | Token system via CSS variables; pixel utilities in theme.css |
-| Animation | Motion (Framer Motion v12) | Orchestrated entry, page transitions, scroll hints |
-| 3D | Three.js (vanilla) | Full control over pixel ratio, no abstraction overhead |
-| Icons | `@iconify-icons/pixelarticons` + Lucide React | Pixel-art icons for nav; Lucide for fine-detail UI icons |
-| UI Primitives | Radix UI | Accessible dialog, tooltip, and other headless components |
-| Fonts | Jersey 15, Manrope, JetBrains Mono | Via Google Fonts |
+### 5.5 Tech Arsenal Bento & GitHub Telemetry
+- **Gapless Execution:** Employs CSS Grid with `grid-auto-flow: dense` to mathematically guarantee zero empty grid holes.
+- **Heatmap Card:** Live interactive GitHub contribution chart showing recent commit density.
+- **Tech Capsules:** Curated stack categorized by discipline (Languages, Frontend, Backend & Cloud, Creative Tech), each carrying an official SVG logo (Simple Icons) and proficiency metadata.
 
 ---
 
-## Quick Reference — The 5 Rules
+## 6. Motion Choreography & Fluid Dynamics
 
-1. **No border-radius.** Use notched `clip-path` polygons instead. `--radius: 0px`.
-2. **Shadows are hard.** Always `N px N px 0 var(--pixel-shadow)` — never blurred. Use `filter: drop-shadow` when `clip-path` is present.
-3. **Motion is quantized.** Transforms use `steps()`. Only opacity and color use smooth easing.
-4. **Type has a role.** Jersey 15 = display. Manrope = body. JetBrains Mono = metadata/terminal.
-5. **Respect reduced motion.** Every animation must have a `prefers-reduced-motion` fallback.
+Static interfaces are prohibited. All animations simulate real mass, spring physics, and kinetic responsiveness.
+
+### 6.1 Spring & Cubic-Bezier Constants
+
+```ts
+export const MOTION_PRESETS = {
+  // Ultra-fluid agency transition for hover and layout shifts
+  fluidEase: [0.16, 1, 0.3, 1] as const, // Custom cubic-bezier
+  
+  // Spring configuration for physical interactions (magnetic pull, modal pop)
+  tactileSpring: {
+    type: "spring",
+    stiffness: 140,
+    damping: 18,
+    mass: 0.8,
+  },
+
+  // Heavy entrance transitions
+  revealSpring: {
+    duration: 0.85,
+    ease: [0.16, 1, 0.3, 1],
+  },
+} as const;
+```
+
+### 6.2 Kinetic Micro-Interactions
+1. **Glitch Text Scramble:** Display names and numerals trigger a high-speed ASCII/matrix character scramble on hover or section entry, settling into the final text over 400ms.
+2. **Hero Interactive Particle Canvas:** Canvas-based fluid particle bridge responding to cursor velocity with spring-based repatriation.
+3. **Magnetic Cursor Damping:** Primary CTAs and icon pills lightly pull toward the cursor coordinate when mouse distance $< 60px$.
+4. **Theme Pixel Dissolve:** Toggling between dark and light initiates a screen-filling pixelated wave transition originating from the click origin coordinate.
+
+### 6.3 Animation Guardrails
+- **GPU-Safe Rule:** Animate exclusively via `transform` (`x`, `y`, `scale`, `rotate`) and `opacity`. Strictly ban animating `top`, `left`, `width`, or `height`.
+- **Reduced Motion Support (`prefers-reduced-motion`):** When enabled, instantly bypass all GSAP pinning, scroll scrubs, and glitch intervals, falling back to clean static CSS opacity reveals.
+
+---
+
+## 7. Media, Iconography & Asset Standards
+
+### 7.1 Iconography Rules
+- **Single Family Standard:** Phosphor Icons (`@phosphor-icons/react`) or ultra-refined Lucide (`lucide-react`).
+- **Consistent Stroke:** Standardized at `1.5px` or `1.25px` across the entire application. No mixing thick 2.5px icons with thin 1px icons.
+- **Tech Brand Logos:** Official SVGs sourced strictly from `Simple Icons` (`https://cdn.simpleicons.org/{slug}`) to ensure genuine vector fidelity in both color themes.
+
+### 7.2 Media & Cloudflare R2 Optimization
+- **Format Order:**
+  1. Animated Previews: Loop MP4 (`video/mp4; codecs=hvc1,avc1`) or WebP with poster image fallback.
+  2. Static Photography: Optimized WebP or AVIF with explicit width and height dimensions to prevent cumulative layout shift (CLS).
+- **Hosting:** Media assets streamed from Cloudflare R2 (`https://media.muuhamedhany.dev/...`) with edge caching and range request support.
+
+---
+
+## 8. Mobile Ergonomics & Breakpoint Collapses
+
+Desktop asymmetry must translate into an intuitive, responsive mobile experience.
+
+### 8.1 Breakpoint Standards
+- Mobile: `< 640px` (`sm`)
+- Tablet: `640px – 1023px` (`md`)
+- Desktop: `1024px – 1279px` (`lg`)
+- Wide Canvas: `1280px+` (`xl`, `2xl`)
+
+### 8.2 Touch Ergonomics & Adaptations
+- **Touch Targets:** All interactive links, buttons, and drawer triggers maintain a minimum touch bounding box of `44px x 44px`.
+- **Asymmetric Grid Collapse:**
+  - Bento grids collapse from multi-column layouts to single-column vertical stacks (`grid-cols-1 gap-6`).
+  - Desktop sticky-stack card scaling simplifies to a vertical stack with standard top margins on mobile viewports to prevent iOS Safari gesture hijacking.
+- **Blur Throttling:** On touch devices (`@media (pointer: coarse)`), heavy backdrop blurs on moving elements are replaced with solid tinted fills (`bg-black/90`) to maintain 60fps scrolling.
+
+---
+
+## 9. Agency Pre-Flight Quality Checklist
+
+Before shipping any frontend section or component update, the code must satisfy this strict verification matrix:
+
+- [ ] **No Banned Fonts:** No Inter, Roboto, Arial, or generic system defaults used for display.
+- [ ] **Hero 2-Line Rule:** The main H1 does not exceed 2 lines on desktop; hero subtext is $\le 20$ words.
+- [ ] **Initial Viewport Integrity:** Hero fits within `min-h-[100dvh]` without forcing scrollbar to reach CTAs.
+- [ ] **Single Accent Rule:** One focused accent spectrum (violet/cyan) used consistently across all sections.
+- [ ] **Button Wrap Ban:** Every CTA fits on exactly 1 line at desktop; no multi-line wrapping.
+- [ ] **Double-Bezel Construction:** All major cards implement the outer shell + inner core nested architecture.
+- [ ] **Button-in-Button:** Primary CTAs nest trailing icons inside discrete circular capsules.
+- [ ] **Gapless Bento:** CSS grid utilizes `grid-auto-flow: dense` with zero vacant cells.
+- [ ] **Eyebrow Discipline:** Maximum 1 eyebrow tag per 3 sections (no repetitive uppercase stamps).
+- [ ] **WCAG AA Check:** Text contrast is $\ge 4.5:1$ on all interactive elements and content surfaces.
+- [ ] **GPU-Safe Motion:** Animations strictly mutate `transform` and `opacity`; no layout thrashing.
+- [ ] **Reduced Motion:** Verified clean fallback with `useReducedMotion()`.
+- [ ] **Mobile Collapse:** Verified that all asymmetric grids collapse cleanly below 768px.
