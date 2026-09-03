@@ -1,6 +1,6 @@
 import * as Dialog from "@radix-ui/react-dialog";
 import { useState, useRef, useEffect } from "react";
-import { X, ArrowUpRight, ChevronLeft, ChevronRight } from "lucide-react";
+import { X, ArrowUpRight, ChevronLeft, ChevronRight, Globe } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import type { Project } from "@/sections/projects/projectsData";
 import { LINK_ICON, STACK_ITEM_ICON } from "@/sections/projects/projectsData";
@@ -465,6 +465,15 @@ export function ProjectDetailDialog({ project }: { project: Project }) {
 
   const hasVideoAndImage = Boolean(project.previewVideo && project.previewImage);
 
+  // Prioritize Live demo first as primary CTA, then GitHub / other repositories
+  const sortedLinks = [...project.links].sort((a, b) => {
+    const isALive = a.icon === "live" || a.label.toLowerCase().includes("live");
+    const isBLive = b.icon === "live" || b.label.toLowerCase().includes("live");
+    if (isALive && !isBLive) return -1;
+    if (!isALive && isBLive) return 1;
+    return 0;
+  });
+
   return (
     <Dialog.Portal>
       {/* Overlay — CSS keyframes handle enter/exit */}
@@ -474,9 +483,7 @@ export function ProjectDetailDialog({ project }: { project: Project }) {
       <Dialog.Content className="project-detail-content select-none" aria-label={`${project.name} project details`}>
         {/* ── Header ── */}
         <div className="project-detail-header">
-          <div className="min-w-0 flex-1 flex flex-wrap items-center gap-x-3 gap-y-1">
-
-
+          <div className="project-header-title-group">
             <Dialog.Title className="font-display text-2xl sm:text-3xl leading-none tracking-normal text-foreground">
               {project.name}
             </Dialog.Title>
@@ -487,6 +494,45 @@ export function ProjectDetailDialog({ project }: { project: Project }) {
               </span>
             )}
           </div>
+
+          {/* Action Links (Live Demo, GitHub, etc.) */}
+          {sortedLinks.length > 0 && (
+            <div className="project-header-actions">
+              {sortedLinks.map((link) => {
+                const Icon = LINK_ICON[link.icon] ?? Globe;
+                const isLive = link.icon === "live" || link.label.toLowerCase().includes("live");
+
+                return (
+                  <motion.a
+                    key={link.label}
+                    href={link.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={`project-header-btn group ${
+                      isLive ? "project-header-btn-primary" : "project-header-btn-secondary"
+                    }`}
+                    whileHover={{ y: -1, scale: 1.02 }}
+                    whileTap={{ y: 1, scale: 0.98 }}
+                    transition={{ duration: 0.1 }}
+                    aria-label={`Open ${project.name} ${link.label}`}
+                  >
+                    {isLive && (
+                      <span className="relative flex h-2 w-2 mr-0.5 shrink-0" aria-hidden="true">
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+                        <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
+                      </span>
+                    )}
+                    <Icon className="h-3.5 w-3.5 shrink-0 text-current" aria-hidden="true" />
+                    <span>{link.label}</span>
+                    <ArrowUpRight
+                      className="h-3 w-3 opacity-60 transition-transform duration-150 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+                      aria-hidden="true"
+                    />
+                  </motion.a>
+                );
+              })}
+            </div>
+          )}
 
           {/* Close */}
           <Dialog.Close asChild>
@@ -505,7 +551,7 @@ export function ProjectDetailDialog({ project }: { project: Project }) {
         {/* ── Body Layout (40% Left Dossier / 60% Right Media Stage) ── */}
         <div className="project-detail-layout">
 
-          {/* Left Column — Dossier (Overview, Tech Stack, Links) */}
+          {/* Left Column — Dossier (Overview, Tech Stack) */}
           <motion.div
             className="project-detail-dossier"
             variants={infoContainerVariants}
@@ -521,33 +567,6 @@ export function ProjectDetailDialog({ project }: { project: Project }) {
             {/* Tech Stack — RPG Equipped Components Inventory */}
             <motion.div variants={infoItemVariants} className="project-detail-section">
               <EquippedInventory project={project} />
-            </motion.div>
-
-            {/* Links */}
-            <motion.div variants={infoItemVariants} className="project-detail-section project-detail-links-section">
-              <h4 className="project-detail-section-title">Links</h4>
-              <div className="project-detail-links">
-                {project.links.map((link) => {
-                  const Icon = LINK_ICON[link.icon];
-                  return (
-                    <motion.a
-                      key={link.label}
-                      href={link.href}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="project-detail-link"
-                      whileHover={{ y: -2, scale: 1.02 }}
-                      whileTap={{ y: 1, scale: 0.98 }}
-                      transition={{ duration: 0.1 }}
-                      aria-label={`Open ${project.name} ${link.label}`}
-                    >
-                      <Icon className="h-3.5 w-3.5 text-[var(--accent-to)]" aria-hidden="true" />
-                      {link.label}
-                      <ArrowUpRight className="h-3 w-3 opacity-60" aria-hidden="true" />
-                    </motion.a>
-                  );
-                })}
-              </div>
             </motion.div>
           </motion.div>
 

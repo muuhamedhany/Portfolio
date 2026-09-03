@@ -1001,12 +1001,91 @@
 
   .project-detail-header {
     display: flex;
-    align-items: flex-start;
+    align-items: center;
     justify-content: space-between;
-    gap: 16px;
+    flex-wrap: wrap;
+    gap: 12px;
     margin-bottom: 18px;
     padding-bottom: 14px;
     border-bottom: 1px solid var(--border);
+  }
+
+  .project-header-title-group {
+    min-width: 0;
+    flex: 1 1 auto;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .project-header-actions {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .project-header-btn {
+    display: inline-flex;
+    min-height: 34px;
+    align-items: center;
+    gap: 7px;
+    padding: 5px 12px;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    text-decoration: none;
+    cursor: pointer;
+    box-shadow:
+      inset 1px 1px 0 var(--pixel-edge-light),
+      2px 2px 0 var(--pixel-shadow);
+    clip-path: polygon(0 4px, 4px 4px, 4px 0,
+        calc(100% - 4px) 0, calc(100% - 4px) 4px, 100% 4px,
+        100% calc(100% - 4px), calc(100% - 4px) calc(100% - 4px), calc(100% - 4px) 100%,
+        4px 100%, 4px calc(100% - 4px), 0 calc(100% - 4px));
+    transition: background 120ms, color 120ms, border-color 120ms, box-shadow 120ms, transform 120ms;
+  }
+
+  /* Primary Button (Live Demo): High-contrast accent fill with live glow */
+  .project-header-btn-primary {
+    border: 1px solid var(--accent-to);
+    background: color-mix(in oklab, var(--accent-to) 18%, var(--background));
+    color: var(--accent-to);
+    box-shadow:
+      inset 1px 1px 0 rgba(255, 255, 255, 0.15),
+      2px 2px 0 var(--pixel-shadow),
+      0 0 12px color-mix(in oklab, var(--accent-to) 20%, transparent);
+  }
+
+  .project-header-btn-primary:hover {
+    background: var(--accent-to);
+    color: var(--background);
+    border-color: var(--accent-to);
+    box-shadow:
+      inset 1px 1px 0 rgba(255, 255, 255, 0.3),
+      2px 2px 0 var(--pixel-shadow),
+      0 0 18px color-mix(in oklab, var(--accent-to) 40%, transparent);
+  }
+
+  /* Secondary Button (GitHub / Docs / Behance): Tactile outlined frame */
+  .project-header-btn-secondary {
+    border: 1px solid var(--pixel-frame);
+    background: var(--background);
+    color: var(--foreground);
+  }
+
+  .project-header-btn-secondary:hover {
+    background: var(--pixel-active);
+    color: var(--pixel-active-foreground);
+    border-color: var(--pixel-frame);
+  }
+
+  .project-header-btn:focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
   }
 
   .project-detail-close {
@@ -1626,8 +1705,18 @@
     box-shadow: inset 1px 1px 0 var(--pixel-edge-dark);
   }
 
+  .p-safe {
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+    padding-left: env(safe-area-inset-left, 0px);
+    padding-right: env(safe-area-inset-right, 0px);
+  }
+
   .pixel-video-player {
     image-rendering: auto;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
   }
 
   .pixel-video-player svg {
@@ -2074,8 +2163,32 @@
     }
 
     .project-detail-header {
-      gap: 10px;
-      margin-bottom: 10px;
+      gap: 8px 10px;
+      margin-bottom: 12px;
+      padding-bottom: 10px;
+    }
+
+    .project-header-title-group {
+      order: 1;
+      flex: 1 1 auto;
+    }
+
+    .project-detail-close {
+      order: 2;
+    }
+
+    .project-header-actions {
+      order: 3;
+      width: 100%;
+      gap: 6px;
+    }
+
+    .project-header-btn {
+      flex: 1 1 auto;
+      min-height: 32px;
+      padding: 4px 10px;
+      font-size: 9.5px;
+      justify-content: center;
     }
 
     .project-detail-layout {

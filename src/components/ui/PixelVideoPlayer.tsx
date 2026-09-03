@@ -184,20 +184,35 @@ export function PixelVideoPlayer({
   // Toggle Fullscreen
   const toggleFullscreen = useCallback(async () => {
     const container = containerRef.current;
+    const video = videoRef.current;
     if (!container) return;
 
     try {
       if (!document.fullscreenElement) {
-        await container.requestFullscreen();
-        setIsFullscreen(true);
-        triggerFlash("FULLSCREEN");
+        if (container.requestFullscreen) {
+          await container.requestFullscreen();
+          setIsFullscreen(true);
+          triggerFlash("FULLSCREEN");
+        } else if ((video as any)?.webkitEnterFullscreen) {
+          (video as any).webkitEnterFullscreen();
+          triggerFlash("FULLSCREEN");
+        }
       } else {
-        await document.exitFullscreen();
-        setIsFullscreen(false);
-        triggerFlash("WINDOWED");
+        if (document.exitFullscreen) {
+          await document.exitFullscreen();
+          setIsFullscreen(false);
+          triggerFlash("WINDOWED");
+        }
       }
     } catch (err) {
-      console.warn("Fullscreen toggle failed:", err);
+      console.warn("Fullscreen toggle failed, trying webkit fallback:", err);
+      if ((video as any)?.webkitEnterFullscreen) {
+        try {
+          (video as any).webkitEnterFullscreen();
+        } catch {
+          // ignore
+        }
+      }
     }
   }, [triggerFlash]);
 
@@ -248,37 +263,44 @@ export function PixelVideoPlayer({
     triggerFlash(next ? "CRT: ON" : "CRT: OFF");
   }, [crtEffect, triggerFlash]);
 
-  // Scrubber drag / click mechanics
-  const handleSeekFromEvent = useCallback((e: React.MouseEvent<HTMLDivElement> | MouseEvent) => {
+  // Pointer / Touch Scrubber mechanics
+  const handleSeekFromPointer = useCallback((clientX: number) => {
     if (!scrubberRef.current || !videoRef.current || !duration) return;
     const rect = scrubberRef.current.getBoundingClientRect();
-    const clickX = e.clientX - rect.left;
+    const clickX = clientX - rect.left;
     const ratio = Math.max(0, Math.min(1, clickX / rect.width));
     const target = ratio * duration;
     videoRef.current.currentTime = target;
     setCurrentTime(target);
+    setHoverRatio(ratio);
+    setHoverTime(target);
   }, [duration]);
 
-  const handleScrubberMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
+  const handleScrubberPointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
     e.preventDefault();
     setIsDragging(true);
-    handleSeekFromEvent(e);
+    handleSeekFromPointer(e.clientX);
+    showControlsTemporarily();
 
-    const onMouseMove = (moveEvent: MouseEvent) => {
-      handleSeekFromEvent(moveEvent);
+    const onPointerMove = (moveEvent: PointerEvent) => {
+      handleSeekFromPointer(moveEvent.clientX);
     };
 
-    const onMouseUp = () => {
+    const onPointerUp = () => {
       setIsDragging(false);
-      window.removeEventListener("mousemove", onMouseMove);
-      window.removeEventListener("mouseup", onMouseUp);
+      setHoverRatio(null);
+      setHoverTime(null);
+      window.removeEventListener("pointermove", onPointerMove);
+      window.removeEventListener("pointerup", onPointerUp);
+      window.removeEventListener("pointercancel", onPointerUp);
     };
 
-    window.addEventListener("mousemove", onMouseMove);
-    window.addEventListener("mouseup", onMouseUp);
+    window.addEventListener("pointermove", onPointerMove);
+    window.addEventListener("pointerup", onPointerUp);
+    window.addEventListener("pointercancel", onPointerUp);
   };
 
-  const handleScrubberMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+  const handleScrubberPointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
     if (!scrubberRef.current || !duration) return;
     const rect = scrubberRef.current.getBoundingClientRect();
     const ratio = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
@@ -286,9 +308,45 @@ export function PixelVideoPlayer({
     setHoverTime(ratio * duration);
   };
 
-  const handleScrubberMouseLeave = () => {
-    setHoverRatio(null);
-    setHoverTime(null);
+  const handleScrubberPointerLeave = () => {
+    if (!isDragging) {
+      setHoverRatio(null);
+      setHoverTime(null);
+    }
+  };
+
+  // Stage mobile tap / double-tap detection
+  const lastTapRef = useRef<{ time: number; x: number }>({ time: 0, x: 0 });
+  const singleTapTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const handleStageClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    const now = Date.now();
+    const rect = e.currentTarget.getBoundingClientRect();
+    const clickX = e.clientX - rect.left;
+    const width = rect.width;
+    const isDoubleTap = now - lastTapRef.current.time < 280;
+
+    if (isDoubleTap) {
+      if (singleTapTimerRef.current) clearTimeout(singleTapTimerRef.current);
+      if (clickX < width * 0.38) {
+        seekRelative(-5);
+      } else if (clickX > width * 0.62) {
+        seekRelative(5);
+      } else {
+        togglePlay();
+      }
+      lastTapRef.current = { time: 0, x: clickX };
+    } else {
+      lastTapRef.current = { time: now, x: clickX };
+      singleTapTimerRef.current = setTimeout(() => {
+        // Single tap behavior: if controls are hidden, wake them up; otherwise toggle visibility
+        if (!controlsVisible) {
+          showControlsTemporarily();
+        } else {
+          setControlsVisible(false);
+        }
+      }, 240);
+    }
   };
 
   // Keyboard Navigation
@@ -412,8 +470,11 @@ export function PixelVideoPlayer({
       onKeyDown={handleKeyDown}
       onMouseMove={showControlsTemporarily}
       onMouseEnter={showControlsTemporarily}
-      className={`pixel-video-player group relative w-full select-none outline-none focus-visible:ring-2 focus-visible:ring-[var(--pixel-frame)] ${
-        isFullscreen ? "h-screen w-screen bg-black flex flex-col justify-center" : "aspect-video"
+      onTouchStart={showControlsTemporarily}
+      className={`pixel-video-player group relative w-full select-none outline-none focus-visible:ring-2 focus-visible:ring-[var(--pixel-frame)] touch-manipulation ${
+        isFullscreen
+          ? "h-screen w-screen bg-black flex flex-col justify-center p-safe"
+          : "aspect-[16/11] sm:aspect-video min-h-[240px] sm:min-h-0"
       } ${className}`}
       aria-label={`Pixel Video Player: ${title}`}
     >
@@ -432,11 +493,11 @@ export function PixelVideoPlayer({
         }}
       >
         {/* ── Top Hardware HUD Bar ── */}
-        <div className="relative z-30 flex h-7 sm:h-8 items-center justify-between border-b-2 border-[var(--pixel-frame)] bg-[var(--card)] px-2.5 sm:px-3 text-foreground shrink-0">
-          <div className="flex items-center gap-2 min-w-0">
+        <div className="relative z-30 flex h-7 sm:h-8 items-center justify-between border-b-2 border-[var(--pixel-frame)] bg-[var(--card)] px-2 sm:px-3 text-foreground shrink-0">
+          <div className="flex items-center gap-1.5 sm:gap-2 min-w-0 pr-1">
             {/* Status dot */}
             <span
-              className={`inline-block h-2 w-2 border border-[var(--pixel-frame)] ${
+              className={`inline-block h-2 w-2 shrink-0 border border-[var(--pixel-frame)] ${
                 isBuffering
                   ? "bg-amber-400 animate-pulse"
                   : isPlaying
@@ -444,14 +505,14 @@ export function PixelVideoPlayer({
                   : "bg-muted-foreground"
               }`}
             />
-            {/* Filename/Title */}
-            <span className="font-mono text-[9px] sm:text-[10px] font-bold uppercase tracking-widest truncate text-foreground">
+            {/* Filename/Title (Truncated on narrow mobile) */}
+            <span className="font-mono text-[9px] sm:text-[10px] font-bold uppercase tracking-wider sm:tracking-widest truncate max-w-[130px] xs:max-w-[200px] sm:max-w-none text-foreground">
               [ {title} ]
             </span>
           </div>
 
-          <div className="flex items-center gap-2 shrink-0">
-            {/* Resolution indicator */}
+          <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
+            {/* Resolution indicator (Desktop only) */}
             <span className="hidden sm:inline-block border border-[var(--pixel-frame)] bg-background px-1.5 py-0.5 font-mono text-[8px] uppercase tracking-wider text-muted-foreground">
               1080P // 60FPS
             </span>
@@ -461,7 +522,7 @@ export function PixelVideoPlayer({
               type="button"
               onClick={toggleCrt}
               title="Toggle Retro CRT Scanlines"
-              className={`border border-[var(--pixel-frame)] px-1.5 py-0.5 font-mono text-[8px] uppercase tracking-wider transition-colors cursor-pointer ${
+              className={`border border-[var(--pixel-frame)] px-1.5 py-0.5 font-mono text-[8px] sm:text-[9px] uppercase tracking-wider transition-colors cursor-pointer touch-manipulation ${
                 crtEffect
                   ? "bg-[var(--pixel-active)] text-[var(--pixel-active-foreground)] font-bold shadow-[1px_1px_0_var(--pixel-shadow)]"
                   : "bg-background text-muted-foreground hover:text-foreground"
@@ -472,10 +533,10 @@ export function PixelVideoPlayer({
           </div>
         </div>
 
-        {/* ── Main Video Display Stage ── */}
+        {/* ── Main Video Display Stage (Touch-enabled single/double-tap) ── */}
         <div
-          className="relative flex-1 bg-black flex items-center justify-center overflow-hidden cursor-pointer"
-          onClick={togglePlay}
+          className="relative flex-1 bg-black flex items-center justify-center overflow-hidden cursor-pointer touch-manipulation"
+          onClick={handleStageClick}
         >
           {/* Native Video Element */}
           <video
@@ -521,7 +582,7 @@ export function PixelVideoPlayer({
                 animate={{ scale: 1, opacity: 1 }}
                 exit={{ scale: 0.9, opacity: 0 }}
                 transition={{ duration: 0.15 }}
-                className="pointer-events-none absolute z-30 border-2 border-[var(--pixel-frame)] bg-background/95 px-4 py-2 font-display text-2xl tracking-wider text-[var(--accent-to)] shadow-[4px_4px_0_var(--pixel-shadow)]"
+                className="pointer-events-none absolute z-30 border-2 border-[var(--pixel-frame)] bg-background/95 px-3 sm:px-4 py-1.5 sm:py-2 font-display text-xl sm:text-2xl tracking-wider text-[var(--accent-to)] shadow-[4px_4px_0_var(--pixel-shadow)]"
                 style={{
                   clipPath:
                     "polygon(0 4px, 4px 4px, 4px 0, calc(100% - 4px) 0, calc(100% - 4px) 4px, 100% 4px, 100% calc(100% - 4px), calc(100% - 4px) calc(100% - 4px), calc(100% - 4px) 100%, 4px 100%, 4px calc(100% - 4px), 0 calc(100% - 4px))",
@@ -587,7 +648,7 @@ export function PixelVideoPlayer({
                 type="button"
                 whileHover={{ scale: 1.06 }}
                 whileTap={{ scale: 0.94 }}
-                className="flex h-14 w-14 sm:h-16 sm:w-16 items-center justify-center border-2 border-[var(--pixel-frame)] bg-[var(--card)] text-[var(--accent-to)] shadow-[4px_4px_0_var(--pixel-shadow)] hover:bg-[var(--pixel-active)] hover:text-white transition-colors cursor-pointer"
+                className="flex h-14 w-14 sm:h-16 sm:w-16 items-center justify-center border-2 border-[var(--pixel-frame)] bg-[var(--card)] text-[var(--accent-to)] shadow-[4px_4px_0_var(--pixel-shadow)] hover:bg-[var(--pixel-active)] hover:text-white transition-colors cursor-pointer touch-manipulation"
                 style={{
                   clipPath:
                     "polygon(0 6px, 6px 6px, 6px 0, calc(100% - 6px) 0, calc(100% - 6px) 6px, 100% 6px, 100% calc(100% - 6px), calc(100% - 6px) calc(100% - 6px), calc(100% - 6px) 100%, 6px 100%, 6px calc(100% - 6px), 0 calc(100% - 6px))",
@@ -612,16 +673,16 @@ export function PixelVideoPlayer({
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 8 }}
               transition={{ duration: 0.14 }}
-              className="relative z-30 flex flex-col border-t-2 border-[var(--pixel-frame)] bg-[var(--card)] px-2 sm:px-3 pt-2 pb-2 text-foreground shrink-0 shadow-[inset_1px_1px_0_var(--pixel-edge-light)]"
+              className="relative z-30 flex flex-col border-t-2 border-[var(--pixel-frame)] bg-[var(--card)] px-2 sm:px-3 pt-1.5 sm:pt-2 pb-2 text-foreground shrink-0 shadow-[inset_1px_1px_0_var(--pixel-edge-light)] touch-manipulation"
               onClick={(e) => e.stopPropagation()}
             >
-              {/* ── 1. Chunky Pixel Scrubber (Timeline) ── */}
+              {/* ── 1. Chunky Pixel Scrubber (Timeline with touch-friendly hit area) ── */}
               <div
                 ref={scrubberRef}
-                onMouseDown={handleScrubberMouseDown}
-                onMouseMove={handleScrubberMouseMove}
-                onMouseLeave={handleScrubberMouseLeave}
-                className="group/scrubber relative mb-2 flex h-5 w-full items-center cursor-pointer select-none"
+                onPointerDown={handleScrubberPointerDown}
+                onPointerMove={handleScrubberPointerMove}
+                onPointerLeave={handleScrubberPointerLeave}
+                className="group/scrubber relative mb-1.5 sm:mb-2 flex h-7 sm:h-5 w-full items-center cursor-pointer select-none touch-none py-2 sm:py-0"
                 role="slider"
                 aria-label="Video timeline"
                 aria-valuemin={0}
@@ -629,7 +690,7 @@ export function PixelVideoPlayer({
                 aria-valuenow={currentTime}
               >
                 {/* Scrubber Base Groove */}
-                <div className="relative h-2.5 w-full border border-[var(--pixel-frame)] bg-background shadow-[inset_1px_1px_0_rgba(0,0,0,0.6)] overflow-hidden">
+                <div className="relative h-2 sm:h-2.5 w-full border border-[var(--pixel-frame)] bg-background shadow-[inset_1px_1px_0_rgba(0,0,0,0.6)] overflow-hidden">
                   {/* Buffer progress bar */}
                   <div
                     className="absolute top-0 bottom-0 left-0 bg-muted-foreground/30 transition-all duration-150"
@@ -643,9 +704,9 @@ export function PixelVideoPlayer({
                   />
                 </div>
 
-                {/* Chunky Pixel Thumb Handle */}
+                {/* Chunky Pixel Thumb Handle - larger touch area on mobile */}
                 <div
-                  className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 flex h-4 w-3 items-center justify-center border border-[var(--pixel-frame)] bg-foreground shadow-[2px_2px_0_var(--pixel-shadow)] group-hover/scrubber:scale-110 active:scale-95 transition-transform pointer-events-none"
+                  className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 flex h-5 w-3.5 sm:h-4 sm:w-3 items-center justify-center border border-[var(--pixel-frame)] bg-foreground shadow-[2px_2px_0_var(--pixel-shadow)] group-hover/scrubber:scale-110 active:scale-95 transition-transform pointer-events-none"
                   style={{
                     left: `${progressPercent}%`,
                     clipPath:
@@ -653,12 +714,12 @@ export function PixelVideoPlayer({
                   }}
                 />
 
-                {/* Hover Time Tooltip */}
-                {hoverRatio !== null && hoverTime !== null && (
+                {/* Hover / Drag Time Tooltip */}
+                {(hoverRatio !== null || isDragging) && hoverTime !== null && (
                   <div
                     className="absolute -top-7 -translate-x-1/2 pointer-events-none border border-[var(--pixel-frame)] bg-foreground px-1.5 py-0.5 font-mono text-[9px] font-bold text-background shadow-[2px_2px_0_var(--pixel-shadow)] z-40"
                     style={{
-                      left: `${hoverRatio * 100}%`,
+                      left: `${(hoverRatio ?? (currentTime / (duration || 1))) * 100}%`,
                       clipPath:
                         "polygon(0 2px, 2px 2px, 2px 0, calc(100% - 2px) 0, calc(100% - 2px) 2px, 100% 2px, 100% calc(100% - 2px), calc(100% - 2px) calc(100% - 2px), calc(100% - 2px) 100%, 2px 100%, 2px calc(100% - 2px), 0 calc(100% - 2px))",
                     }}
@@ -668,57 +729,57 @@ export function PixelVideoPlayer({
                 )}
               </div>
 
-              {/* ── 2. Pixel Arcade Controls Bar ── */}
-              <div className="flex flex-wrap items-center justify-between gap-2">
-                {/* Left controls: Play, Skip, Volume, Digital Time */}
-                <div className="flex items-center gap-1.5 sm:gap-2">
+              {/* ── 2. Pixel Arcade Controls Bar (Single row on mobile, touch-friendly 36px+ targets) ── */}
+              <div className="flex items-center justify-between gap-1 sm:gap-2">
+                {/* Left controls: Play, Skip (desktop), Volume, Digital Time */}
+                <div className="flex items-center gap-1 sm:gap-1.5 min-w-0">
                   {/* Play / Pause button */}
                   <button
                     type="button"
                     onClick={togglePlay}
-                    className="pixel-control-btn flex h-8 w-8 items-center justify-center border-2 border-[var(--pixel-frame)] bg-background text-foreground shadow-[2px_2px_0_var(--pixel-shadow)] hover:bg-[var(--pixel-active)] hover:text-white active:translate-x-[1px] active:translate-y-[1px] active:shadow-none transition-colors cursor-pointer"
+                    className="pixel-control-btn flex h-9 w-9 sm:h-8 sm:w-8 min-h-[36px] min-w-[36px] items-center justify-center border-2 border-[var(--pixel-frame)] bg-background text-foreground shadow-[2px_2px_0_var(--pixel-shadow)] hover:bg-[var(--pixel-active)] hover:text-white active:translate-x-[1px] active:translate-y-[1px] active:shadow-none transition-colors cursor-pointer touch-manipulation shrink-0"
                     aria-label={isPlaying ? "Pause" : "Play"}
                   >
                     <Icon icon={isPlaying ? pauseIcon : playIcon} className="h-4 w-4" />
                   </button>
 
-                  {/* Skip -5s */}
+                  {/* Skip -5s (Desktop only — on mobile, double tap left half rewinds) */}
                   <button
                     type="button"
                     onClick={() => seekRelative(-5)}
-                    className="pixel-control-btn hidden sm:flex h-8 w-8 items-center justify-center border-2 border-[var(--pixel-frame)] bg-background text-foreground shadow-[2px_2px_0_var(--pixel-shadow)] hover:bg-[var(--pixel-active)] hover:text-white active:translate-x-[1px] active:translate-y-[1px] transition-colors cursor-pointer"
+                    className="pixel-control-btn hidden sm:flex h-8 w-8 items-center justify-center border-2 border-[var(--pixel-frame)] bg-background text-foreground shadow-[2px_2px_0_var(--pixel-shadow)] hover:bg-[var(--pixel-active)] hover:text-white active:translate-x-[1px] active:translate-y-[1px] transition-colors cursor-pointer touch-manipulation shrink-0"
                     title="Seek backward 5 seconds"
                     aria-label="Seek backward 5 seconds"
                   >
                     <Icon icon={arrowLeftIcon} className="h-4 w-4" />
                   </button>
 
-                  {/* Skip +5s */}
+                  {/* Skip +5s (Desktop only — on mobile, double tap right half advances) */}
                   <button
                     type="button"
                     onClick={() => seekRelative(5)}
-                    className="pixel-control-btn hidden sm:flex h-8 w-8 items-center justify-center border-2 border-[var(--pixel-frame)] bg-background text-foreground shadow-[2px_2px_0_var(--pixel-shadow)] hover:bg-[var(--pixel-active)] hover:text-white active:translate-x-[1px] active:translate-y-[1px] transition-colors cursor-pointer"
+                    className="pixel-control-btn hidden sm:flex h-8 w-8 items-center justify-center border-2 border-[var(--pixel-frame)] bg-background text-foreground shadow-[2px_2px_0_var(--pixel-shadow)] hover:bg-[var(--pixel-active)] hover:text-white active:translate-x-[1px] active:translate-y-[1px] transition-colors cursor-pointer touch-manipulation shrink-0"
                     title="Seek forward 5 seconds"
                     aria-label="Seek forward 5 seconds"
                   >
                     <Icon icon={arrowRightIcon} className="h-4 w-4" />
                   </button>
 
-                  {/* Volume Cluster: Mute button + Stepped Volume Bars */}
-                  <div className="flex items-center gap-1 border border-[var(--pixel-frame)] bg-background px-1.5 py-1">
+                  {/* Volume Cluster: Mute button (always) + Stepped Volume Bars (desktop only) */}
+                  <div className="flex items-center gap-1 border border-[var(--pixel-frame)] bg-background p-1 sm:px-1.5 shrink-0">
                     <button
                       type="button"
                       onClick={toggleMute}
-                      className="text-foreground hover:text-[var(--accent-to)] transition-colors cursor-pointer"
+                      className="flex h-7 w-7 sm:h-auto sm:w-auto items-center justify-center text-foreground hover:text-[var(--accent-to)] transition-colors cursor-pointer touch-manipulation"
                       title={isMuted ? "Unmute" : "Mute"}
                       aria-label={isMuted ? "Unmute" : "Mute"}
                     >
                       <Icon icon={getVolumeIcon()} className="h-4 w-4" />
                     </button>
 
-                    {/* Stepped Discrete Pixel Volume Bars */}
+                    {/* Stepped Discrete Pixel Volume Bars (hidden on mobile, uses phone volume buttons) */}
                     <div
-                      className="flex items-center gap-0.5 cursor-pointer py-0.5"
+                      className="hidden sm:flex items-center gap-0.5 cursor-pointer py-0.5"
                       title="Adjust Volume"
                       onClick={(e) => {
                         const rect = e.currentTarget.getBoundingClientRect();
@@ -743,21 +804,21 @@ export function PixelVideoPlayer({
                   </div>
 
                   {/* Monospace Digital Telemetry Timer */}
-                  <div className="flex items-center gap-1 border border-[var(--pixel-frame)] bg-background px-2 py-1 font-mono text-[9px] sm:text-[10px] font-bold text-foreground select-none">
+                  <div className="flex items-center gap-1 border border-[var(--pixel-frame)] bg-background px-1.5 sm:px-2 py-1 font-mono text-[8.5px] sm:text-[10px] font-bold text-foreground select-none truncate">
                     <span>{formatTime(currentTime)}</span>
                     <span className="text-muted-foreground">/</span>
                     <span className="text-muted-foreground">{formatTime(duration)}</span>
                   </div>
                 </div>
 
-                {/* Right controls: Speed, Loop, Replay, Fullscreen */}
-                <div className="flex items-center gap-1.5 sm:gap-2">
+                {/* Right controls: Speed, Loop, Fullscreen */}
+                <div className="flex items-center gap-1 sm:gap-1.5 shrink-0">
                   {/* Playback speed selector pill with popover */}
                   <div className="relative">
                     <button
                       type="button"
                       onClick={() => setSpeedMenuOpen(!speedMenuOpen)}
-                      className="pixel-control-btn flex h-8 items-center gap-1 border-2 border-[var(--pixel-frame)] bg-background px-2 font-mono text-[10px] font-bold uppercase text-foreground shadow-[2px_2px_0_var(--pixel-shadow)] hover:bg-[var(--pixel-active)] hover:text-white transition-colors cursor-pointer"
+                      className="pixel-control-btn flex h-9 sm:h-8 min-h-[36px] items-center gap-0.5 sm:gap-1 border-2 border-[var(--pixel-frame)] bg-background px-1.5 sm:px-2 font-mono text-[9px] sm:text-[10px] font-bold uppercase text-foreground shadow-[2px_2px_0_var(--pixel-shadow)] hover:bg-[var(--pixel-active)] hover:text-white transition-colors cursor-pointer touch-manipulation"
                       title="Playback Speed"
                       aria-label={`Playback speed: ${playbackSpeed}x`}
                     >
@@ -779,7 +840,7 @@ export function PixelVideoPlayer({
                             key={sp}
                             type="button"
                             onClick={() => selectPlaybackSpeed(sp)}
-                            className={`px-2 py-1 text-left font-mono text-[10px] font-bold uppercase transition-colors cursor-pointer ${
+                            className={`px-2 py-1.5 text-left font-mono text-[10px] font-bold uppercase transition-colors cursor-pointer touch-manipulation ${
                               playbackSpeed === sp
                                 ? "bg-[var(--pixel-active)] text-white"
                                 : "text-foreground hover:bg-background"
@@ -796,7 +857,7 @@ export function PixelVideoPlayer({
                   <button
                     type="button"
                     onClick={toggleLoop}
-                    className={`pixel-control-btn flex h-8 w-8 items-center justify-center border-2 border-[var(--pixel-frame)] shadow-[2px_2px_0_var(--pixel-shadow)] transition-colors cursor-pointer ${
+                    className={`pixel-control-btn flex h-9 w-9 sm:h-8 sm:w-8 min-h-[36px] min-w-[36px] items-center justify-center border-2 border-[var(--pixel-frame)] shadow-[2px_2px_0_var(--pixel-shadow)] transition-colors cursor-pointer touch-manipulation ${
                       isLooping
                         ? "bg-[var(--pixel-active)] text-[var(--pixel-active-foreground)]"
                         : "bg-background text-muted-foreground hover:text-foreground"
@@ -811,7 +872,7 @@ export function PixelVideoPlayer({
                   <button
                     type="button"
                     onClick={toggleFullscreen}
-                    className="pixel-control-btn flex h-8 w-8 items-center justify-center border-2 border-[var(--pixel-frame)] bg-background text-foreground shadow-[2px_2px_0_var(--pixel-shadow)] hover:bg-[var(--pixel-active)] hover:text-white active:translate-x-[1px] active:translate-y-[1px] transition-colors cursor-pointer"
+                    className="pixel-control-btn flex h-9 w-9 sm:h-8 sm:w-8 min-h-[36px] min-w-[36px] items-center justify-center border-2 border-[var(--pixel-frame)] bg-background text-foreground shadow-[2px_2px_0_var(--pixel-shadow)] hover:bg-[var(--pixel-active)] hover:text-white active:translate-x-[1px] active:translate-y-[1px] transition-colors cursor-pointer touch-manipulation"
                     title={isFullscreen ? "Exit Fullscreen (F)" : "Enter Fullscreen (F)"}
                     aria-label={isFullscreen ? "Exit Fullscreen" : "Enter Fullscreen"}
                   >
