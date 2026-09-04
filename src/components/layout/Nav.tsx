@@ -221,7 +221,7 @@ export function Nav({ theme, onToggle, active, onNavigate, onOpenCvModal }: NavP
                 type="button"
                 onClick={onOpenCvModal}
                 aria-label="Fast Report"
-                className="pixel-nav-control relative flex h-10 w-10 sm:h-11 sm:w-11 items-center justify-center overflow-hidden transition-all duration-200 cursor-pointer text-muted-foreground hover:text-foreground"
+                className="lg:flex hidden pixel-nav-control relative flex h-10 w-10 sm:h-11 sm:w-11 items-center justify-center overflow-hidden transition-all duration-200 cursor-pointer text-muted-foreground hover:text-foreground"
                 whileHover={{ y: -2, scale: 1.08 }}
                 whileTap={{ scale: 0.92 }}
               >
@@ -243,9 +243,8 @@ export function Nav({ theme, onToggle, active, onNavigate, onOpenCvModal }: NavP
                 type="button"
                 onClick={() => setIsLoginModalOpen(true)}
                 aria-label={isAdmin ? "Admin Console Active" : "Admin Login"}
-                className={`pixel-nav-control relative flex h-10 w-10 sm:h-11 sm:w-11 items-center justify-center overflow-hidden transition-all duration-200 cursor-pointer ${
-                  isAdmin ? "text-emerald-400 border-emerald-500/50" : "text-muted-foreground hover:text-foreground"
-                }`}
+                className={`lg:flex hidden pixel-nav-control relative flex h-10 w-10 sm:h-11 sm:w-11 items-center justify-center overflow-hidden transition-all duration-200 cursor-pointer ${isAdmin ? "text-emerald-400 border-emerald-500/50" : "text-muted-foreground hover:text-foreground"
+                  }`}
                 whileHover={{ y: -2, scale: 1.08 }}
                 whileTap={{ scale: 0.92 }}
               >
