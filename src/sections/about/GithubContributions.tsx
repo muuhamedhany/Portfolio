@@ -1,8 +1,8 @@
 import { useEffect, useState, useRef, useCallback } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { Activity, ChevronLeft, ChevronRight, Github, Loader2 } from "lucide-react";
-import type { GitHubContributionsResponse, ContributionDay } from "../../../server/github";
-import { generateFallbackContributions } from "../../../server/github";
+import type { GitHubContributionsResponse, ContributionDay } from "./githubContributionsSnapshot";
+import { getSnapshotContributions, parseJogruberResponse } from "./githubContributionsSnapshot";
 
 const USERNAME = "muuhamedhany";
 const AVAILABLE_YEARS = [2026, 2025, 2024];
@@ -10,11 +10,11 @@ const AVAILABLE_YEARS = [2026, 2025, 2024];
 export function GithubContributions() {
   const [selectedYear, setSelectedYear] = useState<number>(2026);
 
-  // Client-side cache to make year switching instantaneous
+  // Client-side cache to make year switching instantaneous with authentic verified data
   const clientCache = useRef<Record<number, GitHubContributionsResponse>>({
-    2026: generateFallbackContributions(USERNAME, 2026),
-    2025: generateFallbackContributions(USERNAME, 2025),
-    2024: generateFallbackContributions(USERNAME, 2024),
+    2026: getSnapshotContributions(USERNAME, 2026),
+    2025: getSnapshotContributions(USERNAME, 2025),
+    2024: getSnapshotContributions(USERNAME, 2024),
   });
 
   const [data, setData] = useState<GitHubContributionsResponse>(
@@ -25,21 +25,42 @@ export function GithubContributions() {
 
   const scrollRef = useRef<HTMLDivElement>(null);
 
-  // Fetch live contribution data from server
+  // Fetch live contribution data from server with browser fallback
   const fetchContributions = useCallback(async (year: number) => {
     setIsFetching(true);
     try {
+      // Step 1: Query API route
       const res = await fetch(`/api/github/contributions?username=${USERNAME}&year=${year}`);
-      if (!res.ok) throw new Error("Failed");
-      const json: GitHubContributionsResponse = await res.json();
-      clientCache.current[year] = json;
-      setData(json);
-    } catch (_err) {
-      // Fallback
-      if (!clientCache.current[year]) {
-        clientCache.current[year] = generateFallbackContributions(USERNAME, year);
+      if (res.ok) {
+        const json: GitHubContributionsResponse = await res.json();
+        if (json && json.weeks && json.weeks.length > 0) {
+          clientCache.current[year] = json;
+          setData(json);
+          return;
+        }
       }
-      setData(clientCache.current[year]);
+      throw new Error(`API returned ${res.status}`);
+    } catch (_err) {
+      // Step 2: Browser direct fallback to dedicated contributions API (CORS enabled)
+      try {
+        const directRes = await fetch(
+          `https://github-contributions-api.jogruber.de/v4/${encodeURIComponent(USERNAME)}?y=${year}`,
+          { signal: AbortSignal.timeout(4000) }
+        );
+        if (directRes.ok) {
+          const directJson = await directRes.json();
+          const parsed = parseJogruberResponse(USERNAME, year, directJson);
+          clientCache.current[year] = parsed;
+          setData(parsed);
+          return;
+        }
+      } catch (_directErr) {
+        // Step 3: Offline fallback to authentic static snapshot
+      }
+
+      const fallback = clientCache.current[year] || getSnapshotContributions(USERNAME, year);
+      clientCache.current[year] = fallback;
+      setData(fallback);
     } finally {
       setIsFetching(false);
     }

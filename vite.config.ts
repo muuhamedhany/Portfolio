@@ -17,22 +17,29 @@ function figmaAssetResolver() {
 }
 
 function apiPlugin() {
+  const attachMiddleware = (server: any) => {
+    server.middlewares.use(async (req: any, res: any, next: any) => {
+      if (req.url && req.url.startsWith('/api/')) {
+        try {
+          const handled = await handleApiRequest(req, res)
+          if (!handled) next()
+        } catch (err) {
+          console.error('API middleware error:', err)
+          next(err)
+        }
+      } else {
+        next()
+      }
+    })
+  }
+
   return {
     name: 'api-server-middleware',
-    configureServer(server) {
-      server.middlewares.use(async (req, res, next) => {
-        if (req.url && req.url.startsWith('/api/')) {
-          try {
-            const handled = await handleApiRequest(req, res)
-            if (!handled) next()
-          } catch (err) {
-            console.error('API middleware error:', err)
-            next(err)
-          }
-        } else {
-          next()
-        }
-      })
+    configureServer(server: any) {
+      attachMiddleware(server)
+    },
+    configurePreviewServer(server: any) {
+      attachMiddleware(server)
     },
   }
 }

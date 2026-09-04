@@ -15,6 +15,7 @@ import { Transition } from "@/components/layout/Transition";
 import { PageDots } from "@/components/layout/PageDots";
 import { Intro } from "@/components/layout/Intro";
 import { PixelThemeTransition } from "@/components/layout/PixelThemeTransition";
+import { CvModal } from "@/components/cv/CvModal";
 import { SECTIONS } from "@/lib/constants/sections";
 import type { SectionId } from "@/lib/constants/sections";
 
@@ -38,6 +39,7 @@ function PortfolioApp() {
   const [isProjectDialogOpen, setIsProjectDialogOpen] = useState(false);
   const [showIntro, setShowIntro] = useState(true);
   const [introReady, setIntroReady] = useState(false);
+  const [isCvModalOpen, setIsCvModalOpen] = useState(false);
 
   const [themeTransition, setThemeTransition] = useState<{
     active: boolean;
@@ -105,7 +107,7 @@ function PortfolioApp() {
 
   // Wheel paging: scroll within a page until its edge, then advance.
   const onWheel = (e: React.WheelEvent<HTMLElement>) => {
-    if (isProjectDialogOpen) return;
+    if (isProjectDialogOpen || isCvModalOpen) return;
     if (pending || Date.now() < lockUntil.current) return;
     if (Math.abs(e.deltaY) < 8) return;
     const el = e.currentTarget;
@@ -121,7 +123,7 @@ function PortfolioApp() {
     touchStart.current = { y: e.touches[0].clientY, top: e.currentTarget.scrollTop, el: e.currentTarget };
   };
   const onTouchEnd = (e: React.TouchEvent<HTMLElement>) => {
-    if (isProjectDialogOpen) return;
+    if (isProjectDialogOpen || isCvModalOpen) return;
     if (pending || Date.now() < lockUntil.current) return;
     const el = touchStart.current.el;
     if (!el) return;
@@ -136,18 +138,18 @@ function PortfolioApp() {
   // Keyboard paging.
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if (isProjectDialogOpen) return;
+      if (isProjectDialogOpen || isCvModalOpen) return;
       if (e.key === "ArrowDown" || e.key === "PageDown") navigateRelative(1);
       else if (e.key === "ArrowUp" || e.key === "PageUp") navigateRelative(-1);
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [isProjectDialogOpen, navigateRelative]);
+  }, [isProjectDialogOpen, isCvModalOpen, navigateRelative]);
 
   const renderSection = (id: SectionId) => {
     switch (id) {
       case "home":
-        return <Hero onNavigate={navigate} theme={theme} />;
+        return <Hero onNavigate={navigate} theme={theme} onOpenCvModal={() => setIsCvModalOpen(true)} />;
       case "projects":
         return <Projects onProjectDialogOpenChange={setIsProjectDialogOpen} />;
       case "stack":
@@ -173,7 +175,7 @@ function PortfolioApp() {
 
       {!showIntro && (
         <>
-          <Nav theme={theme} onToggle={toggle} active={section} onNavigate={navigate} />
+          <Nav theme={theme} onToggle={toggle} active={section} onNavigate={navigate} onOpenCvModal={() => setIsCvModalOpen(true)} />
           <PageDots active={section} onNavigate={navigate} />
         </>
       )}
@@ -215,6 +217,9 @@ function PortfolioApp() {
       <AnimatePresence>
         {showIntro && <Intro key="intro" onExitStart={handleIntroExitStart} onComplete={handleIntroComplete} />}
       </AnimatePresence>
+
+      {/* CV Fast Report Modal */}
+      <CvModal isOpen={isCvModalOpen} onClose={() => setIsCvModalOpen(false)} />
     </div>
   );
 }

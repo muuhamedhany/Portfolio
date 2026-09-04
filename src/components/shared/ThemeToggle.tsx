@@ -48,7 +48,7 @@ export function ThemeToggle({ theme, onToggle }: ThemeToggleProps) {
             whileHover={{ scale: 1.08 }}
             whileTap={{ scale: 0.92 }}
             aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} theme`}
-            className="pixel-nav-control relative grid h-11 w-11 place-items-center text-muted-foreground focus-visible:z-10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring cursor-pointer"
+            className="pixel-nav-control relative grid h-10 w-10 sm:h-11 sm:w-11 place-items-center text-muted-foreground focus-visible:z-10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring cursor-pointer"
           >
             <motion.span
               key={theme}

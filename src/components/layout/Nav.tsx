@@ -9,7 +9,7 @@ import { ThemeToggle } from "@/components/shared/ThemeToggle";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { SECTIONS } from "@/lib/constants/sections";
 import type { SectionId } from "@/lib/constants/sections";
-import { KeyRound, ShieldCheck } from "lucide-react";
+import { KeyRound, ShieldCheck, FileText } from "lucide-react";
 import { useAdminAuth } from "@/lib/context/AdminAuthContext";
 
 interface NavProps {
@@ -17,6 +17,7 @@ interface NavProps {
   onToggle: (e?: React.MouseEvent) => void;
   active: SectionId;
   onNavigate: (id: SectionId) => void;
+  onOpenCvModal?: () => void;
 }
 
 type PixelNavIcon = typeof homeIcon;
@@ -74,7 +75,7 @@ function NavItem({ section, isActive, isHint, onNavigate }: NavItemProps) {
       aria-label={`Go to ${section.label}`}
       aria-current={isActive ? "page" : undefined}
       data-active={isActive}
-      className={`pixel-nav-control relative flex h-11 items-center justify-center overflow-hidden focus-visible:z-10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring cursor-pointer transition-all duration-200 ${isActive ? "px-3.5 gap-2.5 text-white" : "w-11 text-muted-foreground"
+      className={`pixel-nav-control relative flex h-10 sm:h-11 items-center justify-center overflow-hidden focus-visible:z-10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring cursor-pointer transition-all duration-200 ${isActive ? "px-2.5 sm:px-3.5 gap-2 sm:gap-2.5 text-white" : "w-10 sm:w-11 text-muted-foreground"
         }`}
     >
       {/* Animated active background pill using layoutId */}
@@ -140,7 +141,7 @@ function NavItem({ section, isActive, isHint, onNavigate }: NavItemProps) {
   );
 }
 
-export function Nav({ theme, onToggle, active, onNavigate }: NavProps) {
+export function Nav({ theme, onToggle, active, onNavigate, onOpenCvModal }: NavProps) {
   const [hintSectionId, setHintSectionId] = useState<SectionId | null>(null);
   const [isDockHovered, setIsDockHovered] = useState(false);
   const { isAdmin, setIsLoginModalOpen } = useAdminAuth();
@@ -198,8 +199,8 @@ export function Nav({ theme, onToggle, active, onNavigate }: NavProps) {
         onMouseEnter={() => setIsDockHovered(true)}
         onMouseLeave={() => setIsDockHovered(false)}
       >
-        <div className="pixel-dock-surface flex items-center gap-1.5 p-1.5">
-          <ul className="flex items-center gap-1.5">
+        <div className="pixel-dock-surface flex items-center gap-1 sm:gap-1.5 p-1 sm:p-1.5">
+          <ul className="flex items-center gap-1 sm:gap-1.5">
             {SECTIONS.map((section) => (
               <NavItem
                 key={section.id}
@@ -211,8 +212,30 @@ export function Nav({ theme, onToggle, active, onNavigate }: NavProps) {
             ))}
           </ul>
 
-          <span aria-hidden="true" className="mx-0.5 h-8 w-0.5 bg-[var(--pixel-frame)] opacity-60 shrink-0" />
+          <span aria-hidden="true" className="mx-0.5 h-6 sm:h-8 w-0.5 bg-[var(--pixel-frame)] opacity-60 shrink-0" />
           <ThemeToggle theme={theme} onToggle={onToggle} />
+
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <motion.button
+                type="button"
+                onClick={onOpenCvModal}
+                aria-label="Fast Report"
+                className="pixel-nav-control relative flex h-10 w-10 sm:h-11 sm:w-11 items-center justify-center overflow-hidden transition-all duration-200 cursor-pointer text-muted-foreground hover:text-foreground"
+                whileHover={{ y: -2, scale: 1.08 }}
+                whileTap={{ scale: 0.92 }}
+              >
+                <FileText className="h-4 w-4" />
+              </motion.button>
+            </TooltipTrigger>
+            <TooltipContent
+              side="top"
+              sideOffset={10}
+              className="pixel-tooltip px-3 py-2 font-mono text-[11px] uppercase tracking-[0.16em] [&>svg]:hidden"
+            >
+              FAST REPORT
+            </TooltipContent>
+          </Tooltip>
 
           <Tooltip>
             <TooltipTrigger asChild>
@@ -220,7 +243,7 @@ export function Nav({ theme, onToggle, active, onNavigate }: NavProps) {
                 type="button"
                 onClick={() => setIsLoginModalOpen(true)}
                 aria-label={isAdmin ? "Admin Console Active" : "Admin Login"}
-                className={`pixel-nav-control relative flex h-11 w-11 items-center justify-center overflow-hidden transition-all duration-200 cursor-pointer ${
+                className={`pixel-nav-control relative flex h-10 w-10 sm:h-11 sm:w-11 items-center justify-center overflow-hidden transition-all duration-200 cursor-pointer ${
                   isAdmin ? "text-emerald-400 border-emerald-500/50" : "text-muted-foreground hover:text-foreground"
                 }`}
                 whileHover={{ y: -2, scale: 1.08 }}

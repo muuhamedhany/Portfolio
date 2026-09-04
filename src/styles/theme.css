@@ -3313,6 +3313,129 @@
 
 
   /* ─────────────────────────────────────────────────
+     Digital CV Modal (Fast Report)
+  ───────────────────────────────────────────────── */
+
+  .pixel-cv-modal {
+    border: 2px solid var(--pixel-frame);
+    background: var(--card);
+    box-shadow:
+      inset 2px 2px 0 var(--pixel-edge-light),
+      inset -2px -2px 0 var(--pixel-edge-dark),
+      6px 6px 0 var(--pixel-shadow);
+    clip-path: polygon(
+      0 8px, 8px 8px, 8px 0,
+      calc(100% - 8px) 0, calc(100% - 8px) 8px, 100% 8px,
+      100% calc(100% - 8px), calc(100% - 8px) calc(100% - 8px), calc(100% - 8px) 100%,
+      8px 100%, 8px calc(100% - 8px), 0 calc(100% - 8px)
+    );
+  }
+
+  @media (max-width: 640px) {
+    .pixel-cv-modal {
+      box-shadow:
+        inset 1px 1px 0 var(--pixel-edge-light),
+        inset -1px -1px 0 var(--pixel-edge-dark),
+        3px 3px 0 var(--pixel-shadow);
+      clip-path: polygon(
+        0 5px, 5px 5px, 5px 0,
+        calc(100% - 5px) 0, calc(100% - 5px) 5px, 100% 5px,
+        100% calc(100% - 5px), calc(100% - 5px) calc(100% - 5px), calc(100% - 5px) 100%,
+        5px 100%, 5px calc(100% - 5px), 0 calc(100% - 5px)
+      );
+    }
+  }
+
+  .pixel-cv-section-label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.25em;
+    color: var(--primary);
+    margin-bottom: 10px;
+  }
+
+  .pixel-cv-chip {
+    display: inline-flex;
+    align-items: center;
+    padding: 5px 12px;
+    font-family: var(--font-sans);
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--foreground);
+    border: 1px solid var(--border);
+    background: var(--background);
+    box-shadow:
+      inset 1px 1px 0 var(--pixel-edge-light),
+      inset -1px -1px 0 var(--pixel-edge-dark);
+    clip-path: polygon(
+      0 3px, 3px 3px, 3px 0,
+      calc(100% - 3px) 0, calc(100% - 3px) 3px, 100% 3px,
+      100% calc(100% - 3px), calc(100% - 3px) calc(100% - 3px), calc(100% - 3px) 100%,
+      3px 100%, 3px calc(100% - 3px), 0 calc(100% - 3px)
+    );
+    transition: border-color 150ms linear, background-color 150ms linear;
+  }
+
+  .pixel-cv-chip:hover {
+    border-color: var(--pixel-frame);
+    background: var(--secondary);
+  }
+
+  .pixel-cv-exp-card {
+    border: 1px solid var(--border);
+    background: var(--background);
+    padding: 14px 16px;
+    box-shadow:
+      inset 1px 1px 0 var(--pixel-edge-light),
+      inset -1px -1px 0 var(--pixel-edge-dark),
+      3px 3px 0 var(--pixel-shadow);
+  }
+
+  .pixel-cv-close {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border: 2px solid var(--pixel-frame);
+    background: var(--background);
+    color: var(--muted-foreground);
+    cursor: pointer;
+    box-shadow:
+      inset 2px 2px 0 var(--pixel-edge-light),
+      inset -2px -2px 0 var(--pixel-edge-dark),
+      3px 3px 0 var(--pixel-shadow);
+    transition: color 150ms linear, background-color 150ms linear, transform 80ms steps(2, end);
+  }
+
+  .pixel-cv-close:hover {
+    color: var(--foreground);
+    background: var(--secondary);
+  }
+
+  .pixel-cv-close:active {
+    transform: translate(2px, 2px);
+    box-shadow: inset 1px 1px 0 var(--pixel-edge-dark);
+  }
+
+  .pixel-cv-divider {
+    height: 2px;
+    background: var(--border);
+    box-shadow: 0 1px 0 var(--pixel-edge-light);
+  }
+
+  .pixel-cv-footer {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: var(--muted-foreground);
+    text-align: center;
+  }
+
+  /* ─────────────────────────────────────────────────
      Interactive Sliding Pixel CTA Button
   ───────────────────────────────────────────────── */
   .pixel-cta-btn {

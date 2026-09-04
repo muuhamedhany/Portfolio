@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from "react";
 import { motion, useMotionValue, useTransform, useSpring } from "motion/react";
-import { Download, Github } from "lucide-react";
+import { Download, Github, FileText } from "lucide-react";
 import type { SectionId } from "@/lib/constants/sections";
 import { GlitchChar } from "@/sections/home/GlitchChar";
 import { GlitchTicker } from "@/sections/home/GlitchTicker";
@@ -120,10 +120,11 @@ function ParticleBridge() {
 interface HeroProps {
   onNavigate: (id: SectionId) => void;
   theme: "dark" | "light";
+  onOpenCvModal?: () => void;
 }
 
 /* ─── Main Component ─── */
-export function Hero({ onNavigate, theme: _theme }: HeroProps) {
+export function Hero({ onNavigate, theme: _theme, onOpenCvModal }: HeroProps) {
   const [glitchTrigger, setGlitchTrigger] = useState(0);
   const mouseX = useMotionValue(0.5);
   const mouseY = useMotionValue(0.5);
@@ -258,26 +259,37 @@ export function Hero({ onNavigate, theme: _theme }: HeroProps) {
                 </span>
               </button>
 
-              <div className="flex items-center justify-center gap-3">
+              <div className="flex items-center justify-center gap-2 sm:gap-3 flex-nowrap">
                 <a
                   href={MEDIA_URLS.cv}
                   download="Muhammed_Hany_CV.pdf"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 border-2 border-border bg-card px-4 sm:px-5 py-2.5 sm:py-3 text-xs sm:text-sm font-medium text-foreground pixel-btn hover:border-foreground/30 transition-colors duration-200"
+                  aria-label="Download CV as PDF"
+                  className="h-10 sm:h-11 inline-flex items-center justify-center gap-1.5 sm:gap-2 border-2 border-border bg-card px-3 sm:px-5 text-xs sm:text-sm font-medium text-foreground pixel-btn hover:border-foreground/30 transition-colors duration-200 whitespace-nowrap shrink-0"
                 >
-                  <Download className="h-3.5 w-3.5" aria-hidden="true" />
-                  Download CV
+                  <Download className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
+                  <span>CV</span>
                 </a>
+
+                <button
+                  type="button"
+                  onClick={onOpenCvModal}
+                  aria-label="Open Digital CV"
+                  className="h-10 sm:h-11 inline-flex items-center justify-center gap-1.5 sm:gap-2 border-2 border-border bg-card px-3 sm:px-5 text-xs sm:text-sm font-medium text-foreground pixel-btn hover:border-foreground/30 transition-colors duration-200 whitespace-nowrap shrink-0"
+                >
+                  <FileText className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
+                  <span>Digital CV</span>
+                </button>
 
                 <a
                   href="https://github.com/muuhamedhany"
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label="GitHub Profile"
-                  className="inline-flex items-center justify-center gap-2 border-2 border-border bg-card px-3.5 py-2.5 sm:py-3 text-xs sm:text-sm font-medium text-foreground pixel-btn hover:border-foreground/30 hover:text-foreground transition-colors duration-200"
+                  className="h-10 w-10 sm:h-11 sm:w-11 inline-flex items-center justify-center border-2 border-border bg-card text-xs sm:text-sm font-medium text-foreground pixel-btn hover:border-foreground/30 hover:text-foreground transition-colors duration-200 shrink-0"
                 >
-                  <Github className="h-4 w-4" aria-hidden="true" />
+                  <Github className="h-4 w-4 shrink-0" aria-hidden="true" />
                 </a>
               </div>
             </motion.div>
