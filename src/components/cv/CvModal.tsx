@@ -1,7 +1,8 @@
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { X, Mail, Phone, MapPin, Github, Linkedin, Instagram, FileText, Briefcase, GraduationCap, Award, Zap } from "lucide-react";
+import { X, Mail, Phone, MapPin, Github, Linkedin, Instagram, FileText, Briefcase, GraduationCap, Award, Zap, Download, Loader2 } from "lucide-react";
 import { CV_DATA } from "@/lib/constants/cvData";
+import { downloadCv } from "@/lib/utils/download";
 
 /* ─── Spring config (matches AdminLoginModal) ─── */
 const SPRING = { type: "spring" as const, stiffness: 480, damping: 32 };
@@ -82,6 +83,19 @@ interface CvModalProps {
 /* ─── Main Component ─── */
 export function CvModal({ isOpen, onClose }: CvModalProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
+  const [isDownloading, setIsDownloading] = useState(false);
+
+  const handleDownloadCv = async () => {
+    if (isDownloading) return;
+    setIsDownloading(true);
+    try {
+      await downloadCv();
+    } catch (err) {
+      console.error("Failed to download CV:", err);
+    } finally {
+      setIsDownloading(false);
+    }
+  };
 
   // Lock body scroll when modal is open
   useEffect(() => {
@@ -140,14 +154,31 @@ export function CvModal({ isOpen, onClose }: CvModalProps) {
                       Fast Report
                     </span>
                   </div>
-                  <button
-                    type="button"
-                    onClick={onClose}
-                    className="pixel-cv-close"
-                    aria-label="Close CV modal"
-                  >
-                    <X className="h-4 w-4" />
-                  </button>
+                  <div className="flex items-center gap-2">
+                    <button
+                      type="button"
+                      onClick={handleDownloadCv}
+                      disabled={isDownloading}
+                      className="pixel-btn inline-flex items-center gap-1.5 border border-border bg-card px-2.5 py-1 font-mono text-[10px] sm:text-[11px] font-medium text-foreground hover:border-foreground/40 transition-colors duration-150 cursor-pointer disabled:opacity-60"
+                      aria-label="Download CV as PDF"
+                      title="Download PDF"
+                    >
+                      {isDownloading ? (
+                        <Loader2 className="h-3 w-3 animate-spin shrink-0" />
+                      ) : (
+                        <Download className="h-3 w-3 shrink-0" />
+                      )}
+                      <span>{isDownloading ? "Downloading..." : "Download PDF"}</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={onClose}
+                      className="pixel-cv-close"
+                      aria-label="Close CV modal"
+                    >
+                      <X className="h-4 w-4" />
+                    </button>
+                  </div>
                 </div>
 
                 {/* Name */}

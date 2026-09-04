@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from "react";
 import { motion, useMotionValue, useTransform, useSpring } from "motion/react";
-import { Download, Github, FileText } from "lucide-react";
+import { Download, Github, FileText, Loader2 } from "lucide-react";
 import type { SectionId } from "@/lib/constants/sections";
 import { GlitchChar } from "@/sections/home/GlitchChar";
 import { GlitchTicker } from "@/sections/home/GlitchTicker";
@@ -8,6 +8,7 @@ import { HeroParticleCanvas } from "@/sections/home/HeroParticleCanvas";
 import { EditorialMonogram } from "@/sections/home/EditorialMonogram";
 import { HeroStatusCapsule } from "@/sections/home/HeroStatusCapsule";
 import { MEDIA_URLS } from "@/lib/utils/media";
+import { downloadCv } from "@/lib/utils/download";
 
 /* ─── Motion variants ─── */
 const nameContainer = {
@@ -126,8 +127,22 @@ interface HeroProps {
 /* ─── Main Component ─── */
 export function Hero({ onNavigate, theme: _theme, onOpenCvModal }: HeroProps) {
   const [glitchTrigger, setGlitchTrigger] = useState(0);
+  const [isDownloadingCv, setIsDownloadingCv] = useState(false);
   const mouseX = useMotionValue(0.5);
   const mouseY = useMotionValue(0.5);
+
+  const handleDownloadCv = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    if (isDownloadingCv) return;
+    setIsDownloadingCv(true);
+    try {
+      await downloadCv();
+    } catch (err) {
+      console.error("Failed to download CV:", err);
+    } finally {
+      setIsDownloadingCv(false);
+    }
+  };
 
   const springX = useSpring(mouseX, { stiffness: 45, damping: 22 });
   const springY = useSpring(mouseY, { stiffness: 45, damping: 22 });
@@ -261,15 +276,19 @@ export function Hero({ onNavigate, theme: _theme, onOpenCvModal }: HeroProps) {
 
               <div className="flex items-center justify-center gap-2 sm:gap-3 flex-nowrap">
                 <a
-                  href={MEDIA_URLS.cv}
+                  href="/api/download-cv"
                   download="Muhammed_Hany_CV.pdf"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label="Download CV as PDF"
-                  className="h-10 sm:h-11 inline-flex items-center justify-center gap-1.5 sm:gap-2 border-2 border-border bg-card px-3 sm:px-5 text-xs sm:text-sm font-medium text-foreground pixel-btn hover:border-foreground/30 transition-colors duration-200 whitespace-nowrap shrink-0"
+                  onClick={handleDownloadCv}
+                  aria-label={isDownloadingCv ? "Downloading CV..." : "Download CV as PDF"}
+                  aria-busy={isDownloadingCv}
+                  className="h-10 sm:h-11 inline-flex items-center justify-center gap-1.5 sm:gap-2 border-2 border-border bg-card px-3 sm:px-5 text-xs sm:text-sm font-medium text-foreground pixel-btn hover:border-foreground/30 transition-colors duration-200 whitespace-nowrap shrink-0 cursor-pointer disabled:opacity-60"
                 >
-                  <Download className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
-                  <span>CV</span>
+                  {isDownloadingCv ? (
+                    <Loader2 className="h-3.5 w-3.5 shrink-0 animate-spin" aria-hidden="true" />
+                  ) : (
+                    <Download className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
+                  )}
+                  <span>{isDownloadingCv ? "Downloading..." : "CV"}</span>
                 </a>
 
                 <button

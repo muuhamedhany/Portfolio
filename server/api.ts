@@ -1,4 +1,6 @@
 import type { IncomingMessage, ServerResponse } from 'http';
+import fs from 'node:fs';
+import path from 'node:path';
 import { sql, DbProject } from './db.ts';
 import { verifyGoogleToken, signAdminJwt, verifyAdminSession, setAuthCookie, clearAuthCookie } from './auth.ts';
 import { getGitHubContributions } from './github.ts';
@@ -188,6 +190,53 @@ export async function handleApiRequest(req: IncomingMessage, res: ServerResponse
       const data = await getGitHubContributions(username, year);
       sendJson(res, 200, data);
       return true;
+    }
+
+    // ─── CV: FORCE DIRECT FILE DOWNLOAD (PUBLIC) ───
+    if ((pathname === '/api/download-cv' || pathname === '/api/cv/download') && method === 'GET') {
+      try {
+        let pdfBuffer: Buffer | null = null;
+
+        // 1. Check local public/cv.pdf or dist/cv.pdf first
+        const localCandidates = [
+          path.resolve(process.cwd(), 'public', 'cv.pdf'),
+          path.resolve(process.cwd(), 'dist', 'cv.pdf'),
+        ];
+        for (const candidate of localCandidates) {
+          if (fs.existsSync(candidate)) {
+            pdfBuffer = fs.readFileSync(candidate);
+            break;
+          }
+        }
+
+        // 2. Remote fallback to Cloudflare R2 if not found locally
+        if (!pdfBuffer) {
+          const cvUrl = resolveMediaUrl('/cv.pdf') || 'https://pub-c14c24d9e8684e0d8a8fab272a6d427d.r2.dev/cv.pdf';
+          if (/^https?:\/\//i.test(cvUrl)) {
+            const upstream = await fetch(cvUrl);
+            if (upstream.ok) {
+              pdfBuffer = Buffer.from(await upstream.arrayBuffer());
+            }
+          }
+        }
+
+        if (!pdfBuffer) {
+          sendJson(res, 404, { error: 'CV file not found' });
+          return true;
+        }
+
+        res.statusCode = 200;
+        res.setHeader('Content-Type', 'application/pdf');
+        res.setHeader('Content-Disposition', 'attachment; filename="Muhammed_Hany_CV.pdf"');
+        res.setHeader('Content-Length', pdfBuffer.length.toString());
+        res.setHeader('Cache-Control', 'public, max-age=86400');
+        res.end(pdfBuffer);
+        return true;
+      } catch (err: any) {
+        console.error('Error serving CV download:', err);
+        sendJson(res, 500, { error: 'Failed to download CV', message: err?.message || String(err) });
+        return true;
+      }
     }
 
     // ─── PROJECTS: GET ALL (PUBLIC) ───
