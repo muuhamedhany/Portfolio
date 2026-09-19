@@ -1,5 +1,15 @@
 import { neon } from '@neondatabase/serverless';
 
+// Safely load dotenv in local development if environment variables are not already present
+if (!process.env.DATABASE_URL) {
+  try {
+    const dotenv = await import('dotenv');
+    dotenv.default.config();
+  } catch {
+    // Environment variables already provided by hosting platform (Vercel)
+  }
+}
+
 let _sqlInstance: ReturnType<typeof neon> | null = null;
 
 export function getDb(): ReturnType<typeof neon> {

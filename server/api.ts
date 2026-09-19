@@ -1,8 +1,7 @@
 import type { IncomingMessage, ServerResponse } from 'http';
 import fs from 'node:fs';
 import path from 'node:path';
-import { sql } from './db.ts';
-import type { DbProject } from './db.ts';
+import { sql, DbProject } from './db.ts';
 import { verifyGoogleToken, signAdminJwt, verifyAdminSession, setAuthCookie, clearAuthCookie } from './auth.ts';
 import { getGitHubContributions } from './github.ts';
 
@@ -10,21 +9,6 @@ import { getGitHubContributions } from './github.ts';
  * Helper to parse JSON body from incoming request
  */
 async function parseBody<T = any>(req: IncomingMessage): Promise<T> {
-  // If Vercel Node runtime has already parsed req.body
-  const existingBody = (req as any).body;
-  if (existingBody !== undefined && existingBody !== null) {
-    if (typeof existingBody === 'object') {
-      return existingBody as T;
-    }
-    if (typeof existingBody === 'string') {
-      try {
-        return existingBody ? JSON.parse(existingBody) : ({} as T);
-      } catch {
-        return {} as T;
-      }
-    }
-  }
-
   return new Promise((resolve, reject) => {
     let body = '';
     req.on('data', (chunk) => {
@@ -32,7 +16,7 @@ async function parseBody<T = any>(req: IncomingMessage): Promise<T> {
     });
     req.on('end', () => {
       try {
-        resolve(body ? JSON.parse(body) : ({} as T));
+        resolve(body ? JSON.parse(body) : {});
       } catch (e) {
         reject(new Error('Invalid JSON payload'));
       }
@@ -123,37 +107,11 @@ function formatProject(row: any) {
 export async function handleApiRequest(req: IncomingMessage, res: ServerResponse): Promise<boolean> {
   const url = req.url || '';
   const parsedUrl = new URL(url, `http://${req.headers.host || 'localhost'}`);
-  
-  // Resolve pathname: support Vercel rewrite parameter (?path=...), headers, or direct URL
-  const pathParam = parsedUrl.searchParams.get('path');
   let pathname = parsedUrl.pathname;
-  if (pathParam) {
-    pathname = `/api/${pathParam.replace(/^\/+/, '')}`;
-  } else if (pathname === '/api' || pathname === '/api/' || pathname.includes('[...route]')) {
-    const matched = (req.headers['x-matched-path'] as string) || (req.headers['x-forwarded-uri'] as string);
-    if (matched) {
-      pathname = matched.split('?')[0];
-    }
-  }
-
-  if (pathname.includes('?')) {
-    pathname = pathname.split('?')[0];
-  }
   if (!pathname.startsWith('/api/') && pathname !== '/api') {
     pathname = `/api${pathname.startsWith('/') ? pathname : `/${pathname}`}`;
   }
   const method = (req.method || 'GET').toUpperCase();
-
-  // Handle CORS Preflight
-  if (method === 'OPTIONS') {
-    res.statusCode = 204;
-    res.setHeader('Access-Control-Allow-Origin', (req.headers.origin as string) || '*');
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-    res.setHeader('Access-Control-Allow-Credentials', 'true');
-    res.end();
-    return true;
-  }
 
   try {
     // ─── AUTH: GOOGLE LOGIN ───
