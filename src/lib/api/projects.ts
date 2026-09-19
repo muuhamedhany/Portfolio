@@ -50,6 +50,15 @@ export async function fetchProjectsApi(): Promise<Project[]> {
   }
 }
 
+async function safeJson<T = any>(res: Response): Promise<T> {
+  const contentType = res.headers.get('content-type') || '';
+  if (!contentType.includes('application/json')) {
+    const text = await res.text().catch(() => '');
+    throw new Error(text || `Server error (${res.status} ${res.statusText})`);
+  }
+  return res.json();
+}
+
 export async function createProjectApi(project: Partial<Project>): Promise<Project> {
   const res = await fetch('/api/projects', {
     method: 'POST',
@@ -57,7 +66,7 @@ export async function createProjectApi(project: Partial<Project>): Promise<Proje
     body: JSON.stringify(project),
   });
 
-  const data = await res.json();
+  const data = await safeJson(res);
   if (!res.ok) {
     throw new Error(data.error || 'Failed to create project');
   }
@@ -71,7 +80,7 @@ export async function updateProjectApi(id: string, project: Partial<Project>): P
     body: JSON.stringify(project),
   });
 
-  const data = await res.json();
+  const data = await safeJson(res);
   if (!res.ok) {
     throw new Error(data.error || 'Failed to update project');
   }
@@ -83,7 +92,7 @@ export async function deleteProjectApi(id: string): Promise<void> {
     method: 'DELETE',
   });
 
-  const data = await res.json();
+  const data = await safeJson(res);
   if (!res.ok) {
     throw new Error(data.error || 'Failed to delete project');
   }
@@ -96,7 +105,7 @@ export async function loginWithGoogleApi(token: string, isAccessToken: boolean =
     body: JSON.stringify(isAccessToken ? { accessToken: token } : { credential: token }),
   });
 
-  const data = await res.json();
+  const data = await safeJson(res);
   if (!res.ok) {
     throw new Error(data.error || 'Google login failed');
   }
@@ -107,7 +116,7 @@ export async function checkAuthStatusApi(): Promise<AuthUser | null> {
   try {
     const res = await fetch('/api/auth/me');
     if (!res.ok) return null;
-    const data = await res.json();
+    const data = await safeJson(res);
     return data.authenticated ? data.user : null;
   } catch {
     return null;

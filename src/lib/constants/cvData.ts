@@ -63,19 +63,19 @@ export const CV_DATA: CvData = {
   skillGroups: [
     {
       category: "Front-End",
-      skills: ["HTML5", "CSS", "JavaScript ES6+", "TypeScript", "React", "React Native", "Tailwind"],
+      skills: ["HTML5", "CSS", "JavaScript ES6+", "TypeScript", "React", "Next.js", "React Native", "Tailwind"],
     },
     {
       category: "Back-End",
-      skills: ["NodeJS", "ExpressJS", "PHP"],
+      skills: ["NodeJS/ExpressJS", "PHP"],
     },
     {
       category: "Database",
-      skills: ["SQL Server", "MySQL", "PostgreSQL"],
+      skills: ["SQL server", "MySQL", "PostgreSQL"],
     },
     {
       category: "Tools & Platforms",
-      skills: ["Git", "GitHub", "Supabase", "Figma"],
+      skills: ["Git", "Github", "Supabase", "Figma"],
     },
   ],
 
@@ -112,14 +112,19 @@ export const CV_DATA: CvData = {
       name: "CarKit",
       subtitle: "AAST Graduation Project",
       description:
-        "Egyptian automotive marketplace and services platform. Monorepo with 4 subprojects: React Native mobile app, Node/Express REST API (70+ endpoints), admin web portal, and driver/emergency portal.",
-      period: "2025 – 2026",
+        "Egyptian automotive marketplace and services platform. Built as a monorepo with 4 subprojects: a React Native mobile app, Node/Express REST API (70+ endpoints), an admin web portal, and a driver/emergency portal — both web portals in React + Vite + Tailwind. Auth system with 7 user roles, PostgreSQL via Supabase, and an AI-powered product recommendation feature using Gemini API.",
+    },
+    {
+      name: "Nokhba Academy",
+      subtitle: "EdTech Platform",
+      description:
+        "Full-stack educational platform & learning management system. A full-stack LMS built with Next.js 16, React 19, Neon Serverless PostgreSQL, Prisma, and Cloudflare R2. Features multi-role RBAC for students, teachers, parents, and admins with interactive video lessons, timed quiz engines, batch code redemption, and secure course authoring.",
     },
     {
       name: "Car Rental Landing Page",
       subtitle: "Responsive Frontend Web Project",
       description:
-        "Responsive car rental landing page built with React and Tailwind CSS. Rebuilt and upgraded with Framer Motion animations as a hands-on motion design learning project.",
+        "A responsive car rental landing page built with React and Tailwind CSS. Rebuilt and upgraded with Framer Motion animations as a hands-on motion design learning project. Focused on clean UI, smooth interactions.",
     },
     {
       name: "Pure Store",
@@ -131,7 +136,7 @@ export const CV_DATA: CvData = {
       name: "Workout & Diet App",
       subtitle: "UI/UX Case Study · NTI Graduation Project",
       description:
-        "End-to-end UI/UX case study for a workout and diet mobile app. Covered user research, wireframing, prototyping, and high-fidelity Figma designs.",
+        "End-to-end UI/UX case study for a workout and diet mobile app. Covered user research, wireframing, prototyping, and high-fidelity Figma designs. Completed as a graduation project for the NTI UI/UX Design Program.",
     },
   ],
 
@@ -148,7 +153,7 @@ export const CV_DATA: CvData = {
   ],
 
   languages: [
-    { label: "English", level: "Professional" },
     { label: "Arabic", level: "Native" },
+    { label: "English", level: "Fluent" },
   ],
 };
